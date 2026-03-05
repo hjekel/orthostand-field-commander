@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 // ============================================================================
-// ORTHOSTAND FIELD COMMANDER v2.4
+// ORTHOSTAND FIELD COMMANDER v2.5
 // Premium Sales Trip Companion — Moleskine Edition
-// New in v2.4: Scale filters (Large/Medium/Small) with info tooltips
+// New in v2.5: Help popup with app guide, terminology & tips (auto-shows first visit)
 // ============================================================================
 
 // --- TRANSLATIONS ---
@@ -692,8 +692,28 @@ export default function OrthostandFieldCommander() {
   const [calendarDate, setCalendarDate] = useState(new Date(2026, 2, 15)); // March 15, 2026
   const [selectedDay, setSelectedDay] = useState(null); // { day, month, year, city }
   const [showScaleInfo, setShowScaleInfo] = useState(null); // For scale tooltip
+  const [showHelp, setShowHelp] = useState(false); // Help modal
+  const [hasSeenHelp, setHasSeenHelp] = useState(false); // Track if user has seen help
   
   const t = TRANSLATIONS[lang];
+  
+  // Show help on first visit
+  useEffect(() => {
+    const seen = localStorage.getItem('orthostand_fc_help_seen');
+    if (!seen) {
+      setShowHelp(true);
+      setHasSeenHelp(false);
+    } else {
+      setHasSeenHelp(true);
+    }
+  }, []);
+  
+  // Mark help as seen
+  const closeHelp = () => {
+    setShowHelp(false);
+    localStorage.setItem('orthostand_fc_help_seen', 'true');
+    setHasSeenHelp(true);
+  };
   
   // Load saved data
   useEffect(() => {
@@ -757,6 +777,14 @@ export default function OrthostandFieldCommander() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Help Button */}
+          <button
+            onClick={() => setShowHelp(true)}
+            className={`p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.accent} text-sm`}
+            title={lang === 'nl' ? 'Help & Info' : lang === 'es' ? 'Ayuda e Info' : 'Help & Info'}
+          >
+            ❓
+          </button>
           {/* Language Toggle */}
           <div className={`flex rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} p-0.5`}>
             {['en', 'nl', 'es'].map(l => (
@@ -2457,6 +2485,344 @@ export default function OrthostandFieldCommander() {
     );
   };
   
+  // Help Modal - Shows app guide and terminology
+  const HelpModal = () => {
+    const [helpTab, setHelpTab] = useState('welcome');
+    
+    const helpContent = {
+      en: {
+        welcome: {
+          title: "Welcome to Field Commander! 👋",
+          content: `This app helps you manage your Spain sales trip for Orthostand M30.
+
+**What is this app?**
+A mobile-first sales companion with 28 pre-loaded targets across 5 cities: Madrid → Valencia → Córdoba → Sevilla → Málaga.
+
+**Quick Start:**
+1. Browse targets in the **Planner** tab
+2. Filter by city, priority, or scale
+3. Tap a contact to see details & log your visit
+4. Drag cards left↔right to mark as visited
+5. Use **Journal** to log notes on the go
+6. Check **Intel** for city-specific tips
+7. Track progress in **Dashboard**`
+        },
+        tabs: {
+          title: "App Tabs Explained 📑",
+          content: `**📍 Planner** — Main view. All contacts with drag & drop to mark visited.
+
+**📓 Journal** — Quick voice/text notes. Timestamped log of your trip.
+
+**🎯 Intel** — City-specific market info, fiscal tips, talking points & useful links.
+
+**📊 Dashboard** — Progress stats, conversion rates, export/import data backup.
+
+**📅 Calendar** — Visual trip calendar showing which city each day.
+
+**🗺️ Map** — Route overview with city-by-city breakdown.
+
+**📋 Pipeline** — Kanban board showing lead status progression.`
+        },
+        terms: {
+          title: "Terminology Guide 📖",
+          content: `**Priority (Stars):**
+⭐⭐⭐ Must Visit — Top targets, highest potential
+⭐⭐ High Value — Strong opportunities
+⭐ Worth a Stop — If time permits
+
+**Scale (Organisation Size):**
+🏢 Large — National chain, 10+ locations (multi-unit deals, longer sales cycle)
+🏪 Medium — Regional, 3-9 locations (balanced speed & volume)
+🏠 Small — Single location, owner-operated (quick decisions, 1 unit)
+
+**LHF Score (0-100):**
+"Low Hanging Fruit" score. Higher = easier to close.
+Based on: decision-maker access, multi-unit potential, reachability, strategic value.
+
+**Status:**
+• Planned — Not yet visited
+• Visited — Meeting completed
+• Follow-up — Requires action
+• Deal — Closed! 🎉
+• No Fit — Not a match`
+        },
+        tips: {
+          title: "Pro Tips 💡",
+          content: `**Filtering:**
+• Click Priority stars (⭐⭐⭐/⭐⭐/⭐) to filter
+• Click Scale icons (🏢/🏪/🏠) to filter
+• Combine both! E.g., "Must Visit" + "Large"
+• Click ⓘ next to Scale for explanation
+
+**Drag & Drop:**
+• In Planner: drag cards left→right to mark visited
+• Drag back left to undo
+
+**Data Safety:**
+• Auto-saves to device storage
+• Use Dashboard → Export to backup
+• Import to restore on another device
+
+**Offline:**
+• App works offline after first load
+• Data syncs when back online
+
+**Contact Details:**
+• Tap any card to open full details
+• Log notes, set interest score
+• Voice note button for hands-free`
+        }
+      },
+      nl: {
+        welcome: {
+          title: "Welkom bij Field Commander! 👋",
+          content: `Deze app helpt je bij je Spanje verkooptrip voor Orthostand M30.
+
+**Wat is deze app?**
+Een mobiele verkoop-companion met 28 voorgeladen targets in 5 steden: Madrid → Valencia → Córdoba → Sevilla → Málaga.
+
+**Snel starten:**
+1. Bekijk targets in de **Planner** tab
+2. Filter op stad, prioriteit of schaal
+3. Tik op een contact voor details & loggen
+4. Sleep kaartjes links↔rechts voor status
+5. Gebruik **Journal** voor notities onderweg
+6. Check **Intel** voor stadspecifieke tips
+7. Volg voortgang in **Dashboard**`
+        },
+        tabs: {
+          title: "App Tabs Uitgelegd 📑",
+          content: `**📍 Planner** — Hoofdscherm. Alle contacten met drag & drop.
+
+**📓 Journal** — Snelle voice/tekst notities. Tijdstempel log van je reis.
+
+**🎯 Intel** — Stad-specifieke marktinfo, fiscale tips, gesprekspunten & links.
+
+**📊 Dashboard** — Voortgang statistieken, conversie, data backup.
+
+**📅 Calendar** — Visuele reiskalender per dag.
+
+**🗺️ Map** — Route overzicht per stad.
+
+**📋 Pipeline** — Kanban bord met lead status voortgang.`
+        },
+        terms: {
+          title: "Terminologie Gids 📖",
+          content: `**Prioriteit (Sterren):**
+⭐⭐⭐ Must Visit — Top targets, hoogste potentieel
+⭐⭐ High Value — Sterke kansen
+⭐ Worth a Stop — Als er tijd is
+
+**Schaal (Organisatie Grootte):**
+🏢 Large — Nationale keten, 10+ locaties (multi-unit deals, langere cyclus)
+🏪 Medium — Regionaal, 3-9 locaties (balans snelheid & volume)
+🏠 Small — Eén locatie, eigenaar (snelle beslissing, 1 unit)
+
+**LHF Score (0-100):**
+"Low Hanging Fruit" score. Hoger = makkelijker te closen.
+Gebaseerd op: beslisser-toegang, multi-unit potentieel, bereikbaarheid, strategische waarde.
+
+**Status:**
+• Planned — Nog niet bezocht
+• Visited — Meeting geweest
+• Follow-up — Actie nodig
+• Deal — Gesloten! 🎉
+• No Fit — Geen match`
+        },
+        tips: {
+          title: "Pro Tips 💡",
+          content: `**Filteren:**
+• Klik Priority sterren (⭐⭐⭐/⭐⭐/⭐) om te filteren
+• Klik Scale iconen (🏢/🏪/🏠) om te filteren
+• Combineer beide! Bijv. "Must Visit" + "Large"
+• Klik ⓘ naast Scale voor uitleg
+
+**Drag & Drop:**
+• In Planner: sleep kaartjes links→rechts voor bezocht
+• Sleep terug naar links om ongedaan te maken
+
+**Data Veiligheid:**
+• Slaat automatisch op op je device
+• Gebruik Dashboard → Export voor backup
+• Import om te herstellen op ander device
+
+**Offline:**
+• App werkt offline na eerste keer laden
+• Data synct wanneer weer online
+
+**Contact Details:**
+• Tik op een kaartje voor volledige details
+• Log notities, zet interesse score
+• Voice note knop voor handsfree`
+        }
+      },
+      es: {
+        welcome: {
+          title: "¡Bienvenido a Field Commander! 👋",
+          content: `Esta app te ayuda a gestionar tu viaje de ventas en España para Orthostand M30.
+
+**¿Qué es esta app?**
+Un compañero de ventas móvil con 28 objetivos precargados en 5 ciudades: Madrid → Valencia → Córdoba → Sevilla → Málaga.
+
+**Inicio Rápido:**
+1. Navega objetivos en la pestaña **Planner**
+2. Filtra por ciudad, prioridad o escala
+3. Toca un contacto para ver detalles y registrar
+4. Arrastra tarjetas izq↔der para marcar visitado
+5. Usa **Journal** para notas en movimiento
+6. Revisa **Intel** para consejos por ciudad
+7. Sigue progreso en **Dashboard**`
+        },
+        tabs: {
+          title: "Pestañas Explicadas 📑",
+          content: `**📍 Planner** — Vista principal. Todos los contactos con arrastrar y soltar.
+
+**📓 Journal** — Notas rápidas de voz/texto. Registro con marca de tiempo.
+
+**🎯 Intel** — Info de mercado por ciudad, consejos fiscales, puntos de conversación.
+
+**📊 Dashboard** — Estadísticas de progreso, tasas de conversión, backup de datos.
+
+**📅 Calendar** — Calendario visual del viaje por día.
+
+**🗺️ Map** — Vista general de la ruta por ciudad.
+
+**📋 Pipeline** — Tablero Kanban con progreso de leads.`
+        },
+        terms: {
+          title: "Guía de Terminología 📖",
+          content: `**Prioridad (Estrellas):**
+⭐⭐⭐ Must Visit — Objetivos top, mayor potencial
+⭐⭐ High Value — Oportunidades fuertes
+⭐ Worth a Stop — Si hay tiempo
+
+**Escala (Tamaño de Organización):**
+🏢 Large — Cadena nacional, 10+ ubicaciones (multi-unidad, ciclo largo)
+🏪 Medium — Regional, 3-9 ubicaciones (equilibrio velocidad y volumen)
+🏠 Small — Una ubicación, propietario (decisión rápida, 1 unidad)
+
+**LHF Score (0-100):**
+Puntuación "Low Hanging Fruit". Mayor = más fácil de cerrar.
+Basado en: acceso al decisor, potencial multi-unidad, alcanzabilidad, valor estratégico.
+
+**Estado:**
+• Planned — Aún no visitado
+• Visited — Reunión completada
+• Follow-up — Requiere acción
+• Deal — ¡Cerrado! 🎉
+• No Fit — No encaja`
+        },
+        tips: {
+          title: "Consejos Pro 💡",
+          content: `**Filtrado:**
+• Clic en estrellas de Prioridad (⭐⭐⭐/⭐⭐/⭐) para filtrar
+• Clic en iconos de Escala (🏢/🏪/🏠) para filtrar
+• ¡Combina ambos! Ej. "Must Visit" + "Large"
+• Clic ⓘ junto a Escala para explicación
+
+**Arrastrar y Soltar:**
+• En Planner: arrastra tarjetas izq→der para marcar visitado
+• Arrastra de vuelta a la izq para deshacer
+
+**Seguridad de Datos:**
+• Guarda automáticamente en tu dispositivo
+• Usa Dashboard → Export para backup
+• Import para restaurar en otro dispositivo
+
+**Sin Conexión:**
+• App funciona offline después de cargar
+• Datos se sincronizan cuando vuelvas online
+
+**Detalles de Contacto:**
+• Toca cualquier tarjeta para ver detalles
+• Registra notas, establece puntuación de interés
+• Botón de nota de voz para manos libres`
+        }
+      }
+    };
+    
+    const content = helpContent[lang];
+    const tabs = ['welcome', 'tabs', 'terms', 'tips'];
+    const tabLabels = {
+      en: { welcome: '👋 Welcome', tabs: '📑 Tabs', terms: '📖 Terms', tips: '💡 Tips' },
+      nl: { welcome: '👋 Welkom', tabs: '📑 Tabs', terms: '📖 Termen', tips: '💡 Tips' },
+      es: { welcome: '👋 Bienvenida', tabs: '📑 Pestañas', terms: '📖 Términos', tips: '💡 Consejos' }
+    };
+    
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={closeHelp} />
+        <div className={`${theme.bgModal} relative w-full max-w-lg max-h-[85vh] overflow-hidden rounded-2xl shadow-2xl`}>
+          {/* Header */}
+          <div className={`sticky top-0 ${theme.bgModal} p-4 border-b ${theme.border} z-10`}>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
+                {content[helpTab].title}
+              </h2>
+              <button onClick={closeHelp} className={`p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text} text-lg`}>✕</button>
+            </div>
+            {/* Tab navigation */}
+            <div className="flex gap-1 overflow-x-auto">
+              {tabs.map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setHelpTab(tab)}
+                  className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${
+                    helpTab === tab 
+                      ? `${theme.accentBg} ${theme.accent}` 
+                      : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`
+                  }`}
+                >
+                  {tabLabels[lang][tab]}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Content */}
+          <div className="p-4 overflow-y-auto max-h-[60vh]">
+            <div className={`prose prose-sm max-w-none ${theme.text}`}>
+              {content[helpTab].content.split('\n').map((line, i) => {
+                if (line.startsWith('**') && line.endsWith('**')) {
+                  return <h4 key={i} className={`font-semibold mt-4 mb-1 ${theme.accent}`}>{line.replace(/\*\*/g, '')}</h4>;
+                } else if (line.startsWith('**')) {
+                  const parts = line.split('**');
+                  return (
+                    <p key={i} className="mb-1">
+                      <strong className={theme.accent}>{parts[1]}</strong>
+                      <span className={theme.textMuted}>{parts[2]}</span>
+                    </p>
+                  );
+                } else if (line.startsWith('•')) {
+                  return <p key={i} className={`ml-2 text-sm ${theme.textMuted}`}>{line}</p>;
+                } else if (line.trim() === '') {
+                  return <br key={i} />;
+                } else {
+                  return <p key={i} className={`text-sm ${theme.text} mb-2`}>{line}</p>;
+                }
+              })}
+            </div>
+          </div>
+          
+          {/* Footer */}
+          <div className={`sticky bottom-0 ${theme.bgModal} p-4 border-t ${theme.border}`}>
+            <button
+              onClick={closeHelp}
+              className={`w-full py-3 rounded-lg bg-[#c9a962] text-[#1a1814] font-medium`}
+            >
+              {lang === 'nl' ? 'Begrepen, aan de slag!' : lang === 'es' ? '¡Entendido, a trabajar!' : 'Got it, let\'s go!'}
+            </button>
+            <p className={`text-xs ${theme.textMuted} text-center mt-2`}>
+              {lang === 'nl' ? 'Klik ❓ in de header om deze help opnieuw te openen' : 
+               lang === 'es' ? 'Haz clic en ❓ en el encabezado para abrir esta ayuda de nuevo' : 
+               'Click ❓ in the header to open this help again'}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Day detail modal for calendar
   const DayModal = ({ dayInfo, onClose }) => {
     const cityLeads = LEADS.filter(l => l.city === dayInfo.city);
@@ -2532,6 +2898,7 @@ export default function OrthostandFieldCommander() {
       
       {selectedLead && <LeadModal lead={selectedLead} onClose={() => setSelectedLead(null)} />}
       {selectedDay && <DayModal dayInfo={selectedDay} onClose={() => setSelectedDay(null)} />}
+      {showHelp && <HelpModal />}
     </div>
   );
 }
