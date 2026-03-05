@@ -472,31 +472,59 @@ const INTEL = {
       market: "Capital market. ~2,500 practitioners in region. High concentration of associations & decision-makers.",
       fiscal: "Autónomo equipment purchases: 100% deductible in year of purchase if <€300/unit, or depreciated over 10 years.",
       tactical: "Start with CGCOP for national strategy. Prim is volume play. Namrol is competitor intelligence.",
-      talking: ["Spain has 14,400+ podiatrists - 97% private practice", "Static strain causes 65% of early retirement in the profession", "Orthostand eliminates static strain completely - unique in the market"]
+      talking: ["Spain has 14,400+ podiatrists - 97% private practice", "Static strain causes 65% of early retirement in the profession", "Orthostand eliminates static strain completely - unique in the market"],
+      links: [
+        { name: "CGCOP (National Association)", url: "https://cgcop.es" },
+        { name: "Prim Orthopaedics", url: "https://primestablecimientosortopedicos.es" },
+        { name: "Namrol (Competitor)", url: "https://namrol.com" },
+        { name: "FEDOP (O&P Federation)", url: "https://fedop.org" }
+      ]
     },
     Valencia: {
       market: "Strong regional college (ICOPCV) with ~1,200 members. Podoactiva chain presence.",
       fiscal: "Comunidad Valenciana has regional grants for healthcare equipment modernisation.",
       tactical: "Lacomba is the lighthouse target. ICOPCV for regional legitimacy.",
-      talking: ["Valencia region growing 8% annually in healthcare sector", "Lacomba's 50-year reputation validates quality focus", "Regional association endorsement = member trust"]
+      talking: ["Valencia region growing 8% annually in healthcare sector", "Lacomba's 50-year reputation validates quality focus", "Regional association endorsement = member trust"],
+      links: [
+        { name: "ICOPCV (Regional College)", url: "https://icopcv.org" },
+        { name: "Ortopedia Lacomba", url: "https://ortopedialacomba.es" },
+        { name: "Podoactiva", url: "https://podoactiva.com" },
+        { name: "IVACE (Grants)", url: "https://www.ivace.es" }
+      ]
     },
     Córdoba: {
       market: "Smaller market but strategic for Andalucía penetration. Family businesses dominate.",
       fiscal: "Andalucía TRADE offers export assistance and business development support.",
       tactical: "Quirónsalud for hospital network access. Larios for local lighthouse.",
-      talking: ["Family businesses think long-term - equipment is investment", "Córdoba practitioners serve wide rural catchment", "Hospital deal opens 70+ facility network"]
+      talking: ["Family businesses think long-term - equipment is investment", "Córdoba practitioners serve wide rural catchment", "Hospital deal opens 70+ facility network"],
+      links: [
+        { name: "Quirónsalud Hospital", url: "https://quironsalud.es/cordoba" },
+        { name: "Ortopedia Larios", url: "https://ortopedialarios.com" },
+        { name: "Andalucía TRADE", url: "https://www.andaluciatrade.es" }
+      ]
     },
     Sevilla: {
       market: "Andalucía capital. COPOAN HQ. Major hospital and distributor presence.",
       fiscal: "Junta de Andalucía healthcare innovation funds available.",
       tactical: "COPOAN + Rosario = double gateway (regional + national). MBA Surgical = future distributor. Queraltó = lighthouse testimonial.",
-      talking: ["COPOAN reaches 8 provinces, 354+ clinics", "Rosario's dual role (COPOAN + CGCOP VP) = strategic contact", "MBA Surgical's Swedish parent aligns with our Nordic strategy"]
+      talking: ["COPOAN reaches 8 provinces, 354+ clinics", "Rosario's dual role (COPOAN + CGCOP VP) = strategic contact", "MBA Surgical's Swedish parent aligns with our Nordic strategy"],
+      links: [
+        { name: "COPOAN (Andalucía College)", url: "https://copoan.es" },
+        { name: "MBA Surgical", url: "https://mbasurgical.com" },
+        { name: "Ortopedia Queraltó", url: "https://queralto.com" },
+        { name: "Junta de Andalucía (Grants)", url: "https://www.juntadeandalucia.es" }
+      ]
     },
     Málaga: {
       market: "Costa del Sol tourism drives premium healthcare market. International standards expected.",
       fiscal: "Tourism sector grants sometimes extend to healthcare infrastructure.",
       tactical: "Eurodiscap lighthouse deal. OrtopediaCH quick win. Costa del Sol hospital for international credibility.",
-      talking: ["Eurodiscap's 1,000m² = largest showroom in region", "Costa del Sol international patients expect cutting-edge", "Málaga airport = easy logistics for demo unit"]
+      talking: ["Eurodiscap's 1,000m² = largest showroom in region", "Costa del Sol international patients expect cutting-edge", "Málaga airport = easy logistics for demo unit"],
+      links: [
+        { name: "Eurodiscap", url: "https://eurodiscap.com" },
+        { name: "Hospital Costa del Sol", url: "https://hospitalcostadelsol.es" },
+        { name: "OrtopediaCH", url: "https://ortopediach.es" }
+      ]
     }
   },
   nl: {
@@ -504,31 +532,59 @@ const INTEL = {
       market: "Hoofdstedelijke markt. ~2.500 practitioners in de regio. Hoge concentratie van associaties & beslissers.",
       fiscal: "Autónomo apparatuuraankopen: 100% aftrekbaar in aankoopjaar als <€300/stuk, of afgeschreven over 10 jaar.",
       tactical: "Begin met CGCOP voor nationale strategie. Prim is volume play. Namrol is concurrentie-intelligentie.",
-      talking: ["Spanje heeft 14.400+ podologen - 97% private praktijk", "Statische belasting veroorzaakt 65% van vervroegde uittreding", "Orthostand elimineert statische belasting volledig - uniek in de markt"]
+      talking: ["Spanje heeft 14.400+ podologen - 97% private praktijk", "Statische belasting veroorzaakt 65% van vervroegde uittreding", "Orthostand elimineert statische belasting volledig - uniek in de markt"],
+      links: [
+        { name: "CGCOP (Nationale Associatie)", url: "https://cgcop.es" },
+        { name: "Prim Orthopedie", url: "https://primestablecimientosortopedicos.es" },
+        { name: "Namrol (Concurrent)", url: "https://namrol.com" },
+        { name: "FEDOP (O&P Federatie)", url: "https://fedop.org" }
+      ]
     },
     Valencia: {
       market: "Sterke regionale vereniging (ICOPCV) met ~1.200 leden. Podoactiva keten aanwezig.",
       fiscal: "Comunidad Valenciana heeft regionale subsidies voor modernisering zorgapparatuur.",
       tactical: "Lacomba is het lighthouse target. ICOPCV voor regionale legitimiteit.",
-      talking: ["Valencia regio groeit 8% per jaar in zorgsector", "Lacomba's 50-jarige reputatie valideert kwaliteitsfocus", "Regionale associatie endorsement = vertrouwen leden"]
+      talking: ["Valencia regio groeit 8% per jaar in zorgsector", "Lacomba's 50-jarige reputatie valideert kwaliteitsfocus", "Regionale associatie endorsement = vertrouwen leden"],
+      links: [
+        { name: "ICOPCV (Regionaal College)", url: "https://icopcv.org" },
+        { name: "Ortopedia Lacomba", url: "https://ortopedialacomba.es" },
+        { name: "Podoactiva", url: "https://podoactiva.com" },
+        { name: "IVACE (Subsidies)", url: "https://www.ivace.es" }
+      ]
     },
     Córdoba: {
       market: "Kleinere markt maar strategisch voor Andalusië penetratie. Familiebedrijven domineren.",
       fiscal: "Andalucía TRADE biedt exportondersteuning en bedrijfsontwikkeling.",
       tactical: "Quirónsalud voor ziekenhuisnetwerk toegang. Larios voor lokaal lighthouse.",
-      talking: ["Familiebedrijven denken langetermijn - apparatuur is investering", "Córdoba practitioners bedienen groot landelijk gebied", "Ziekenhuisdeal opent 70+ faciliteiten netwerk"]
+      talking: ["Familiebedrijven denken langetermijn - apparatuur is investering", "Córdoba practitioners bedienen groot landelijk gebied", "Ziekenhuisdeal opent 70+ faciliteiten netwerk"],
+      links: [
+        { name: "Quirónsalud Ziekenhuis", url: "https://quironsalud.es/cordoba" },
+        { name: "Ortopedia Larios", url: "https://ortopedialarios.com" },
+        { name: "Andalucía TRADE", url: "https://www.andaluciatrade.es" }
+      ]
     },
     Sevilla: {
       market: "Andalusië hoofdstad. COPOAN hoofdkantoor. Grote ziekenhuis- en distributeur aanwezigheid.",
       fiscal: "Junta de Andalucía zorginnovatie fondsen beschikbaar.",
       tactical: "COPOAN + Rosario = dubbele toegang (regionaal + nationaal). MBA Surgical = toekomstige distributeur. Queraltó = lighthouse testimonial.",
-      talking: ["COPOAN bereikt 8 provincies, 354+ klinieken", "Rosario's dubbele rol (COPOAN + CGCOP VP) = strategisch contact", "MBA Surgical's Zweedse moederbedrijf sluit aan bij onze Nordic strategie"]
+      talking: ["COPOAN bereikt 8 provincies, 354+ klinieken", "Rosario's dubbele rol (COPOAN + CGCOP VP) = strategisch contact", "MBA Surgical's Zweedse moederbedrijf sluit aan bij onze Nordic strategie"],
+      links: [
+        { name: "COPOAN (Andalusië College)", url: "https://copoan.es" },
+        { name: "MBA Surgical", url: "https://mbasurgical.com" },
+        { name: "Ortopedia Queraltó", url: "https://queralto.com" },
+        { name: "Junta de Andalucía (Subsidies)", url: "https://www.juntadeandalucia.es" }
+      ]
     },
     Málaga: {
       market: "Costa del Sol toerisme drijft premium zorgmarkt. Internationale standaarden verwacht.",
       fiscal: "Toerismesector subsidies strekken soms uit tot zorginfrastructuur.",
       tactical: "Eurodiscap lighthouse deal. OrtopediaCH quick win. Costa del Sol ziekenhuis voor internationale credibiliteit.",
-      talking: ["Eurodiscap's 1.000m² = grootste showroom in regio", "Costa del Sol internationale patiënten verwachten state-of-art", "Málaga airport = makkelijke logistiek voor demo unit"]
+      talking: ["Eurodiscap's 1.000m² = grootste showroom in regio", "Costa del Sol internationale patiënten verwachten state-of-art", "Málaga airport = makkelijke logistiek voor demo unit"],
+      links: [
+        { name: "Eurodiscap", url: "https://eurodiscap.com" },
+        { name: "Hospital Costa del Sol", url: "https://hospitalcostadelsol.es" },
+        { name: "OrtopediaCH", url: "https://ortopediach.es" }
+      ]
     }
   },
   es: {
@@ -536,31 +592,59 @@ const INTEL = {
       market: "Mercado capital. ~2.500 profesionales en la región. Alta concentración de asociaciones y decisores.",
       fiscal: "Compras de equipos autónomo: 100% deducible en el año de compra si <€300/unidad, o depreciado en 10 años.",
       tactical: "Empezar con CGCOP para estrategia nacional. Prim es jugada de volumen. Namrol es inteligencia competitiva.",
-      talking: ["España tiene 14.400+ podólogos - 97% práctica privada", "La tensión estática causa 65% de jubilaciones anticipadas", "Orthostand elimina la tensión estática completamente - único en el mercado"]
+      talking: ["España tiene 14.400+ podólogos - 97% práctica privada", "La tensión estática causa 65% de jubilaciones anticipadas", "Orthostand elimina la tensión estática completamente - único en el mercado"],
+      links: [
+        { name: "CGCOP (Asociación Nacional)", url: "https://cgcop.es" },
+        { name: "Prim Ortopedia", url: "https://primestablecimientosortopedicos.es" },
+        { name: "Namrol (Competidor)", url: "https://namrol.com" },
+        { name: "FEDOP (Federación O&P)", url: "https://fedop.org" }
+      ]
     },
     Valencia: {
       market: "Colegio regional fuerte (ICOPCV) con ~1.200 miembros. Presencia de cadena Podoactiva.",
       fiscal: "Comunidad Valenciana tiene subvenciones regionales para modernización de equipos sanitarios.",
       tactical: "Lacomba es el objetivo lighthouse. ICOPCV para legitimidad regional.",
-      talking: ["Región de Valencia crece 8% anualmente en sector salud", "Reputación de 50 años de Lacomba valida enfoque en calidad", "Endorsement de asociación regional = confianza de miembros"]
+      talking: ["Región de Valencia crece 8% anualmente en sector salud", "Reputación de 50 años de Lacomba valida enfoque en calidad", "Endorsement de asociación regional = confianza de miembros"],
+      links: [
+        { name: "ICOPCV (Colegio Regional)", url: "https://icopcv.org" },
+        { name: "Ortopedia Lacomba", url: "https://ortopedialacomba.es" },
+        { name: "Podoactiva", url: "https://podoactiva.com" },
+        { name: "IVACE (Subvenciones)", url: "https://www.ivace.es" }
+      ]
     },
     Córdoba: {
       market: "Mercado más pequeño pero estratégico para penetración en Andalucía. Dominan negocios familiares.",
       fiscal: "Andalucía TRADE ofrece asistencia de exportación y desarrollo empresarial.",
       tactical: "Quirónsalud para acceso a red hospitalaria. Larios para lighthouse local.",
-      talking: ["Negocios familiares piensan a largo plazo - equipos es inversión", "Profesionales de Córdoba sirven amplio área rural", "Acuerdo hospitalario abre red de 70+ instalaciones"]
+      talking: ["Negocios familiares piensan a largo plazo - equipos es inversión", "Profesionales de Córdoba sirven amplio área rural", "Acuerdo hospitalario abre red de 70+ instalaciones"],
+      links: [
+        { name: "Quirónsalud Hospital", url: "https://quironsalud.es/cordoba" },
+        { name: "Ortopedia Larios", url: "https://ortopedialarios.com" },
+        { name: "Andalucía TRADE", url: "https://www.andaluciatrade.es" }
+      ]
     },
     Sevilla: {
       market: "Capital de Andalucía. Sede de COPOAN. Mayor presencia de hospitales y distribuidores.",
       fiscal: "Fondos de innovación sanitaria de Junta de Andalucía disponibles.",
       tactical: "COPOAN + Rosario = doble puerta (regional + nacional). MBA Surgical = futuro distribuidor. Queraltó = testimonial lighthouse.",
-      talking: ["COPOAN alcanza 8 provincias, 354+ clínicas", "Rol dual de Rosario (COPOAN + VP CGCOP) = contacto estratégico", "Matriz sueca de MBA Surgical se alinea con nuestra estrategia nórdica"]
+      talking: ["COPOAN alcanza 8 provincias, 354+ clínicas", "Rol dual de Rosario (COPOAN + VP CGCOP) = contacto estratégico", "Matriz sueca de MBA Surgical se alinea con nuestra estrategia nórdica"],
+      links: [
+        { name: "COPOAN (Colegio Andalucía)", url: "https://copoan.es" },
+        { name: "MBA Surgical", url: "https://mbasurgical.com" },
+        { name: "Ortopedia Queraltó", url: "https://queralto.com" },
+        { name: "Junta de Andalucía (Fondos)", url: "https://www.juntadeandalucia.es" }
+      ]
     },
     Málaga: {
       market: "Turismo Costa del Sol impulsa mercado sanitario premium. Se esperan estándares internacionales.",
       fiscal: "Subvenciones del sector turístico a veces se extienden a infraestructura sanitaria.",
       tactical: "Acuerdo lighthouse Eurodiscap. OrtopediaCH victoria rápida. Hospital Costa del Sol para credibilidad internacional.",
-      talking: ["1.000m² de Eurodiscap = mayor showroom de la región", "Pacientes internacionales Costa del Sol esperan vanguardia", "Aeropuerto Málaga = logística fácil para unidad demo"]
+      talking: ["1.000m² de Eurodiscap = mayor showroom de la región", "Pacientes internacionales Costa del Sol esperan vanguardia", "Aeropuerto Málaga = logística fácil para unidad demo"],
+      links: [
+        { name: "Eurodiscap", url: "https://eurodiscap.com" },
+        { name: "Hospital Costa del Sol", url: "https://hospitalcostadelsol.es" },
+        { name: "OrtopediaCH", url: "https://ortopediach.es" }
+      ]
     }
   }
 };
@@ -601,6 +685,8 @@ export default function OrthostandFieldCommander() {
     let leads = [...LEADS];
     if (selectedCity !== 'all') leads = leads.filter(l => l.city === selectedCity);
     if (filter === 'mustVisit') leads = leads.filter(l => l.priority === 3);
+    if (filter === 'highValue') leads = leads.filter(l => l.priority === 2);
+    if (filter === 'worthStop') leads = leads.filter(l => l.priority === 1);
     return leads.sort((a, b) => b.lhfScore - a.lhfScore);
   }, [selectedCity, filter]);
   
@@ -743,13 +829,61 @@ export default function OrthostandFieldCommander() {
         >
           ⭐⭐⭐ {t.filters.mustVisit}
         </button>
+        <button
+          onClick={() => setFilter('highValue')}
+          className={`px-3 py-1 rounded text-xs flex items-center gap-1 ${filter === 'highValue' ? `${theme.accent}` : theme.textMuted}`}
+        >
+          ⭐⭐ {t.priority[2]}
+        </button>
+        <button
+          onClick={() => setFilter('worthStop')}
+          className={`px-3 py-1 rounded text-xs flex items-center gap-1 ${filter === 'worthStop' ? `${theme.accent}` : theme.textMuted}`}
+        >
+          ⭐ {t.priority[1]}
+        </button>
       </div>
     </div>
   );
   
-  const LeadCard = ({ lead }) => {
+  const LeadCard = ({ lead, compact }) => {
     const data = leadData[lead.id] || {};
     const cityColor = CITIES[lead.city];
+    
+    if (compact) {
+      return (
+        <div
+          onClick={() => setSelectedLead(lead)}
+          className={`${theme.bgCard} rounded-lg p-3 cursor-pointer transition-all hover:scale-[1.01] border ${theme.border} relative overflow-hidden`}
+        >
+          <div 
+            className="absolute top-0 left-0 w-1 h-full"
+            style={{ backgroundColor: darkMode ? cityColor.lightColor : cityColor.color }}
+          />
+          <div className="pl-2 flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1">
+                <span className="text-xs">{'⭐'.repeat(lead.priority)}</span>
+                <span className={`font-medium ${theme.text} text-sm truncate`}>{lead.company}</span>
+              </div>
+              <p className={`text-xs ${theme.textMuted} truncate`}>{lead.contact}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              {data.status && (
+                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                  data.status === 'deal' ? 'bg-green-500/20 text-green-400' :
+                  data.status === 'visited' ? 'bg-blue-500/20 text-blue-400' :
+                  data.status === 'followup' ? 'bg-orange-500/20 text-orange-400' :
+                  `${theme.accentBg} ${theme.textMuted}`
+                }`}>
+                  {t.status[data.status]}
+                </span>
+              )}
+              <span className={`text-lg font-bold ${theme.accent}`}>{lead.lhfScore}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
     
     return (
       <div
@@ -1079,18 +1213,33 @@ export default function OrthostandFieldCommander() {
             {/* Interest Score */}
             <div>
               <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>Interest Score</div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 {[1,2,3,4,5].map(score => (
                   <button
                     key={score}
-                    onClick={() => setLocalData(prev => ({ ...prev, interestScore: score }))}
-                    className={`text-2xl transition-all ${
+                    onClick={() => {
+                      // If clicking on current score, clear it
+                      if (localData.interestScore === score) {
+                        setLocalData(prev => ({ ...prev, interestScore: 0 }));
+                      } else {
+                        setLocalData(prev => ({ ...prev, interestScore: score }));
+                      }
+                    }}
+                    className={`text-2xl transition-all hover:scale-110 ${
                       (localData.interestScore || 0) >= score ? '' : 'opacity-30'
                     }`}
                   >
                     ⭐
                   </button>
                 ))}
+                {localData.interestScore > 0 && (
+                  <button
+                    onClick={() => setLocalData(prev => ({ ...prev, interestScore: 0 }))}
+                    className={`text-xs px-2 py-1 rounded ${theme.textMuted} hover:text-red-400`}
+                  >
+                    ✕ Clear
+                  </button>
+                )}
               </div>
             </div>
             
@@ -1127,24 +1276,77 @@ export default function OrthostandFieldCommander() {
     );
   };
   
-  const PlannerTab = () => (
+  const PlannerTab = () => {
+    // Calculate lists
+    const toVisit = filteredLeads.filter(l => !leadData[l.id]?.status || leadData[l.id]?.status === 'planned' || leadData[l.id]?.status === 'enroute');
+    const visited = filteredLeads.filter(l => leadData[l.id]?.status && !['planned', 'enroute'].includes(leadData[l.id]?.status));
+    
+    return (
     <div className="max-w-6xl mx-auto p-4 space-y-3">
-      {/* Priority Legend */}
+      {/* Priority Legend - clickable */}
       <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
         <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>Priority Guide</div>
         <div className="grid grid-cols-3 gap-2 text-xs">
-          <div><span className="text-sm">⭐⭐⭐</span> <span className={theme.text}>{t.priority[3]}</span></div>
-          <div><span className="text-sm">⭐⭐</span> <span className={theme.text}>{t.priority[2]}</span></div>
-          <div><span className="text-sm">⭐</span> <span className={theme.text}>{t.priority[1]}</span></div>
+          <button 
+            onClick={() => setFilter(filter === 'mustVisit' ? 'all' : 'mustVisit')}
+            className={`text-left p-2 rounded transition-all ${filter === 'mustVisit' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
+          >
+            <span className="text-sm">⭐⭐⭐</span> <span className={theme.text}>{t.priority[3]}</span>
+          </button>
+          <button 
+            onClick={() => setFilter(filter === 'highValue' ? 'all' : 'highValue')}
+            className={`text-left p-2 rounded transition-all ${filter === 'highValue' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
+          >
+            <span className="text-sm">⭐⭐</span> <span className={theme.text}>{t.priority[2]}</span>
+          </button>
+          <button 
+            onClick={() => setFilter(filter === 'worthStop' ? 'all' : 'worthStop')}
+            className={`text-left p-2 rounded transition-all ${filter === 'worthStop' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
+          >
+            <span className="text-sm">⭐</span> <span className={theme.text}>{t.priority[1]}</span>
+          </button>
         </div>
       </div>
       
-      {/* Leads */}
-      {filteredLeads.map(lead => (
-        <LeadCard key={lead.id} lead={lead} />
-      ))}
+      {/* Two Column Layout: To Visit / Visited */}
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* Left: To Visit */}
+        <div>
+          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2 flex items-center gap-2`}>
+            <span>📋</span> {lang === 'nl' ? 'Te Bezoeken' : lang === 'es' ? 'Por Visitar' : 'To Visit'} ({toVisit.length})
+          </div>
+          <div className="space-y-2">
+            {toVisit.map(lead => (
+              <LeadCard key={lead.id} lead={lead} compact />
+            ))}
+            {toVisit.length === 0 && (
+              <p className={`text-sm ${theme.textMuted} italic`}>
+                {lang === 'nl' ? 'Geen openstaande bezoeken' : lang === 'es' ? 'Sin visitas pendientes' : 'No pending visits'}
+              </p>
+            )}
+          </div>
+        </div>
+        
+        {/* Right: Visited */}
+        <div>
+          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2 flex items-center gap-2`}>
+            <span>✅</span> {lang === 'nl' ? 'Bezocht' : lang === 'es' ? 'Visitado' : 'Visited'} ({visited.length})
+          </div>
+          <div className="space-y-2">
+            {visited.map(lead => (
+              <LeadCard key={lead.id} lead={lead} compact />
+            ))}
+            {visited.length === 0 && (
+              <p className={`text-sm ${theme.textMuted} italic`}>
+                {lang === 'nl' ? 'Nog geen bezoeken afgerond' : lang === 'es' ? 'Sin visitas completadas' : 'No visits completed yet'}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
-  );
+    );
+  };
   
   const JournalTab = () => {
     const entries = LEADS.filter(l => leadData[l.id]?.notes).map(l => ({
@@ -1267,6 +1469,28 @@ export default function OrthostandFieldCommander() {
                 ))}
               </ul>
             </div>
+            {/* Links Section */}
+            {data.links && data.links.length > 0 && (
+              <div className={`pt-2 border-t ${theme.border}`}>
+                <span className={`text-xs uppercase tracking-wider ${theme.accent}`}>
+                  🔗 {lang === 'nl' ? 'Relevante Links' : lang === 'es' ? 'Enlaces Relevantes' : 'Relevant Links'}
+                </span>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  {data.links.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`text-sm px-3 py-2 rounded ${darkMode ? 'bg-[#1a1814] hover:bg-[#252118]' : 'bg-[#e8e0d0] hover:bg-[#d4c8b8]'} ${theme.accent} transition-colors flex items-center gap-2`}
+                    >
+                      <span>🌐</span>
+                      <span className="truncate">{link.name}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       ))}
