@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 // ============================================================================
-// ORTHOSTAND FIELD COMMANDER v2.3
+// ORTHOSTAND FIELD COMMANDER v2.4
 // Premium Sales Trip Companion — Moleskine Edition
-// New in v2.3: Drag & Drop in Planner, Fixed Map with Route Overview
+// New in v2.4: Scale filters (Large/Medium/Small) with info tooltips
 // ============================================================================
 
 // --- TRANSLATIONS ---
@@ -685,11 +685,13 @@ export default function OrthostandFieldCommander() {
   const [activeTab, setActiveTab] = useState('planner');
   const [selectedCity, setSelectedCity] = useState('all');
   const [filter, setFilter] = useState('all');
+  const [scaleFilter, setScaleFilter] = useState('all');
   const [selectedLead, setSelectedLead] = useState(null);
   const [leadData, setLeadData] = useState({});
   const [journalEntries, setJournalEntries] = useState([]);
   const [calendarDate, setCalendarDate] = useState(new Date(2026, 2, 15)); // March 15, 2026
   const [selectedDay, setSelectedDay] = useState(null); // { day, month, year, city }
+  const [showScaleInfo, setShowScaleInfo] = useState(null); // For scale tooltip
   
   const t = TRANSLATIONS[lang];
   
@@ -715,8 +717,9 @@ export default function OrthostandFieldCommander() {
     if (filter === 'mustVisit') leads = leads.filter(l => l.priority === 3);
     if (filter === 'highValue') leads = leads.filter(l => l.priority === 2);
     if (filter === 'worthStop') leads = leads.filter(l => l.priority === 1);
+    if (scaleFilter !== 'all') leads = leads.filter(l => l.size === scaleFilter);
     return leads.sort((a, b) => b.lhfScore - a.lhfScore);
-  }, [selectedCity, filter]);
+  }, [selectedCity, filter, scaleFilter]);
   
   // Stats
   const stats = useMemo(() => {
@@ -1394,8 +1397,15 @@ export default function OrthostandFieldCommander() {
         >
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1 mb-1">
+              <div className="flex items-center gap-1 mb-1 flex-wrap">
                 <span className="text-xs">{'⭐'.repeat(lead.priority)}</span>
+                <span className={`text-xs px-1 py-0.5 rounded ${
+                  lead.size === 'large' ? 'bg-purple-500/20 text-purple-400' :
+                  lead.size === 'medium' ? 'bg-blue-500/20 text-blue-400' :
+                  'bg-green-500/20 text-green-400'
+                }`}>
+                  {lead.size === 'large' ? '🏢' : lead.size === 'medium' ? '🏪' : '🏠'}
+                </span>
                 {data.status && (
                   <span className={`text-xs px-1.5 py-0.5 rounded-full ${
                     data.status === 'deal' ? 'bg-green-500/20 text-green-400' :
@@ -1454,6 +1464,147 @@ export default function OrthostandFieldCommander() {
             <span className="text-sm">⭐</span> <span className={theme.text}>{t.priority[1]}</span>
           </button>
         </div>
+      </div>
+      
+      {/* Scale Guide - clickable with tooltips */}
+      <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
+        <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
+          {lang === 'nl' ? 'Schaal Filter' : lang === 'es' ? 'Filtro de Escala' : 'Scale Filter'}
+          <span className={`ml-2 ${theme.textMuted} normal-case`}>
+            ({lang === 'nl' ? 'klik voor info' : lang === 'es' ? 'clic para info' : 'click for info'})
+          </span>
+        </div>
+        <div className="grid grid-cols-3 gap-2 text-xs">
+          <div className="relative">
+            <button 
+              onClick={() => setScaleFilter(scaleFilter === 'large' ? 'all' : 'large')}
+              onContextMenu={(e) => { e.preventDefault(); setShowScaleInfo(showScaleInfo === 'large' ? null : 'large'); }}
+              className={`w-full text-left p-2 rounded transition-all ${scaleFilter === 'large' ? 'bg-purple-500/20 ring-1 ring-purple-400 text-purple-400' : 'hover:bg-purple-500/10'}`}
+            >
+              <span className="text-sm">🏢</span> <span className={scaleFilter === 'large' ? 'text-purple-400' : theme.text}>Large</span>
+              <span className={`ml-1 ${theme.textMuted}`}>({LEADS.filter(l => l.size === 'large').length})</span>
+            </button>
+            <button
+              onClick={() => setShowScaleInfo(showScaleInfo === 'large' ? null : 'large')}
+              className={`absolute top-1 right-1 w-5 h-5 rounded-full text-xs ${theme.textMuted} hover:${theme.accent}`}
+            >
+              ⓘ
+            </button>
+            {showScaleInfo === 'large' && (
+              <div className={`absolute z-50 top-full left-0 mt-1 p-3 rounded-lg shadow-xl ${theme.bgModal} border ${theme.border} w-64`}>
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-medium text-purple-400">🏢 Large</span>
+                  <button onClick={() => setShowScaleInfo(null)} className={theme.textMuted}>✕</button>
+                </div>
+                <p className={`text-xs ${theme.text}`}>
+                  {lang === 'nl' ? 'Nationale keten / 10+ locaties / Grote organisatie' : 
+                   lang === 'es' ? 'Cadena nacional / 10+ ubicaciones / Gran organización' : 
+                   'National chain / 10+ locations / Large organisation'}
+                </p>
+                <p className={`text-xs ${theme.textMuted} mt-2`}>
+                  {lang === 'nl' ? '→ Multi-unit deal potentieel, langere besliscyclus' : 
+                   lang === 'es' ? '→ Potencial multi-unidad, ciclo de decisión más largo' : 
+                   '→ Multi-unit deal potential, longer decision cycle'}
+                </p>
+              </div>
+            )}
+          </div>
+          
+          <div className="relative">
+            <button 
+              onClick={() => setScaleFilter(scaleFilter === 'medium' ? 'all' : 'medium')}
+              className={`w-full text-left p-2 rounded transition-all ${scaleFilter === 'medium' ? 'bg-blue-500/20 ring-1 ring-blue-400 text-blue-400' : 'hover:bg-blue-500/10'}`}
+            >
+              <span className="text-sm">🏪</span> <span className={scaleFilter === 'medium' ? 'text-blue-400' : theme.text}>Medium</span>
+              <span className={`ml-1 ${theme.textMuted}`}>({LEADS.filter(l => l.size === 'medium').length})</span>
+            </button>
+            <button
+              onClick={() => setShowScaleInfo(showScaleInfo === 'medium' ? null : 'medium')}
+              className={`absolute top-1 right-1 w-5 h-5 rounded-full text-xs ${theme.textMuted} hover:${theme.accent}`}
+            >
+              ⓘ
+            </button>
+            {showScaleInfo === 'medium' && (
+              <div className={`absolute z-50 top-full left-0 mt-1 p-3 rounded-lg shadow-xl ${theme.bgModal} border ${theme.border} w-64`}>
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-medium text-blue-400">🏪 Medium</span>
+                  <button onClick={() => setShowScaleInfo(null)} className={theme.textMuted}>✕</button>
+                </div>
+                <p className={`text-xs ${theme.text}`}>
+                  {lang === 'nl' ? 'Regionaal / 3-9 locaties' : 
+                   lang === 'es' ? 'Regional / 3-9 ubicaciones' : 
+                   'Regional / 3-9 locations'}
+                </p>
+                <p className={`text-xs ${theme.textMuted} mt-2`}>
+                  {lang === 'nl' ? '→ Goede balans snelheid & volume' : 
+                   lang === 'es' ? '→ Buen equilibrio velocidad y volumen' : 
+                   '→ Good balance of speed & volume'}
+                </p>
+              </div>
+            )}
+          </div>
+          
+          <div className="relative">
+            <button 
+              onClick={() => setScaleFilter(scaleFilter === 'small' ? 'all' : 'small')}
+              className={`w-full text-left p-2 rounded transition-all ${scaleFilter === 'small' ? 'bg-green-500/20 ring-1 ring-green-400 text-green-400' : 'hover:bg-green-500/10'}`}
+            >
+              <span className="text-sm">🏠</span> <span className={scaleFilter === 'small' ? 'text-green-400' : theme.text}>Small</span>
+              <span className={`ml-1 ${theme.textMuted}`}>({LEADS.filter(l => l.size === 'small').length})</span>
+            </button>
+            <button
+              onClick={() => setShowScaleInfo(showScaleInfo === 'small' ? null : 'small')}
+              className={`absolute top-1 right-1 w-5 h-5 rounded-full text-xs ${theme.textMuted} hover:${theme.accent}`}
+            >
+              ⓘ
+            </button>
+            {showScaleInfo === 'small' && (
+              <div className={`absolute z-50 top-full left-0 mt-1 p-3 rounded-lg shadow-xl ${theme.bgModal} border ${theme.border} w-64`}>
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-medium text-green-400">🏠 Small</span>
+                  <button onClick={() => setShowScaleInfo(null)} className={theme.textMuted}>✕</button>
+                </div>
+                <p className={`text-xs ${theme.text}`}>
+                  {lang === 'nl' ? 'Eén locatie / Eigenaar-geëxploiteerd' : 
+                   lang === 'es' ? 'Una ubicación / Operado por propietario' : 
+                   'Single location / Owner-operated'}
+                </p>
+                <p className={`text-xs ${theme.textMuted} mt-2`}>
+                  {lang === 'nl' ? '→ Snelle beslissing, meestal 1 unit' : 
+                   lang === 'es' ? '→ Decisión rápida, generalmente 1 unidad' : 
+                   '→ Quick decision, usually 1 unit'}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Active filters summary */}
+        {(filter !== 'all' || scaleFilter !== 'all') && (
+          <div className={`mt-2 pt-2 border-t ${theme.border} flex items-center gap-2 flex-wrap`}>
+            <span className={`text-xs ${theme.textMuted}`}>{lang === 'nl' ? 'Actieve filters:' : lang === 'es' ? 'Filtros activos:' : 'Active filters:'}</span>
+            {filter !== 'all' && (
+              <span className={`text-xs px-2 py-0.5 rounded-full ${theme.accentBg} ${theme.accent}`}>
+                {filter === 'mustVisit' ? '⭐⭐⭐' : filter === 'highValue' ? '⭐⭐' : '⭐'}
+              </span>
+            )}
+            {scaleFilter !== 'all' && (
+              <span className={`text-xs px-2 py-0.5 rounded-full ${
+                scaleFilter === 'large' ? 'bg-purple-500/20 text-purple-400' :
+                scaleFilter === 'medium' ? 'bg-blue-500/20 text-blue-400' :
+                'bg-green-500/20 text-green-400'
+              }`}>
+                {scaleFilter === 'large' ? '🏢' : scaleFilter === 'medium' ? '🏪' : '🏠'} {scaleFilter}
+              </span>
+            )}
+            <button 
+              onClick={() => { setFilter('all'); setScaleFilter('all'); }}
+              className={`text-xs ${theme.textMuted} hover:text-red-400 ml-auto`}
+            >
+              ✕ {lang === 'nl' ? 'Reset' : lang === 'es' ? 'Limpiar' : 'Clear'}
+            </button>
+          </div>
+        )}
       </div>
       
       {/* Drag instruction */}
