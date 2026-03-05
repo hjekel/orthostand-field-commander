@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Spanish Flag Background -->
+  <rect x="0" y="0" width="64" height="16" fill="#c60b1e"/>
+  <rect x="0" y="16" width="64" height="32" fill="#ffc400"/>
+  <rect x="0" y="48" width="64" height="16" fill="#c60b1e"/>
+  
+  <!-- Anatomical spine only -->
+  <g transform="translate(32, 3) scale(0.55)">
+    
+    <!-- C1 Atlas (top) -->
+    <path d="M-4,5 L4,5 L5,8 L3,9 L-3,9 L-5,8 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    
+    <!-- C2-C7 Cervical vertebrae -->
+    <path d="M-5,11 L5,11 L6,14 Q4,16 0,16 Q-4,16 -6,14 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    <path d="M-6,18 L6,18 L7,22 Q4,24 0,24 Q-4,24 -7,22 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    <path d="M-7,26 L7,26 L8,30 Q5,32 0,32 Q-5,32 -8,30 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    
+    <!-- T1-T6 Thoracic (with lateral processes) -->
+    <path d="M-12,34 L-8,35 L-8,38 L8,38 L8,35 L12,34 L12,37 L8,40 Q4,42 0,42 Q-4,42 -8,40 L-12,37 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    <path d="M-13,44 L-9,45 L-9,48 L9,48 L9,45 L13,44 L13,47 L9,51 Q5,53 0,53 Q-5,53 -9,51 L-13,47 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    <path d="M-14,55 L-10,56 L-10,59 L10,59 L10,56 L14,55 L14,58 L10,62 Q5,64 0,64 Q-5,64 -10,62 L-14,58 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    
+    <!-- L1-L5 Lumbar (larger bodies) -->
+    <path d="M-12,66 L12,66 L13,72 Q8,75 0,75 Q-8,75 -13,72 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    <path d="M-13,77 L13,77 L14,84 Q8,87 0,87 Q-8,87 -14,84 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    <path d="M-12,89 L12,89 L13,95 Q8,98 0,98 Q-8,98 -13,95 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    
+    <!-- Sacrum (fused triangular) -->
+    <path d="M-10,100 L10,100 L8,108 L6,114 L-6,114 L-8,108 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    
+    <!-- Coccyx -->
+    <path d="M-4,116 L4,116 L2,122 L-2,122 Z" fill="#708090" stroke="#4a5568" stroke-width="0.5"/>
+    
+    <!-- Spinous processes (the bumps you feel on your back) -->
+    <g fill="#5a6570">
+      <path d="M-2,7 L0,2 L2,7 Z"/>
+      <path d="M-2,13 L0,9 L2,13 Z"/>
+      <path d="M-2,21 L0,16 L2,21 Z"/>
+      <path d="M-2,29 L0,24 L2,29 Z"/>
+      <path d="M-2,38 L0,33 L2,38 Z"/>
+      <path d="M-2,49 L0,43 L2,49 Z"/>
+      <path d="M-2,60 L0,54 L2,60 Z"/>
+      <path d="M-2,70 L0,65 L2,70 Z"/>
+      <path d="M-2,82 L0,76 L2,82 Z"/>
+      <path d="M-2,93 L0,88 L2,93 Z"/>
+    </g>
+  </g>
+</svg>
