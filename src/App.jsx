@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 // ============================================================================
-// ORTHOSTAND FIELD COMMANDER v2.2
+// ORTHOSTAND FIELD COMMANDER v2.3
 // Premium Sales Trip Companion — Moleskine Edition
-// New in v2.2: Map Tab, Kanban Pipeline, Export/Import, Priority Filters
+// New in v2.3: Drag & Drop in Planner, Fixed Map with Route Overview
 // ============================================================================
 
 // --- TRANSLATIONS ---
@@ -1307,9 +1307,127 @@ export default function OrthostandFieldCommander() {
   };
   
   const PlannerTab = () => {
+    // Drag state
+    const [draggedLead, setDraggedLead] = useState(null);
+    const [dragOverColumn, setDragOverColumn] = useState(null);
+    
     // Calculate lists
     const toVisit = filteredLeads.filter(l => !leadData[l.id]?.status || leadData[l.id]?.status === 'planned' || leadData[l.id]?.status === 'enroute');
     const visited = filteredLeads.filter(l => leadData[l.id]?.status && !['planned', 'enroute'].includes(leadData[l.id]?.status));
+    
+    // Handle drag start
+    const handleDragStart = (e, lead) => {
+      setDraggedLead(lead);
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', lead.id);
+    };
+    
+    // Handle drag over
+    const handleDragOver = (e, column) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      setDragOverColumn(column);
+    };
+    
+    // Handle drag leave
+    const handleDragLeave = () => {
+      setDragOverColumn(null);
+    };
+    
+    // Handle drop
+    const handleDrop = (e, targetColumn) => {
+      e.preventDefault();
+      setDragOverColumn(null);
+      
+      if (!draggedLead) return;
+      
+      const currentStatus = leadData[draggedLead.id]?.status;
+      const isCurrentlyVisited = currentStatus && !['planned', 'enroute'].includes(currentStatus);
+      
+      if (targetColumn === 'visited' && !isCurrentlyVisited) {
+        // Moving to visited → set status to 'visited'
+        setLeadData(prev => ({
+          ...prev,
+          [draggedLead.id]: {
+            ...prev[draggedLead.id],
+            status: 'visited',
+            updatedAt: new Date().toISOString()
+          }
+        }));
+      } else if (targetColumn === 'toVisit' && isCurrentlyVisited) {
+        // Moving back to toVisit → clear status
+        setLeadData(prev => ({
+          ...prev,
+          [draggedLead.id]: {
+            ...prev[draggedLead.id],
+            status: null,
+            updatedAt: new Date().toISOString()
+          }
+        }));
+      }
+      
+      setDraggedLead(null);
+    };
+    
+    // Handle drag end
+    const handleDragEnd = () => {
+      setDraggedLead(null);
+      setDragOverColumn(null);
+    };
+    
+    // Draggable card component
+    const DraggableCard = ({ lead }) => {
+      const data = leadData[lead.id] || {};
+      const cityColor = CITIES[lead.city];
+      const isDragging = draggedLead?.id === lead.id;
+      
+      return (
+        <div
+          draggable
+          onDragStart={(e) => handleDragStart(e, lead)}
+          onDragEnd={handleDragEnd}
+          onClick={() => setSelectedLead(lead)}
+          className={`p-3 rounded-lg cursor-grab active:cursor-grabbing border-l-3 transition-all ${
+            isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.02]'
+          } ${darkMode ? 'bg-[#252118]' : 'bg-white'} border ${theme.border}`}
+          style={{ borderLeftColor: cityColor.lightColor, borderLeftWidth: '3px' }}
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1 mb-1">
+                <span className="text-xs">{'⭐'.repeat(lead.priority)}</span>
+                {data.status && (
+                  <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                    data.status === 'deal' ? 'bg-green-500/20 text-green-400' :
+                    data.status === 'visited' ? 'bg-blue-500/20 text-blue-400' :
+                    data.status === 'followup' ? 'bg-orange-500/20 text-orange-400' :
+                    data.status === 'nofit' ? 'bg-red-500/20 text-red-400' :
+                    `${theme.accentBg} ${theme.textMuted}`
+                  }`}>
+                    {t.status[data.status]}
+                  </span>
+                )}
+              </div>
+              <p className={`font-medium ${theme.text} truncate`}>{lead.company}</p>
+              <p className={`text-xs ${theme.textMuted} truncate`}>{lead.contact}</p>
+            </div>
+            <div className="flex flex-col items-end gap-1">
+              <span className={`text-lg font-bold ${theme.accent}`}>{lead.lhfScore}</span>
+              <span className={`text-xs ${theme.textMuted}`}>{lead.city}</span>
+            </div>
+          </div>
+          {data.interestScore > 0 && (
+            <div className={`mt-1 text-xs ${theme.accent}`}>
+              {'★'.repeat(data.interestScore)}{'☆'.repeat(5 - data.interestScore)} Interest
+            </div>
+          )}
+          {/* Drag hint */}
+          <div className={`mt-2 text-center text-xs ${theme.textMuted} opacity-50`}>
+            ⋮⋮ {lang === 'nl' ? 'sleep om te verplaatsen' : lang === 'es' ? 'arrastra para mover' : 'drag to move'}
+          </div>
+        </div>
+      );
+    };
     
     return (
     <div className="max-w-6xl mx-auto p-4 space-y-3">
@@ -1338,19 +1456,33 @@ export default function OrthostandFieldCommander() {
         </div>
       </div>
       
+      {/* Drag instruction */}
+      <p className={`text-xs ${theme.textMuted} text-center`}>
+        💡 {lang === 'nl' ? 'Sleep kaartjes van links naar rechts om status te wijzigen' : lang === 'es' ? 'Arrastra tarjetas de izquierda a derecha para cambiar estado' : 'Drag cards from left to right to change status'}
+      </p>
+      
       {/* Two Column Layout: To Visit / Visited */}
       <div className="grid md:grid-cols-2 gap-4">
         {/* Left: To Visit */}
-        <div>
-          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2 flex items-center gap-2`}>
+        <div
+          onDragOver={(e) => handleDragOver(e, 'toVisit')}
+          onDragLeave={handleDragLeave}
+          onDrop={(e) => handleDrop(e, 'toVisit')}
+          className={`min-h-[200px] rounded-lg p-3 transition-all ${
+            dragOverColumn === 'toVisit' 
+              ? `ring-2 ring-dashed ring-[#c9a962] ${theme.accentBg}` 
+              : ''
+          }`}
+        >
+          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-3 flex items-center gap-2`}>
             <span>📋</span> {lang === 'nl' ? 'Te Bezoeken' : lang === 'es' ? 'Por Visitar' : 'To Visit'} ({toVisit.length})
           </div>
           <div className="space-y-2">
             {toVisit.map(lead => (
-              <LeadCard key={lead.id} lead={lead} compact />
+              <DraggableCard key={lead.id} lead={lead} />
             ))}
             {toVisit.length === 0 && (
-              <p className={`text-sm ${theme.textMuted} italic`}>
+              <p className={`text-sm ${theme.textMuted} italic text-center py-8`}>
                 {lang === 'nl' ? 'Geen openstaande bezoeken' : lang === 'es' ? 'Sin visitas pendientes' : 'No pending visits'}
               </p>
             )}
@@ -1358,18 +1490,30 @@ export default function OrthostandFieldCommander() {
         </div>
         
         {/* Right: Visited */}
-        <div>
-          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2 flex items-center gap-2`}>
+        <div
+          onDragOver={(e) => handleDragOver(e, 'visited')}
+          onDragLeave={handleDragLeave}
+          onDrop={(e) => handleDrop(e, 'visited')}
+          className={`min-h-[200px] rounded-lg p-3 transition-all ${
+            dragOverColumn === 'visited' 
+              ? `ring-2 ring-dashed ring-green-500 bg-green-500/10` 
+              : ''
+          }`}
+        >
+          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-3 flex items-center gap-2`}>
             <span>✅</span> {lang === 'nl' ? 'Bezocht' : lang === 'es' ? 'Visitado' : 'Visited'} ({visited.length})
           </div>
           <div className="space-y-2">
             {visited.map(lead => (
-              <LeadCard key={lead.id} lead={lead} compact />
+              <DraggableCard key={lead.id} lead={lead} />
             ))}
             {visited.length === 0 && (
-              <p className={`text-sm ${theme.textMuted} italic`}>
-                {lang === 'nl' ? 'Nog geen bezoeken afgerond' : lang === 'es' ? 'Sin visitas completadas' : 'No visits completed yet'}
-              </p>
+              <div className={`text-center py-8 border-2 border-dashed ${theme.border} rounded-lg`}>
+                <p className={`text-sm ${theme.textMuted} italic`}>
+                  {lang === 'nl' ? 'Sleep bezoeken hierheen' : lang === 'es' ? 'Arrastra visitas aquí' : 'Drag visits here'}
+                </p>
+                <p className="text-2xl mt-2">📥</p>
+              </div>
             )}
           </div>
         </div>
@@ -1880,34 +2024,77 @@ export default function OrthostandFieldCommander() {
           ))}
         </div>
         
-        {/* Map Container */}
+        {/* Route Overview - Visual representation */}
         <div className={`${theme.bgCard} rounded-lg border ${theme.border} overflow-hidden`}>
-          {/* Leaflet Map */}
-          <div className="relative w-full h-[400px] sm:h-[500px]">
-            <iframe
-              title="Target Map"
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              style={{ border: 0 }}
-              src={`https://www.openstreetmap.org/export/embed.html?bbox=-8.0%2C36.0%2C0.5%2C41.0&layer=mapnik&marker=${mapCenter.lat}%2C${mapCenter.lng}`}
-            />
-            {/* Overlay with custom markers info */}
-            <div className="absolute bottom-2 left-2 right-2 bg-black/70 backdrop-blur-sm rounded-lg p-3">
-              <p className={`text-xs text-white mb-2`}>
-                📍 {mapLeads.length} {lang === 'nl' ? 'contacten op de kaart' : lang === 'es' ? 'contactos en el mapa' : 'contacts on map'}
-              </p>
-              <div className="grid grid-cols-5 gap-1 text-xs text-white">
-                {Object.entries(CITIES).map(([city, data]) => {
-                  const count = mapLeads.filter(l => l.city === city).length;
-                  return (
-                    <div key={city} className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: data.lightColor }} />
-                      <span>{city.slice(0,3)}: {count}</span>
-                    </div>
-                  );
-                })}
+          {/* Trip Route Header */}
+          <div className={`p-4 border-b ${theme.border}`}>
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h3 className={`font-medium ${theme.text}`}>
+                  {lang === 'nl' ? '🚗 Reis Route' : lang === 'es' ? '🚗 Ruta del Viaje' : '🚗 Trip Route'}
+                </h3>
+                <p className={`text-xs ${theme.textMuted}`}>
+                  {lang === 'nl' ? '15 maart - 8 april 2026' : lang === 'es' ? '15 marzo - 8 abril 2026' : 'March 15 - April 8, 2026'}
+                </p>
               </div>
+              <a 
+                href={`https://www.google.com/maps/dir/Madrid/Valencia/Cordoba/Sevilla/Malaga`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`px-3 py-2 rounded-lg ${theme.accentBg} ${theme.accent} text-sm flex items-center gap-2`}
+              >
+                🗺️ {lang === 'nl' ? 'Open Route' : lang === 'es' ? 'Abrir Ruta' : 'Open Route'}
+              </a>
+            </div>
+            
+            {/* Visual Route */}
+            <div className="flex items-center justify-between overflow-x-auto pb-2">
+              {Object.entries(CITIES).map(([city, cityData], index) => {
+                const cityLeads = mapLeads.filter(l => l.city === city);
+                const cityVisited = cityLeads.filter(l => ['visited', 'deal'].includes(leadData[l.id]?.status)).length;
+                
+                return (
+                  <React.Fragment key={city}>
+                    <div 
+                      className="flex flex-col items-center min-w-[80px] cursor-pointer"
+                      onClick={() => { setSelectedCity(city); setActiveTab('planner'); }}
+                    >
+                      <div 
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shadow-lg"
+                        style={{ backgroundColor: cityData.lightColor }}
+                      >
+                        {cityLeads.length}
+                      </div>
+                      <span className={`text-sm font-medium mt-1 ${theme.text}`}>{city}</span>
+                      <span className={`text-xs ${theme.textMuted}`}>{cityData.dates}</span>
+                      {cityVisited > 0 && (
+                        <span className="text-xs text-green-400">✓ {cityVisited} visited</span>
+                      )}
+                    </div>
+                    {index < Object.entries(CITIES).length - 1 && (
+                      <div className={`flex-1 h-0.5 mx-2 ${darkMode ? 'bg-[#3a3228]' : 'bg-[#d4c8b8]'}`}>
+                        <div className="h-full bg-[#c9a962]" style={{ width: '100%' }} />
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          </div>
+          
+          {/* Summary Stats */}
+          <div className="grid grid-cols-3 divide-x divide-[#3a3228]">
+            <div className="p-3 text-center">
+              <div className={`text-2xl font-bold`} style={{ color: '#FFD700' }}>{LEADS.filter(l => l.priority === 3).length}</div>
+              <div className={`text-xs ${theme.textMuted}`}>🥇 Must Visit</div>
+            </div>
+            <div className="p-3 text-center">
+              <div className={`text-2xl font-bold`} style={{ color: '#C0C0C0' }}>{LEADS.filter(l => l.priority === 2).length}</div>
+              <div className={`text-xs ${theme.textMuted}`}>🥈 High Value</div>
+            </div>
+            <div className="p-3 text-center">
+              <div className={`text-2xl font-bold`} style={{ color: '#CD7F32' }}>{LEADS.filter(l => l.priority === 1).length}</div>
+              <div className={`text-xs ${theme.textMuted}`}>🥉 Worth Stop</div>
             </div>
           </div>
         </div>
