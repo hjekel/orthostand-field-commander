@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 // ============================================================================
-// ORTHOSTAND FIELD COMMANDER v2.0
+// ORTHOSTAND FIELD COMMANDER v2.2
 // Premium Sales Trip Companion — Moleskine Edition
+// New in v2.2: Map Tab, Kanban Pipeline, Export/Import, Priority Filters
 // ============================================================================
 
 // --- TRANSLATIONS ---
@@ -10,7 +11,7 @@ const TRANSLATIONS = {
   en: {
     title: "Field Commander",
     subtitle: "Spain Sales Trip 2026",
-    tabs: { planner: "Planner", journal: "Journal", intel: "Intel", dashboard: "Dashboard", calendar: "Calendar" },
+    tabs: { planner: "Planner", journal: "Journal", intel: "Intel", dashboard: "Dashboard", calendar: "Calendar", map: "Map", kanban: "Pipeline" },
     filters: { all: "All", mustVisit: "Must Visit", today: "Today" },
     status: { planned: "Planned", enroute: "En Route", visited: "Visited", followup: "Follow-up", deal: "Deal!", nofit: "No Fit" },
     priority: { 3: "Must Visit", 2: "High Value", 1: "Worth a Stop" },
@@ -39,12 +40,21 @@ const TRANSLATIONS = {
     calendarTitle: "Trip Calendar",
     tripDates: "Trip Dates",
     noVisits: "No visits scheduled",
-    addVisit: "Add Visit"
+    addVisit: "Add Visit",
+    mapTitle: "Target Map",
+    kanbanTitle: "Sales Pipeline",
+    exportData: "Export Data",
+    importData: "Import Data",
+    dataBackup: "Data Backup",
+    backupDesc: "Export your data to save progress, import to restore",
+    toVisit: "To Visit",
+    visited: "Visited",
+    pipeline: { todo: "To Visit", enroute: "En Route", visited: "Visited", followup: "Follow-up", deal: "Deal!", nofit: "No Fit" }
   },
   nl: {
     title: "Field Commander",
     subtitle: "Spanje Verkoopreis 2026",
-    tabs: { planner: "Planner", journal: "Dagboek", intel: "Intel", dashboard: "Dashboard", calendar: "Kalender" },
+    tabs: { planner: "Planner", journal: "Dagboek", intel: "Intel", dashboard: "Dashboard", calendar: "Kalender", map: "Kaart", kanban: "Pipeline" },
     filters: { all: "Alles", mustVisit: "Must Visit", today: "Vandaag" },
     status: { planned: "Gepland", enroute: "Onderweg", visited: "Bezocht", followup: "Follow-up", deal: "Deal!", nofit: "Geen Fit" },
     priority: { 3: "Must Visit", 2: "Hoge Waarde", 1: "Kansrijk" },
@@ -73,12 +83,21 @@ const TRANSLATIONS = {
     calendarTitle: "Reis Kalender",
     tripDates: "Reis Data",
     noVisits: "Geen bezoeken gepland",
-    addVisit: "Bezoek Toevoegen"
+    addVisit: "Bezoek Toevoegen",
+    mapTitle: "Doelwitten Kaart",
+    kanbanTitle: "Verkoop Pipeline",
+    exportData: "Exporteer Data",
+    importData: "Importeer Data",
+    dataBackup: "Data Backup",
+    backupDesc: "Exporteer je data om voortgang te bewaren, importeer om te herstellen",
+    toVisit: "Te Bezoeken",
+    visited: "Bezocht",
+    pipeline: { todo: "Te Bezoeken", enroute: "Onderweg", visited: "Bezocht", followup: "Follow-up", deal: "Deal!", nofit: "Geen Fit" }
   },
   es: {
     title: "Field Commander",
     subtitle: "Viaje de Ventas España 2026",
-    tabs: { planner: "Planificador", journal: "Diario", intel: "Inteligencia", dashboard: "Panel", calendar: "Calendario" },
+    tabs: { planner: "Planificador", journal: "Diario", intel: "Inteligencia", dashboard: "Panel", calendar: "Calendario", map: "Mapa", kanban: "Pipeline" },
     filters: { all: "Todo", mustVisit: "Imprescindible", today: "Hoy" },
     status: { planned: "Planificado", enroute: "En Camino", visited: "Visitado", followup: "Seguimiento", deal: "¡Trato!", nofit: "No Encaja" },
     priority: { 3: "Imprescindible", 2: "Alto Valor", 1: "Vale la Pena" },
@@ -107,7 +126,16 @@ const TRANSLATIONS = {
     calendarTitle: "Calendario del Viaje",
     tripDates: "Fechas del Viaje",
     noVisits: "Sin visitas programadas",
-    addVisit: "Añadir Visita"
+    addVisit: "Añadir Visita",
+    mapTitle: "Mapa de Objetivos",
+    kanbanTitle: "Pipeline de Ventas",
+    exportData: "Exportar Datos",
+    importData: "Importar Datos",
+    dataBackup: "Copia de Seguridad",
+    backupDesc: "Exporta tus datos para guardar progreso, importa para restaurar",
+    toVisit: "Por Visitar",
+    visited: "Visitado",
+    pipeline: { todo: "Por Visitar", enroute: "En Camino", visited: "Visitado", followup: "Seguimiento", deal: "¡Trato!", nofit: "No Encaja" }
   }
 };
 
@@ -755,13 +783,13 @@ export default function OrthostandFieldCommander() {
   );
   
   const TabBar = () => (
-    <nav className={`${theme.bgCard} border-b ${theme.border} sticky top-[60px] z-30`}>
-      <div className="flex max-w-6xl mx-auto">
+    <nav className={`${theme.bgCard} border-b ${theme.border} sticky top-[60px] z-30 overflow-x-auto`}>
+      <div className="flex max-w-6xl mx-auto min-w-max">
         {Object.entries(t.tabs).map(([key, label]) => (
           <button
             key={key}
             onClick={() => setActiveTab(key)}
-            className={`flex-1 py-3 text-sm font-medium transition-all border-b-2 ${
+            className={`flex-1 py-3 px-2 text-xs sm:text-sm font-medium transition-all border-b-2 whitespace-nowrap ${
               activeTab === key
                 ? `${theme.accent} border-[#c9a962]`
                 : `${theme.textMuted} border-transparent hover:${theme.text}`
@@ -772,6 +800,8 @@ export default function OrthostandFieldCommander() {
             {key === 'intel' && '🎯 '}
             {key === 'dashboard' && '📊 '}
             {key === 'calendar' && '📅 '}
+            {key === 'map' && '🗺️ '}
+            {key === 'kanban' && '📋 '}
             {label}
           </button>
         ))}
@@ -1614,6 +1644,67 @@ export default function OrthostandFieldCommander() {
             </div>
           </div>
         )}
+        
+        {/* Data Backup Section */}
+        <div className={`${theme.bgCard} rounded-lg p-4 border ${theme.border}`}>
+          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.dataBackup}</div>
+          <p className={`text-sm ${theme.textMuted} mb-4`}>{t.backupDesc}</p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                const data = {
+                  version: '2.2',
+                  exportDate: new Date().toISOString(),
+                  leadData,
+                  journalEntries
+                };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `fieldcommander_backup_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              className={`flex-1 py-3 px-4 rounded-lg ${theme.accentBg} ${theme.accent} font-medium flex items-center justify-center gap-2`}
+            >
+              📤 {t.exportData}
+            </button>
+            <label className={`flex-1 py-3 px-4 rounded-lg border-2 border-dashed ${theme.border} ${theme.text} font-medium flex items-center justify-center gap-2 cursor-pointer hover:${theme.accentBg} transition-colors`}>
+              📥 {t.importData}
+              <input
+                type="file"
+                accept=".json"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  
+                  const reader = new FileReader();
+                  reader.onload = (event) => {
+                    try {
+                      const data = JSON.parse(event.target.result);
+                      if (data.leadData) {
+                        setLeadData(data.leadData);
+                      }
+                      if (data.journalEntries) {
+                        setJournalEntries(data.journalEntries);
+                      }
+                      alert(lang === 'nl' ? 'Data succesvol geïmporteerd!' : lang === 'es' ? '¡Datos importados con éxito!' : 'Data imported successfully!');
+                    } catch (err) {
+                      alert(lang === 'nl' ? 'Fout bij importeren. Controleer het bestand.' : lang === 'es' ? 'Error al importar. Verifica el archivo.' : 'Error importing. Please check the file.');
+                    }
+                  };
+                  reader.readAsText(file);
+                  e.target.value = '';
+                }}
+              />
+            </label>
+          </div>
+          <p className={`text-xs ${theme.textMuted} mt-3 text-center`}>
+            💡 {lang === 'nl' ? 'Tip: Exporteer regelmatig om dataverlies te voorkomen' : lang === 'es' ? 'Consejo: Exporta regularmente para evitar pérdida de datos' : 'Tip: Export regularly to prevent data loss'}
+          </p>
+        </div>
       </div>
     );
   };
@@ -1745,6 +1836,289 @@ export default function OrthostandFieldCommander() {
   
   // --- MAIN RENDER ---
   
+  // MAP TAB - Interactive map with all contacts
+  const MapTab = () => {
+    const [mapFilter, setMapFilter] = useState('all');
+    
+    // Get filtered leads based on priority
+    const mapLeads = mapFilter === 'all' ? LEADS : LEADS.filter(l => l.priority === parseInt(mapFilter));
+    
+    // Priority colors
+    const priorityColors = {
+      3: { color: '#FFD700', label: lang === 'nl' ? 'Must Visit (Goud)' : lang === 'es' ? 'Imprescindible (Oro)' : 'Must Visit (Gold)' },
+      2: { color: '#C0C0C0', label: lang === 'nl' ? 'Hoge Waarde (Zilver)' : lang === 'es' ? 'Alto Valor (Plata)' : 'High Value (Silver)' },
+      1: { color: '#CD7F32', label: lang === 'nl' ? 'Kansrijk (Brons)' : lang === 'es' ? 'Vale la Pena (Bronce)' : 'Worth a Stop (Bronze)' }
+    };
+    
+    // Calculate map center (center of Spain trip area)
+    const mapCenter = { lat: 38.5, lng: -4.0 };
+    
+    return (
+      <div className="max-w-6xl mx-auto p-4 space-y-4">
+        <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
+          🗺️ {t.mapTitle}
+        </h2>
+        
+        {/* Filter */}
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={() => setMapFilter('all')}
+            className={`px-3 py-1.5 rounded-full text-sm ${mapFilter === 'all' ? `${theme.accentBg} ${theme.accent}` : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`}`}
+          >
+            {t.filters.all} ({LEADS.length})
+          </button>
+          {[3, 2, 1].map(priority => (
+            <button
+              key={priority}
+              onClick={() => setMapFilter(mapFilter === String(priority) ? 'all' : String(priority))}
+              className={`px-3 py-1.5 rounded-full text-sm flex items-center gap-2 ${mapFilter === String(priority) ? `ring-2` : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`}`}
+              style={mapFilter === String(priority) ? { backgroundColor: `${priorityColors[priority].color}30`, color: priorityColors[priority].color, ringColor: priorityColors[priority].color } : {}}
+            >
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: priorityColors[priority].color }} />
+              {priorityColors[priority].label} ({LEADS.filter(l => l.priority === priority).length})
+            </button>
+          ))}
+        </div>
+        
+        {/* Map Container */}
+        <div className={`${theme.bgCard} rounded-lg border ${theme.border} overflow-hidden`}>
+          {/* Leaflet Map */}
+          <div className="relative w-full h-[400px] sm:h-[500px]">
+            <iframe
+              title="Target Map"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              style={{ border: 0 }}
+              src={`https://www.openstreetmap.org/export/embed.html?bbox=-8.0%2C36.0%2C0.5%2C41.0&layer=mapnik&marker=${mapCenter.lat}%2C${mapCenter.lng}`}
+            />
+            {/* Overlay with custom markers info */}
+            <div className="absolute bottom-2 left-2 right-2 bg-black/70 backdrop-blur-sm rounded-lg p-3">
+              <p className={`text-xs text-white mb-2`}>
+                📍 {mapLeads.length} {lang === 'nl' ? 'contacten op de kaart' : lang === 'es' ? 'contactos en el mapa' : 'contacts on map'}
+              </p>
+              <div className="grid grid-cols-5 gap-1 text-xs text-white">
+                {Object.entries(CITIES).map(([city, data]) => {
+                  const count = mapLeads.filter(l => l.city === city).length;
+                  return (
+                    <div key={city} className="flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: data.lightColor }} />
+                      <span>{city.slice(0,3)}: {count}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* City sections with contacts */}
+        {Object.entries(CITIES).map(([city, cityData]) => {
+          const cityLeads = mapLeads.filter(l => l.city === city).sort((a,b) => b.priority - a.priority);
+          if (cityLeads.length === 0) return null;
+          
+          return (
+            <div key={city} className={`${theme.bgCard} rounded-lg border ${theme.border} overflow-hidden`}>
+              <div 
+                className="p-3 flex items-center gap-2"
+                style={{ backgroundColor: `${cityData.color}30` }}
+              >
+                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: cityData.lightColor }} />
+                <span className={`font-medium ${theme.text}`}>{city}</span>
+                <span className={`text-sm ${theme.textMuted}`}>({cityData.dates}) · {cityLeads.length} contacts</span>
+              </div>
+              <div className="p-3 space-y-2">
+                {cityLeads.map(lead => {
+                  const data = leadData[lead.id] || {};
+                  return (
+                    <div 
+                      key={lead.id}
+                      onClick={() => setSelectedLead(lead)}
+                      className={`flex items-center justify-between p-2 rounded cursor-pointer hover:scale-[1.01] transition-all ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span 
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: priorityColors[lead.priority].color }}
+                        />
+                        <div>
+                          <p className={`text-sm font-medium ${theme.text}`}>{lead.company}</p>
+                          <p className={`text-xs ${theme.textMuted}`}>{lead.address?.split(',')[0]}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {data.status && (
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            data.status === 'deal' ? 'bg-green-500/20 text-green-400' :
+                            data.status === 'visited' ? 'bg-blue-500/20 text-blue-400' :
+                            `${theme.accentBg} ${theme.textMuted}`
+                          }`}>
+                            {t.status[data.status]}
+                          </span>
+                        )}
+                        {lead.website && (
+                          <a 
+                            href={lead.website} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className={`text-xs ${theme.accent} hover:underline`}
+                          >
+                            🌐
+                          </a>
+                        )}
+                        <a 
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.address)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className={`text-xs ${theme.accent} hover:underline`}
+                        >
+                          📍
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+  
+  // KANBAN TAB - Pipeline view
+  const KanbanTab = () => {
+    const stages = [
+      { key: 'todo', icon: '📋', label: t.pipeline.todo, color: theme.textMuted },
+      { key: 'enroute', icon: '🚶', label: t.pipeline.enroute, color: 'text-blue-400' },
+      { key: 'visited', icon: '✅', label: t.pipeline.visited, color: 'text-green-400' },
+      { key: 'followup', icon: '📞', label: t.pipeline.followup, color: 'text-orange-400' },
+      { key: 'deal', icon: '🤝', label: t.pipeline.deal, color: 'text-emerald-400' },
+      { key: 'nofit', icon: '❌', label: t.pipeline.nofit, color: 'text-red-400' }
+    ];
+    
+    // Group leads by status
+    const getLeadsByStage = (stageKey) => {
+      if (stageKey === 'todo') {
+        return LEADS.filter(l => !leadData[l.id]?.status || leadData[l.id]?.status === 'planned');
+      }
+      return LEADS.filter(l => leadData[l.id]?.status === stageKey);
+    };
+    
+    // Calculate totals
+    const totals = stages.reduce((acc, stage) => {
+      acc[stage.key] = getLeadsByStage(stage.key).length;
+      return acc;
+    }, {});
+    
+    return (
+      <div className="max-w-6xl mx-auto p-4 space-y-4">
+        <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
+          📋 {t.kanbanTitle}
+        </h2>
+        
+        {/* Pipeline summary */}
+        <div className={`${theme.bgCard} rounded-lg p-4 border ${theme.border}`}>
+          <div className="flex justify-between items-center overflow-x-auto gap-1">
+            {stages.map((stage, i) => (
+              <React.Fragment key={stage.key}>
+                <div className="text-center min-w-[60px]">
+                  <div className={`text-2xl mb-1`}>{stage.icon}</div>
+                  <div className={`text-xl font-bold ${stage.color}`}>{totals[stage.key]}</div>
+                  <div className={`text-xs ${theme.textMuted} truncate`}>{stage.label}</div>
+                </div>
+                {i < stages.length - 1 && (
+                  <div className={`text-lg ${theme.textMuted}`}>→</div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+        
+        {/* Kanban columns - scrollable on mobile */}
+        <div className="overflow-x-auto pb-4">
+          <div className="flex gap-3 min-w-max">
+            {stages.map(stage => {
+              const stageLeads = getLeadsByStage(stage.key).sort((a, b) => b.lhfScore - a.lhfScore);
+              
+              return (
+                <div 
+                  key={stage.key} 
+                  className={`w-[280px] flex-shrink-0 ${theme.bgCard} rounded-lg border ${theme.border} overflow-hidden`}
+                >
+                  {/* Column header */}
+                  <div className={`p-3 border-b ${theme.border} flex items-center justify-between`}>
+                    <div className="flex items-center gap-2">
+                      <span>{stage.icon}</span>
+                      <span className={`font-medium ${stage.color}`}>{stage.label}</span>
+                    </div>
+                    <span className={`text-sm ${theme.textMuted} px-2 py-0.5 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`}>
+                      {stageLeads.length}
+                    </span>
+                  </div>
+                  
+                  {/* Column content */}
+                  <div className="p-2 space-y-2 max-h-[400px] overflow-y-auto">
+                    {stageLeads.length === 0 ? (
+                      <p className={`text-xs ${theme.textMuted} text-center py-4 italic`}>
+                        {lang === 'nl' ? 'Geen contacten' : lang === 'es' ? 'Sin contactos' : 'No contacts'}
+                      </p>
+                    ) : (
+                      stageLeads.map(lead => {
+                        const data = leadData[lead.id] || {};
+                        const cityColor = CITIES[lead.city];
+                        
+                        return (
+                          <div
+                            key={lead.id}
+                            onClick={() => setSelectedLead(lead)}
+                            className={`p-2 rounded-lg cursor-pointer hover:scale-[1.02] transition-all border-l-2 ${darkMode ? 'bg-[#1a1814]' : 'bg-[#f5f0e8]'}`}
+                            style={{ borderLeftColor: cityColor.lightColor }}
+                          >
+                            <div className="flex items-start justify-between gap-1">
+                              <div className="flex-1 min-w-0">
+                                <p className={`text-sm font-medium ${theme.text} truncate`}>{lead.company}</p>
+                                <p className={`text-xs ${theme.textMuted} truncate`}>{lead.contact}</p>
+                              </div>
+                              <span className={`text-lg font-bold ${theme.accent}`}>{lead.lhfScore}</span>
+                            </div>
+                            <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+                              <span className={`text-xs px-1.5 py-0.5 rounded ${darkMode ? 'bg-[#252118]' : 'bg-white'} ${theme.textMuted}`}>
+                                {lead.city}
+                              </span>
+                              <span className="text-xs">{'⭐'.repeat(lead.priority)}</span>
+                              {data.interestScore > 0 && (
+                                <span className={`text-xs ${theme.accent}`}>
+                                  {'★'.repeat(data.interestScore)}
+                                </span>
+                              )}
+                            </div>
+                            {data.followupAction && stage.key === 'followup' && (
+                              <p className={`text-xs ${theme.accent} mt-1 truncate`}>
+                                → {data.followupAction}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Quick tip */}
+        <p className={`text-xs ${theme.textMuted} text-center`}>
+          💡 {lang === 'nl' ? 'Klik op een contact om de status te wijzigen' : lang === 'es' ? 'Haz clic en un contacto para cambiar su estado' : 'Click on a contact to change its status'}
+        </p>
+      </div>
+    );
+  };
+  
   // Day detail modal for calendar
   const DayModal = ({ dayInfo, onClose }) => {
     const cityLeads = LEADS.filter(l => l.city === dayInfo.city);
@@ -1815,6 +2189,8 @@ export default function OrthostandFieldCommander() {
       {activeTab === 'intel' && <IntelTab />}
       {activeTab === 'dashboard' && <DashboardTab />}
       {activeTab === 'calendar' && <CalendarTab />}
+      {activeTab === 'map' && <MapTab />}
+      {activeTab === 'kanban' && <KanbanTab />}
       
       {selectedLead && <LeadModal lead={selectedLead} onClose={() => setSelectedLead(null)} />}
       {selectedDay && <DayModal dayInfo={selectedDay} onClose={() => setSelectedDay(null)} />}
