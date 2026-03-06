@@ -2108,59 +2108,69 @@ export default function OrthostandFieldCommander() {
         </div>
       ) : (
         /* DESKTOP VIEW - Original Two Column Layout */
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Left: To Visit */}
-          <div
-            onDragOver={(e) => handleDragOver(e, 'toVisit')}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDrop(e, 'toVisit')}
-            className={`min-h-[200px] rounded-lg p-3 transition-all ${
-              dragOverColumn === 'toVisit' 
-                ? `ring-2 ring-dashed ring-[#c9a962] ${theme.accentBg}` 
-                : ''
-            }`}
-          >
-            <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-3 flex items-center gap-2`}>
-              <span>📋</span> {lang === 'nl' ? 'Te Bezoeken' : lang === 'es' ? 'Por Visitar' : 'To Visit'} ({toVisit.length})
+        <div>
+          {/* Column Headers with Arrow */}
+          <div className="grid md:grid-cols-2 gap-4 mb-3">
+            <div className={`text-lg font-bold ${theme.text} flex items-center gap-2`}>
+              <span>📋</span> {lang === 'nl' ? 'TE BEZOEKEN' : lang === 'es' ? 'POR VISITAR' : 'TO VISIT'} 
+              <span className={`text-sm font-normal ${theme.textMuted}`}>({toVisit.length})</span>
             </div>
-            <div className="space-y-2">
-              {toVisit.map(lead => (
-                <DraggableCard key={lead.id} lead={lead} />
-              ))}
-              {toVisit.length === 0 && (
-                <p className={`text-sm ${theme.textMuted} italic text-center py-8`}>
-                  {lang === 'nl' ? 'Geen openstaande bezoeken' : lang === 'es' ? 'Sin visitas pendientes' : 'No pending visits'}
-                </p>
-              )}
+            <div className={`text-lg font-bold text-green-400 flex items-center gap-2`}>
+              <span className={`text-2xl ${theme.accent} mr-2`}>➡️</span>
+              <span>✅</span> {lang === 'nl' ? 'BEZOCHT' : lang === 'es' ? 'VISITADO' : 'VISITED'}
+              <span className={`text-sm font-normal ${theme.textMuted}`}>({visited.length})</span>
             </div>
           </div>
           
-          {/* Right: Visited */}
-          <div
-            onDragOver={(e) => handleDragOver(e, 'visited')}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDrop(e, 'visited')}
-            className={`min-h-[200px] rounded-lg p-3 transition-all ${
-              dragOverColumn === 'visited' 
-                ? `ring-2 ring-dashed ring-green-500 bg-green-500/10` 
-                : ''
-            }`}
-          >
-            <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-3 flex items-center gap-2`}>
-              <span>✅</span> {lang === 'nl' ? 'Bezocht' : lang === 'es' ? 'Visitado' : 'Visited'} ({visited.length})
-            </div>
-            <div className="space-y-2">
-              {visited.map(lead => (
-                <DraggableCard key={lead.id} lead={lead} />
-              ))}
-              {visited.length === 0 && (
-                <div className={`text-center py-8 border-2 border-dashed ${theme.border} rounded-lg`}>
-                  <p className={`text-sm ${theme.textMuted} italic`}>
-                    {lang === 'nl' ? 'Sleep bezoeken hierheen' : lang === 'es' ? 'Arrastra visitas aquí' : 'Drag visits here'}
+          {/* Two Columns */}
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Left: To Visit */}
+            <div
+              onDragOver={(e) => handleDragOver(e, 'toVisit')}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, 'toVisit')}
+              className={`min-h-[200px] rounded-lg p-3 transition-all ${
+                dragOverColumn === 'toVisit' 
+                  ? `ring-2 ring-dashed ring-[#c9a962] ${theme.accentBg}` 
+                  : ''
+              }`}
+            >
+              <div className="space-y-2">
+                {toVisit.map(lead => (
+                  <DraggableCard key={lead.id} lead={lead} />
+                ))}
+                {toVisit.length === 0 && (
+                  <p className={`text-sm ${theme.textMuted} italic text-center py-8`}>
+                    {lang === 'nl' ? 'Geen openstaande bezoeken' : lang === 'es' ? 'Sin visitas pendientes' : 'No pending visits'}
                   </p>
-                  <p className="text-2xl mt-2">📥</p>
-                </div>
-              )}
+                )}
+              </div>
+            </div>
+            
+            {/* Right: Visited */}
+            <div
+              onDragOver={(e) => handleDragOver(e, 'visited')}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, 'visited')}
+              className={`min-h-[200px] rounded-lg p-3 transition-all ${
+                dragOverColumn === 'visited' 
+                  ? `ring-2 ring-dashed ring-green-500 bg-green-500/10` 
+                  : ''
+              }`}
+            >
+              <div className="space-y-2">
+                {visited.map(lead => (
+                  <DraggableCard key={lead.id} lead={lead} />
+                ))}
+                {visited.length === 0 && (
+                  <div className={`text-center py-8 border-2 border-dashed ${theme.border} rounded-lg`}>
+                    <p className={`text-sm ${theme.textMuted} italic`}>
+                      {lang === 'nl' ? 'Sleep bezoeken hierheen' : lang === 'es' ? 'Arrastra visitas aquí' : 'Drag visits here'}
+                    </p>
+                    <p className="text-2xl mt-2">📥</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -2756,11 +2766,11 @@ export default function OrthostandFieldCommander() {
   const HelpModal = () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeHelp} />
-      <div className={`${theme.bgModal} relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl p-6`}>
+      <div className={`${theme.bgModal} relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6`}>
         <button onClick={closeHelp} className={`absolute top-4 right-4 p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text}`}>✕</button>
         
         <h2 className={`font-serif text-2xl ${theme.accent} mb-4`} style={{ fontFamily: 'Playfair Display, serif' }}>
-          ⚡ Field Commander
+          ⚡ Field Commander v2.8
         </h2>
         
         <div className="space-y-4">
@@ -2769,21 +2779,69 @@ export default function OrthostandFieldCommander() {
               {lang === 'nl' ? '🎯 Doel' : lang === 'es' ? '🎯 Objetivo' : '🎯 Purpose'}
             </h3>
             <p className={`text-sm ${theme.textMuted}`}>
-              {lang === 'nl' ? 'Je persoonlijke verkoopreis-assistent voor de Orthostand Spanje missie. 49 vooraf geselecteerde doelwitten in 5 steden.' :
-               lang === 'es' ? 'Tu asistente personal de viaje de ventas para la misión Orthostand España. 49 objetivos preseleccionados en 5 ciudades.' :
-               'Your personal sales trip companion for the Orthostand Spain mission. 49 pre-selected targets across 5 cities.'}
+              {lang === 'nl' ? 'Je persoonlijke verkoopreis-assistent voor de Orthostand Spanje missie. 49 vooraf geselecteerde doelwitten in 5 steden (Madrid, Valencia, Córdoba, Sevilla, Málaga).' :
+               lang === 'es' ? 'Tu asistente personal de viaje de ventas para la misión Orthostand España. 49 objetivos preseleccionados en 5 ciudades (Madrid, Valencia, Córdoba, Sevilla, Málaga).' :
+               'Your personal sales trip companion for the Orthostand Spain mission. 49 pre-selected targets across 5 cities (Madrid, Valencia, Córdoba, Sevilla, Málaga).'}
             </p>
           </div>
           
           <div>
             <h3 className={`font-medium ${theme.text} mb-1`}>
-              {lang === 'nl' ? '⭐ Prioriteiten' : lang === 'es' ? '⭐ Prioridades' : '⭐ Priority System'}
+              {lang === 'nl' ? '⭐ Prioriteit Systeem' : lang === 'es' ? '⭐ Sistema de Prioridades' : '⭐ Priority System'}
             </h3>
-            <ul className={`text-sm ${theme.textMuted} space-y-1`}>
-              <li>⭐⭐⭐ {lang === 'nl' ? 'Must Visit - Strategische accounts' : lang === 'es' ? 'Imprescindible - Cuentas estratégicas' : 'Must Visit - Strategic accounts'}</li>
-              <li>⭐⭐ {lang === 'nl' ? 'Hoge Waarde - Sterk potentieel' : lang === 'es' ? 'Alto Valor - Fuerte potencial' : 'High Value - Strong potential'}</li>
-              <li>⭐ {lang === 'nl' ? 'Kansrijk - Opportunistisch' : lang === 'es' ? 'Vale la Pena - Oportunista' : 'Worth a Stop - Opportunistic'}</li>
-            </ul>
+            <div className={`text-sm ${theme.textMuted} space-y-2`}>
+              <div className={`p-2 rounded ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`}>
+                <span className="text-yellow-400">⭐⭐⭐</span> <strong className={theme.text}>Must Visit</strong><br/>
+                {lang === 'nl' ? 'Strategische toegangspoorten of lighthouse accounts. Associaties, grote ketens, key decision-makers.' :
+                 lang === 'es' ? 'Puertas estratégicas o cuentas faro. Asociaciones, grandes cadenas, decisores clave.' :
+                 'Strategic gateways or lighthouse accounts. Associations, large chains, key decision-makers.'}
+              </div>
+              <div className={`p-2 rounded ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`}>
+                <span className="text-yellow-400">⭐⭐</span> <strong className={theme.text}>High Value</strong><br/>
+                {lang === 'nl' ? 'Sterk potentieel met bekende contactpersoon. Regionale spelers, multi-locatie bedrijven.' :
+                 lang === 'es' ? 'Fuerte potencial con contacto conocido. Jugadores regionales, empresas multi-ubicación.' :
+                 'Strong potential with named contact. Regional players, multi-location businesses.'}
+              </div>
+              <div className={`p-2 rounded ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`}>
+                <span className="text-yellow-400">⭐</span> <strong className={theme.text}>Worth a Stop</strong><br/>
+                {lang === 'nl' ? 'Opportunistisch, verkennen waard. Kleinere praktijken, lokale contacten.' :
+                 lang === 'es' ? 'Oportunista, vale explorar. Prácticas más pequeñas, contactos locales.' :
+                 'Opportunistic, worth exploring. Smaller practices, local contacts.'}
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className={`font-medium ${theme.text} mb-1`}>
+              {lang === 'nl' ? '🏢 Schaal Definities' : lang === 'es' ? '🏢 Definiciones de Escala' : '🏢 Scale Definitions'}
+            </h3>
+            <div className={`text-sm ${theme.textMuted} space-y-1`}>
+              <div><span className="text-purple-400">🏢 Large</span> — {lang === 'nl' ? 'Nationale keten / 10+ locaties' : lang === 'es' ? 'Cadena nacional / 10+ ubicaciones' : 'National chain / 10+ locations'}</div>
+              <div><span className="text-blue-400">🏪 Medium</span> — {lang === 'nl' ? 'Regionaal / 3-9 locaties' : lang === 'es' ? 'Regional / 3-9 ubicaciones' : 'Regional / 3-9 locations'}</div>
+              <div><span className="text-green-400">🏠 Small</span> — {lang === 'nl' ? 'Eén locatie / Eigenaar' : lang === 'es' ? 'Una ubicación / Propietario' : 'Single location / Owner-operated'}</div>
+              <p className={`mt-2 text-xs italic`}>
+                {lang === 'nl' ? 'NB: Associaties zijn "Small" qua locatie maar strategisch zeer belangrijk als toegangspoort tot hun leden.' :
+                 lang === 'es' ? 'Nota: Las asociaciones son "Small" en ubicación pero estratégicamente muy importantes como puerta de acceso a sus miembros.' :
+                 'Note: Associations are "Small" in location terms but strategically very important as gateway to their members.'}
+              </p>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className={`font-medium ${theme.text} mb-1`}>
+              {lang === 'nl' ? '📊 LHF Score (0-100)' : lang === 'es' ? '📊 Puntuación LHF (0-100)' : '📊 LHF Score (0-100)'}
+            </h3>
+            <p className={`text-sm ${theme.textMuted} mb-2`}>
+              {lang === 'nl' ? 'Low-Hanging Fruit score berekend op 4 factoren (elk max 25 punten):' :
+               lang === 'es' ? 'Puntuación de Fruta Madura calculada en 4 factores (cada uno máx 25 puntos):' :
+               'Low-Hanging Fruit score calculated on 4 factors (each max 25 points):'}
+            </p>
+            <div className={`text-sm ${theme.textMuted} space-y-1 ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} p-2 rounded`}>
+              <div>🎯 <strong>{lang === 'nl' ? 'Beslisser toegang' : lang === 'es' ? 'Acceso al decisor' : 'Decision-maker access'}</strong> — {lang === 'nl' ? 'Hebben we directe toegang?' : lang === 'es' ? '¿Tenemos acceso directo?' : 'Do we have direct access?'}</div>
+              <div>🏢 <strong>{lang === 'nl' ? 'Multi-unit potentieel' : lang === 'es' ? 'Potencial multi-unidad' : 'Multi-unit potential'}</strong> — {lang === 'nl' ? 'Meerdere locaties = meer verkoop' : lang === 'es' ? 'Múltiples ubicaciones = más ventas' : 'Multiple locations = more sales'}</div>
+              <div>📍 <strong>{lang === 'nl' ? 'Bereikbaarheid' : lang === 'es' ? 'Accesibilidad' : 'Reachability'}</strong> — {lang === 'nl' ? 'Makkelijk te bereiken tijdens de reis?' : lang === 'es' ? '¿Fácil de alcanzar durante el viaje?' : 'Easy to reach during the trip?'}</div>
+              <div>🎖️ <strong>{lang === 'nl' ? 'Strategische waarde' : lang === 'es' ? 'Valor estratégico' : 'Strategic value'}</strong> — {lang === 'nl' ? 'Lighthouse effect, referentiewaarde' : lang === 'es' ? 'Efecto faro, valor de referencia' : 'Lighthouse effect, reference value'}</div>
+            </div>
           </div>
           
           <div>
@@ -2791,31 +2849,44 @@ export default function OrthostandFieldCommander() {
               {lang === 'nl' ? '📱 Tabs' : lang === 'es' ? '📱 Pestañas' : '📱 Tabs'}
             </h3>
             <ul className={`text-sm ${theme.textMuted} space-y-1`}>
-              <li>📍 <strong>Planner</strong> - {lang === 'nl' ? 'Dagelijkse bezoekplanning' : lang === 'es' ? 'Planificación diaria' : 'Daily visit planning'}</li>
-              <li>📓 <strong>Journal</strong> - {lang === 'nl' ? 'Bezoekverslagen' : lang === 'es' ? 'Informes de visita' : 'Visit reports'}</li>
-              <li>🎯 <strong>Intel</strong> - {lang === 'nl' ? 'Marktinformatie per stad' : lang === 'es' ? 'Inteligencia de mercado' : 'Market intel per city'}</li>
-              <li>📊 <strong>Dashboard</strong> - {lang === 'nl' ? 'Voortgang & commissie' : lang === 'es' ? 'Progreso y comisión' : 'Progress & commission'}</li>
-              <li>📅 <strong>Calendar</strong> - {lang === 'nl' ? 'Reisplanning overzicht' : lang === 'es' ? 'Calendario del viaje' : 'Trip schedule overview'}</li>
-              <li>🗺️ <strong>Map</strong> - {lang === 'nl' ? 'Geografisch overzicht' : lang === 'es' ? 'Vista geográfica' : 'Geographic overview'}</li>
-              <li>📋 <strong>Pipeline</strong> - {lang === 'nl' ? 'Kanban verkoopfunnel' : lang === 'es' ? 'Embudo de ventas' : 'Kanban sales funnel'}</li>
+              <li>📍 <strong>Planner</strong> — {lang === 'nl' ? 'Dagelijkse bezoekplanning met drag & drop' : lang === 'es' ? 'Planificación diaria con arrastrar y soltar' : 'Daily visit planning with drag & drop'}</li>
+              <li>📓 <strong>Journal</strong> — {lang === 'nl' ? 'Bezoekverslagen & notities' : lang === 'es' ? 'Informes de visita y notas' : 'Visit reports & notes'}</li>
+              <li>🎯 <strong>Intel</strong> — {lang === 'nl' ? 'Marktinformatie, talking points, links per stad' : lang === 'es' ? 'Inteligencia de mercado, puntos de conversación, enlaces por ciudad' : 'Market intel, talking points, links per city'}</li>
+              <li>📊 <strong>Dashboard</strong> — {lang === 'nl' ? 'Voortgang, commissieklok, data backup' : lang === 'es' ? 'Progreso, reloj de comisión, copia de datos' : 'Progress, commission clock, data backup'}</li>
+              <li>📅 <strong>Calendar</strong> — {lang === 'nl' ? 'Reisplanning 15 Mar - 8 Apr 2026' : lang === 'es' ? 'Calendario del viaje 15 Mar - 8 Abr 2026' : 'Trip calendar Mar 15 - Apr 8, 2026'}</li>
+              <li>🗺️ <strong>Map</strong> — {lang === 'nl' ? 'Geografisch overzicht met Google Maps links' : lang === 'es' ? 'Vista geográfica con enlaces a Google Maps' : 'Geographic overview with Google Maps links'}</li>
+              <li>📋 <strong>Pipeline</strong> — {lang === 'nl' ? 'Kanban verkoopfunnel (To Visit → Deal)' : lang === 'es' ? 'Embudo de ventas Kanban (Por Visitar → Trato)' : 'Kanban sales funnel (To Visit → Deal)'}</li>
             </ul>
           </div>
           
           <div>
             <h3 className={`font-medium ${theme.text} mb-1`}>
-              {lang === 'nl' ? '💡 Tips' : lang === 'es' ? '💡 Consejos' : '💡 Tips'}
+              {lang === 'nl' ? '📱 Field Mode (nieuw!)' : lang === 'es' ? '📱 Modo Campo (¡nuevo!)' : '📱 Field Mode (new!)'}
+            </h3>
+            <p className={`text-sm ${theme.textMuted}`}>
+              {lang === 'nl' ? 'Toggle in Planner tab voor vereenvoudigde mobiele weergave met grote knoppen voor Bellen, Route en Bezocht markeren.' :
+               lang === 'es' ? 'Interruptor en pestaña Planificador para vista móvil simplificada con botones grandes para Llamar, Ruta y marcar Visitado.' :
+               'Toggle in Planner tab for simplified mobile view with large buttons for Call, Route and mark Visited.'}
+            </p>
+          </div>
+          
+          <div>
+            <h3 className={`font-medium ${theme.text} mb-1`}>
+              {lang === 'nl' ? '💡 Pro Tips' : lang === 'es' ? '💡 Consejos Pro' : '💡 Pro Tips'}
             </h3>
             <ul className={`text-sm ${theme.textMuted} space-y-1`}>
-              <li>• {lang === 'nl' ? 'Klik op een contact voor volledige details' : lang === 'es' ? 'Haz clic en un contacto para ver detalles' : 'Click any contact for full details'}</li>
-              <li>• {lang === 'nl' ? 'Gebruik 🎙 voor spraaknotities' : lang === 'es' ? 'Usa 🎙 para notas de voz' : 'Use 🎙 for voice notes'}</li>
-              <li>• {lang === 'nl' ? 'Data wordt lokaal opgeslagen' : lang === 'es' ? 'Los datos se guardan localmente' : 'Data is saved locally'}</li>
-              <li>• {lang === 'nl' ? 'Exporteer in Dashboard voor backup' : lang === 'es' ? 'Exporta en Dashboard para copia' : 'Export in Dashboard for backup'}</li>
+              <li>• {lang === 'nl' ? 'Klik op stadsknop boven om te filteren' : lang === 'es' ? 'Haz clic en botón de ciudad arriba para filtrar' : 'Click city button above to filter'}</li>
+              <li>• {lang === 'nl' ? 'Sleep kaartjes van links naar rechts om status te wijzigen' : lang === 'es' ? 'Arrastra tarjetas de izquierda a derecha para cambiar estado' : 'Drag cards left to right to change status'}</li>
+              <li>• {lang === 'nl' ? 'Gebruik 🎙 in contact modal voor spraaknotities' : lang === 'es' ? 'Usa 🎙 en modal de contacto para notas de voz' : 'Use 🎙 in contact modal for voice notes'}</li>
+              <li>• {lang === 'nl' ? 'Bekijk "Details" in LHF score voor breakdown' : lang === 'es' ? 'Mira "Detalles" en puntuación LHF para desglose' : 'Click "Details" in LHF score for breakdown'}</li>
+              <li>• {lang === 'nl' ? 'Data wordt automatisch lokaal opgeslagen' : lang === 'es' ? 'Los datos se guardan automáticamente en local' : 'Data is auto-saved locally'}</li>
+              <li>• {lang === 'nl' ? 'Dashboard → Export voor JSON backup' : lang === 'es' ? 'Dashboard → Exportar para copia JSON' : 'Dashboard → Export for JSON backup'}</li>
             </ul>
           </div>
           
           <div className={`pt-4 border-t ${theme.border}`}>
             <p className={`text-xs ${theme.textMuted} text-center`}>
-              v2.7 • {lang === 'nl' ? 'Gebouwd voor' : lang === 'es' ? 'Construido para' : 'Built for'} Orthostand 🇪🇸
+              v2.8 • {lang === 'nl' ? 'Gebouwd voor Jan & Henk' : lang === 'es' ? 'Construido para Jan y Henk' : 'Built for Jan & Henk'} • Orthostand 🇪🇸 2026
             </p>
           </div>
         </div>
