@@ -13,6 +13,7 @@ const TRANSLATIONS = {
     subtitle: "Spain Sales Trip 2026",
     tabs: { planner: "Planner", journal: "Journal", intel: "Intel", dashboard: "Dashboard", calendar: "Calendar", map: "Map", kanban: "Pipeline" },
     filters: { all: "All", mustVisit: "Must Visit", today: "Today" },
+    sourceFilter: { all: "All Sources", jan: "Jan's list", henk: "Henk's list", both: "Both lists" },
     status: { planned: "Planned", enroute: "En Route", visited: "Visited", followup: "Follow-up", deal: "Deal!", nofit: "No Fit" },
     priority: { 3: "Must Visit", 2: "High Value", 1: "Worth a Stop" },
     priorityDesc: { 3: "Strategic gateway or lighthouse account", 2: "Strong potential, named contact", 1: "Opportunistic, worth exploring" },
@@ -56,6 +57,7 @@ const TRANSLATIONS = {
     subtitle: "Spanje Verkoopreis 2026",
     tabs: { planner: "Planner", journal: "Dagboek", intel: "Intel", dashboard: "Dashboard", calendar: "Kalender", map: "Kaart", kanban: "Pipeline" },
     filters: { all: "Alles", mustVisit: "Must Visit", today: "Vandaag" },
+    sourceFilter: { all: "Alle bronnen", jan: "Jan's lijst", henk: "Henk's lijst", both: "Beide lijsten" },
     status: { planned: "Gepland", enroute: "Onderweg", visited: "Bezocht", followup: "Follow-up", deal: "Deal!", nofit: "Geen Fit" },
     priority: { 3: "Must Visit", 2: "Hoge Waarde", 1: "Kansrijk" },
     priorityDesc: { 3: "Strategische toegangspoort of lighthouse account", 2: "Sterk potentieel, contactpersoon bekend", 1: "Opportunistisch, verkennen waard" },
@@ -99,6 +101,7 @@ const TRANSLATIONS = {
     subtitle: "Viaje de Ventas España 2026",
     tabs: { planner: "Planificador", journal: "Diario", intel: "Inteligencia", dashboard: "Panel", calendar: "Calendario", map: "Mapa", kanban: "Pipeline" },
     filters: { all: "Todo", mustVisit: "Imprescindible", today: "Hoy" },
+    sourceFilter: { all: "Todas las fuentes", jan: "Lista de Jan", henk: "Lista de Henk", both: "Ambas listas" },
     status: { planned: "Planificado", enroute: "En Camino", visited: "Visitado", followup: "Seguimiento", deal: "¡Trato!", nofit: "No Encaja" },
     priority: { 3: "Imprescindible", 2: "Alto Valor", 1: "Vale la Pena" },
     priorityDesc: { 3: "Puerta estratégica o cuenta faro", 2: "Fuerte potencial, contacto conocido", 1: "Oportunista, vale explorar" },
@@ -159,6 +162,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 22, multiUnit: 25, reachability: 20, strategic: 22 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "National chain; 6+ centres in Madrid; 20+ certified technicians"
   },
@@ -171,6 +175,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -183,6 +188,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -195,6 +201,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -207,6 +214,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -219,10 +227,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 7, city: "Madrid", company: "CGCOP (Consejo General de Colegios Oficiales de Podólogos)", size: "",
+  { id: 7, city: "Madrid", company: "CGCOP (Consejo General de Colegios Oficiales de Podólogos)", size: "small",
     address: "C/ Fortuny, 15, 28010 Madrid", phone: "+34 91 319 67 80", email: "info@cgcop.es",
     website: "https://cgcop.es", contact: "Secretaría General", role: "Management",
     linkedin: "", priority: 3, notes: "National gateway to ~9,500 podiatrists",
@@ -231,10 +240,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 23, multiUnit: 5, reachability: 20, strategic: 23 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "National gateway to ~9,500 podiatrists"
   },
-  { id: 8, city: "Madrid", company: "Namrol Medical", size: "",
+  { id: 8, city: "Madrid", company: "Namrol Medical", size: "small",
     address: "Madrid (HQ Barcelona)", phone: "+34 93 336 06 55", email: "info@namrol.com",
     website: "https://namrol.com", contact: "Commercial Director", role: "Management",
     linkedin: "", priority: 3, notes: "COMPETITOR - Only makes seated solutions",
@@ -243,10 +253,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 15, multiUnit: 5, reachability: 20, strategic: 15 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "COMPETITOR - Only makes seated solutions"
   },
-  { id: 9, city: "Madrid", company: "FEDOP (Federación Española de Ortesistas Protesistas)", size: "",
+  { id: 9, city: "Madrid", company: "FEDOP (Federación Española de Ortesistas Protesistas)", size: "small",
     address: "C/ Isla de Saipán, 29, local 4, 28035 Madrid", phone: "+34 91 373 97 18", email: "fedop@fedop.org",
     website: "https://fedop.org", contact: "Secretariat", role: "Management",
     linkedin: "", priority: 2, notes: "National O&P federation",
@@ -255,10 +266,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 20, strategic: 18 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 10, city: "Madrid", company: "Hospital Quirónsalud Madrid", size: "",
+  { id: 10, city: "Madrid", company: "Hospital Quirónsalud Madrid", size: "small",
     address: "C/ Diego de Velázquez, 1, 28223 Pozuelo", phone: "+34 91 452 19 00", email: "info.hmadrid@quironsalud.es",
     website: "https://quironsalud.es/madrid", contact: "Procurement Dept", role: "Management",
     linkedin: "", priority: 2, notes: "Part of 70+ hospital network",
@@ -267,10 +279,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 11, city: "Madrid", company: "Ortopedia López Cerrato", size: "",
+  { id: 11, city: "Madrid", company: "Ortopedia López Cerrato", size: "small",
     address: "C/ María Auxiliadora, 2, 28040 Madrid", phone: "+34 91 533 26 01", email: "info@lopezcerrato.es",
     website: "https://ortopedialopezcerrato.es", contact: "Unknown", role: "Management",
     linkedin: "", priority: 2, notes: "Technical orthopaedics + podiatry",
@@ -279,10 +292,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 16, multiUnit: 5, reachability: 20, strategic: 16 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 12, city: "Madrid", company: "Clínica del Pie Elgeadi", size: "",
+  { id: 12, city: "Madrid", company: "Clínica del Pie Elgeadi", size: "small",
     address: "C/ O'Donnell, 47, 28009 Madrid", phone: "+34 91 574 30 70", email: "info@clinicadelpie.es",
     website: "https://clinicadelpie.es", contact: "Dr. Elgeadi", role: "Management",
     linkedin: "", priority: 1, notes: "Premium private clinic",
@@ -291,10 +305,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 13, city: "Madrid", company: "Ortopedia Silvio", size: "",
+  { id: 13, city: "Madrid", company: "Ortopedia Silvio", size: "small",
     address: "C/ Guzmán el Bueno, 70, 28015 Madrid", phone: "+34 91 549 78 27", email: "info@ortopediasilvio.com",
     website: "https://ortopediasilvio.com", contact: "Unknown", role: "Management",
     linkedin: "", priority: 1, notes: "Traditional orthopaedics shop",
@@ -303,6 +318,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 11, multiUnit: 5, reachability: 20, strategic: 11 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -315,6 +331,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 20, multiUnit: 15, reachability: 20, strategic: 20 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "50+ years; 4 centres in Valencia province (Valencia, Mislata, Alzira…)"
   },
@@ -327,6 +344,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -339,6 +357,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -351,6 +370,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -363,10 +383,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 19, city: "Valencia", company: "ICOPCV (Colegio Oficial Podólogos Com. Valenciana)", size: "",
+  { id: 19, city: "Valencia", company: "ICOPCV (Colegio Oficial Podólogos Com. Valenciana)", size: "small",
     address: "C/ Grabador Esteve, 6, bajo, 46004 Valencia", phone: "+34 96 351 73 81", email: "secretaria@icopcv.org",
     website: "https://icopcv.org", contact: "Secretariat", role: "Management",
     linkedin: "", priority: 3, notes: "~1,200 members",
@@ -375,10 +396,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 19, multiUnit: 5, reachability: 20, strategic: 19 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "~1,200 members"
   },
-  { id: 20, city: "Valencia", company: "Podoactiva Valencia", size: "",
+  { id: 20, city: "Valencia", company: "Podoactiva Valencia", size: "small",
     address: "C/ Colón, 48, 46004 Valencia", phone: "+34 96 352 63 30", email: "valencia@podoactiva.com",
     website: "https://podoactiva.com", contact: "Centre Manager", role: "Management",
     linkedin: "", priority: 2, notes: "National chain - sports podiatry",
@@ -387,10 +409,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 21, city: "Valencia", company: "Hospital La Fe - Podología", size: "",
+  { id: 21, city: "Valencia", company: "Hospital La Fe - Podología", size: "small",
     address: "Av. Fernando Abril Martorell, 106, 46026", phone: "+34 96 124 40 00", email: "comunicacion_lafe@gva.es",
     website: "https://hospital-lafe.san.gva.es", contact: "Dept. Podología", role: "Management",
     linkedin: "", priority: 2, notes: "Major public hospital - teaching",
@@ -399,10 +422,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 22, city: "Valencia", company: "Ortopròtesis Valencia", size: "",
+  { id: 22, city: "Valencia", company: "Ortopròtesis Valencia", size: "small",
     address: "Av. del Cid, 64, 46018 Valencia", phone: "+34 96 385 11 22", email: "info@ortoprotesis.es",
     website: "https://ortoprotesis.es", contact: "Unknown", role: "Management",
     linkedin: "", priority: 1, notes: "Custom orthotics & prosthetics",
@@ -411,6 +435,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 12, multiUnit: 5, reachability: 20, strategic: 12 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -423,6 +448,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -435,6 +461,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -447,6 +474,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -459,10 +487,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 27, city: "Córdoba", company: "Ortopedia Larios", size: "",
+  { id: 27, city: "Córdoba", company: "Ortopedia Larios", size: "small",
     address: "Av. Gran Capitán, 29, 14006 Córdoba", phone: "+34 957 47 47 88", email: "info@ortopedialarios.com",
     website: "https://ortopedialarios.com", contact: "Miguel Larios", role: "Management",
     linkedin: "", priority: 3, notes: "Family business, 3 generations",
@@ -471,10 +500,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 20, strategic: 18 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "Family business, 3 generations"
   },
-  { id: 28, city: "Córdoba", company: "Hospital Quirónsalud Córdoba", size: "",
+  { id: 28, city: "Córdoba", company: "Hospital Quirónsalud Córdoba", size: "small",
     address: "Av. Brillante, 106, 14012 Córdoba", phone: "+34 957 76 01 00", email: "info.hcordoba@quironsalud.es",
     website: "https://quironsalud.es/cordoba", contact: "Procurement", role: "Management",
     linkedin: "", priority: 3, notes: "Part of 70+ hospital network",
@@ -483,10 +513,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 20, strategic: 18 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "Part of 70+ hospital network"
   },
-  { id: 29, city: "Córdoba", company: "Colegio de Podólogos de Andalucía (Regional)", size: "",
+  { id: 29, city: "Córdoba", company: "Colegio de Podólogos de Andalucía (Regional)", size: "small",
     address: "Regional office", phone: "+34 954 22 15 00", email: "info@cpoan.es",
     website: "https://cpoan.es", contact: "Regional Delegate", role: "Management",
     linkedin: "", priority: 2, notes: "COPOAN regional presence",
@@ -495,10 +526,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 16, multiUnit: 5, reachability: 20, strategic: 16 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 30, city: "Córdoba", company: "Clínica Podológica Sánchez", size: "",
+  { id: 30, city: "Córdoba", company: "Clínica Podológica Sánchez", size: "small",
     address: "C/ Jesús María, 8, 14003 Córdoba", phone: "+34 957 47 11 22", email: "info@podologiacordoba.es",
     website: "", contact: "Dr. Sánchez", role: "Management",
     linkedin: "", priority: 1, notes: "Private practice",
@@ -507,6 +539,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -519,6 +552,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 21, multiUnit: 25, reachability: 20, strategic: 21 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "125+ years; multiple Sevilla + Huelva locations"
   },
@@ -531,6 +565,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -543,6 +578,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -555,6 +591,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -567,10 +604,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 36, city: "Sevilla", company: "COPOAN (Colegio Oficial Podólogos Andalucía)", size: "",
+  { id: 36, city: "Sevilla", company: "COPOAN (Colegio Oficial Podólogos Andalucía)", size: "small",
     address: "C/ Recaredo, 39, 41003 Sevilla", phone: "+34 954 22 15 00", email: "info@cpoan.es",
     website: "https://cpoan.es", contact: "Rosario Correa (Presidenta)", role: "Management",
     linkedin: "", priority: 3, notes: "8 provinces, 354+ clinics. Rosario = CGCOP VP",
@@ -579,10 +617,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 22, multiUnit: 5, reachability: 20, strategic: 22 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "8 provinces, 354+ clinics. Rosario = CGCOP VP"
   },
-  { id: 37, city: "Sevilla", company: "MBA Surgical Empowerment", size: "",
+  { id: 37, city: "Sevilla", company: "MBA Surgical Empowerment", size: "small",
     address: "Parque Empresarial Torneo, 41015 Sevilla", phone: "+34 954 46 99 00", email: "info@mbasurgical.com",
     website: "https://mbasurgical.com", contact: "Commercial Director", role: "Management",
     linkedin: "", priority: 3, notes: "221 employees. AddLife group (Swedish)",
@@ -591,10 +630,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 20, strategic: 18 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "221 employees. AddLife group (Swedish)"
   },
-  { id: 38, city: "Sevilla", company: "Ortopedia Gordillo", size: "",
+  { id: 38, city: "Sevilla", company: "Ortopedia Gordillo", size: "small",
     address: "C/ San Jacinto, 80, 41010 Sevilla", phone: "+34 954 33 11 22", email: "info@ortopediagordillo.es",
     website: "https://ortopediagordillo.es", contact: "Unknown", role: "Management",
     linkedin: "", priority: 2, notes: "Established local orthopaedics",
@@ -603,10 +643,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 15, multiUnit: 5, reachability: 20, strategic: 15 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 39, city: "Sevilla", company: "Hospital Virgen del Rocío - Podología", size: "",
+  { id: 39, city: "Sevilla", company: "Hospital Virgen del Rocío - Podología", size: "small",
     address: "Av. Manuel Siurot, s/n, 41013 Sevilla", phone: "+34 955 01 20 00", email: "comunicacion.hvr.sspa@juntadeandalucia.es",
     website: "https://hospitaluvrocio.es", contact: "Dept. Rehabilitación", role: "Management",
     linkedin: "", priority: 2, notes: "Largest public hospital Andalucía",
@@ -615,10 +656,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 40, city: "Sevilla", company: "Clínica Podológica Sevilla", size: "",
+  { id: 40, city: "Sevilla", company: "Clínica Podológica Sevilla", size: "small",
     address: "C/ Feria, 88, 41002 Sevilla", phone: "+34 954 38 22 11", email: "info@clinicapodologicasevilla.es",
     website: "", contact: "Owner", role: "Management",
     linkedin: "", priority: 1, notes: "Private practice",
@@ -627,6 +669,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 12, multiUnit: 5, reachability: 20, strategic: 12 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -639,6 +682,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 22, multiUnit: 25, reachability: 20, strategic: 22 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "15 employees; 1 000 m² showroom; largest orthopaedics in Spain"
   },
@@ -651,6 +695,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -663,6 +708,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -675,6 +721,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 19, multiUnit: 5, reachability: 20, strategic: 19 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: "Owner-operated; custom insoles specialist; own manufacturing workshop"
   },
@@ -687,6 +734,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
@@ -699,10 +747,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 47, city: "Málaga", company: "Colegio de Podólogos de Málaga", size: "",
+  { id: 47, city: "Málaga", company: "Colegio de Podólogos de Málaga", size: "small",
     address: "Address TBD", phone: "+34 952 XX XX XX", email: "malaga@cpoan.es",
     website: "", contact: "Local Delegate", role: "Management",
     linkedin: "", priority: 2, notes: "COPOAN provincial office",
@@ -711,10 +760,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 15, multiUnit: 5, reachability: 20, strategic: 15 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 48, city: "Málaga", company: "Hospital Costa del Sol - Podología", size: "",
+  { id: 48, city: "Málaga", company: "Hospital Costa del Sol - Podología", size: "small",
     address: "Ctra. Nacional 340, km 187, 29603 Marbella", phone: "+34 951 97 66 69", email: "info@hcs.es",
     website: "https://hospitalcostadelsol.es", contact: "Dept. Rehabilitación", role: "Management",
     linkedin: "", priority: 2, notes: "International patient base",
@@ -723,10 +773,11 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 14, multiUnit: 5, reachability: 20, strategic: 14 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 49, city: "Málaga", company: "Ortopedia Marbella", size: "",
+  { id: 49, city: "Málaga", company: "Ortopedia Marbella", size: "small",
     address: "Av. Ricardo Soriano, 72, 29601 Marbella", phone: "+34 952 77 33 22", email: "info@ortopediamarbella.es",
     website: "", contact: "Owner", role: "Management",
     linkedin: "", priority: 1, notes: "Premium Marbella market",
@@ -735,6 +786,7 @@ const LEADS = [
     lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
     pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
     icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    icebreakersDutch: ["Hoeveel uur per dag werken jullie in een voorovergebogen positie?", "Hebben jullie rugklachten opgemerkt bij het personeel?", "Hoe ziet een typische dag eruit in jullie praktijk?"],
     network: [],
     mustVisitReason: null
   }
@@ -933,6 +985,8 @@ export default function OrthostandFieldCommander() {
   const [selectedCity, setSelectedCity] = useState('all');
   const [filter, setFilter] = useState('all');
   const [scaleFilter, setScaleFilter] = useState('all');
+  const [sourceFilter, setSourceFilter] = useState('all');
+  const [showScaleTooltip, setShowScaleTooltip] = useState(null);
   const [selectedLead, setSelectedLead] = useState(null);
   const [leadData, setLeadData] = useState({});
   const [journalEntries, setJournalEntries] = useState([]);
@@ -997,8 +1051,13 @@ export default function OrthostandFieldCommander() {
     if (filter === 'highValue') leads = leads.filter(l => l.priority === 2);
     if (filter === 'worthStop') leads = leads.filter(l => l.priority === 1);
     if (scaleFilter !== 'all') leads = leads.filter(l => l.size === scaleFilter);
+    if (sourceFilter !== 'all') {
+      if (sourceFilter === 'jan') leads = leads.filter(l => l.source === 'J');
+      else if (sourceFilter === 'henk') leads = leads.filter(l => l.source === 'H');
+      else if (sourceFilter === 'both') leads = leads.filter(l => l.source === 'J+H');
+    }
     return leads.sort((a, b) => b.lhfScore - a.lhfScore);
-  }, [selectedCity, filter, scaleFilter]);
+  }, [selectedCity, filter, scaleFilter, sourceFilter]);
   
   // Stats
   const stats = useMemo(() => {
@@ -1459,15 +1518,31 @@ export default function OrthostandFieldCommander() {
             </div>
             
             {/* Icebreakers */}
-            <div>
-              <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.icebreakers} 🇪🇸</div>
-              <ul className="space-y-1">
-                {lead.icebreakers.map((ice, i) => (
-                  <li key={i} className={`text-sm ${theme.text} italic pl-3 border-l-2 border-[#c9a962]/30`}>
-                    "{ice}"
-                  </li>
-                ))}
-              </ul>
+            <div className="space-y-3">
+              {/* Spanish Icebreakers */}
+              <div>
+                <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.icebreakers} 🇪🇸</div>
+                <ul className="space-y-1">
+                  {lead.icebreakers.map((ice, i) => (
+                    <li key={i} className={`text-sm ${theme.text} italic pl-3 border-l-2 border-[#c9a962]/30`}>
+                      "{ice}"
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* Dutch Icebreakers */}
+              {lead.icebreakersDutch && (
+                <div>
+                  <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.icebreakers} 🇳🇱</div>
+                  <ul className="space-y-1">
+                    {lead.icebreakersDutch.map((ice, i) => (
+                      <li key={i} className={`text-sm ${theme.text} italic pl-3 border-l-2 border-orange-400/30`}>
+                        "{ice}"
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
             
             {/* Network */}
@@ -1738,9 +1813,9 @@ export default function OrthostandFieldCommander() {
         >
           <span className={`text-sm ${theme.text}`}>
             🎯 {lang === 'nl' ? 'Filters' : lang === 'es' ? 'Filtros' : 'Filters'}
-            {(filter !== 'all' || scaleFilter !== 'all' || selectedCity !== 'all') && (
+            {(filter !== 'all' || scaleFilter !== 'all' || sourceFilter !== 'all' || selectedCity !== 'all') && (
               <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${theme.accentBg} ${theme.accent}`}>
-                {[filter !== 'all', scaleFilter !== 'all', selectedCity !== 'all'].filter(Boolean).length}
+                {[filter !== 'all', scaleFilter !== 'all', sourceFilter !== 'all', selectedCity !== 'all'].filter(Boolean).length}
               </span>
             )}
           </span>
@@ -1762,21 +1837,21 @@ export default function OrthostandFieldCommander() {
                 className={`text-center p-2 rounded transition-all ${filter === 'mustVisit' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
               >
                 <span className="text-sm">⭐⭐⭐</span>
-                {!isMobile && <span className={`ml-1 ${theme.text}`}>{t.priority[3]}</span>}
+                <span className={`ml-1 ${theme.text}`}>{t.priority[3]} ({LEADS.filter(l => l.priority === 3).length})</span>
               </button>
               <button 
                 onClick={() => setFilter(filter === 'highValue' ? 'all' : 'highValue')}
                 className={`text-center p-2 rounded transition-all ${filter === 'highValue' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
               >
                 <span className="text-sm">⭐⭐</span>
-                {!isMobile && <span className={`ml-1 ${theme.text}`}>{t.priority[2]}</span>}
+                <span className={`ml-1 ${theme.text}`}>{t.priority[2]} ({LEADS.filter(l => l.priority === 2).length})</span>
               </button>
               <button 
                 onClick={() => setFilter(filter === 'worthStop' ? 'all' : 'worthStop')}
                 className={`text-center p-2 rounded transition-all ${filter === 'worthStop' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
               >
                 <span className="text-sm">⭐</span>
-                {!isMobile && <span className={`ml-1 ${theme.text}`}>{t.priority[1]}</span>}
+                <span className={`ml-1 ${theme.text}`}>{t.priority[1]} ({LEADS.filter(l => l.priority === 1).length})</span>
               </button>
             </div>
           </div>
@@ -1787,31 +1862,106 @@ export default function OrthostandFieldCommander() {
               {lang === 'nl' ? 'Schaal' : lang === 'es' ? 'Escala' : 'Scale'}
             </div>
             <div className={`grid ${isMobile ? 'grid-cols-3 gap-1' : 'grid-cols-3 gap-2'} text-xs`}>
+              <div className="relative">
+                <button 
+                  onClick={() => setScaleFilter(scaleFilter === 'large' ? 'all' : 'large')}
+                  onMouseEnter={() => setShowScaleTooltip('large')}
+                  onMouseLeave={() => setShowScaleTooltip(null)}
+                  className={`text-center p-2 rounded transition-all w-full ${scaleFilter === 'large' ? 'bg-purple-500/20 ring-1 ring-purple-400' : 'hover:bg-purple-500/10'}`}
+                >
+                  <span>🏢</span>
+                  <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'large' ? 'text-purple-400' : theme.textMuted}`}>
+                    {isMobile ? `(${LEADS.filter(l => l.size === 'large').length})` : `Large (${LEADS.filter(l => l.size === 'large').length})`}
+                  </span>
+                </button>
+                {showScaleTooltip === 'large' && (
+                  <div className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${theme.bgCard} border ${theme.border} shadow-lg`}>
+                    <span className={theme.text}>{t.scaleDesc.large}</span>
+                    <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent ${darkMode ? 'border-t-[#2a2520]' : 'border-t-white'}`}></div>
+                  </div>
+                )}
+              </div>
+              <div className="relative">
+                <button 
+                  onClick={() => setScaleFilter(scaleFilter === 'medium' ? 'all' : 'medium')}
+                  onMouseEnter={() => setShowScaleTooltip('medium')}
+                  onMouseLeave={() => setShowScaleTooltip(null)}
+                  className={`text-center p-2 rounded transition-all w-full ${scaleFilter === 'medium' ? 'bg-blue-500/20 ring-1 ring-blue-400' : 'hover:bg-blue-500/10'}`}
+                >
+                  <span>🏪</span>
+                  <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'medium' ? 'text-blue-400' : theme.textMuted}`}>
+                    {isMobile ? `(${LEADS.filter(l => l.size === 'medium').length})` : `Medium (${LEADS.filter(l => l.size === 'medium').length})`}
+                  </span>
+                </button>
+                {showScaleTooltip === 'medium' && (
+                  <div className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${theme.bgCard} border ${theme.border} shadow-lg`}>
+                    <span className={theme.text}>{t.scaleDesc.medium}</span>
+                    <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent ${darkMode ? 'border-t-[#2a2520]' : 'border-t-white'}`}></div>
+                  </div>
+                )}
+              </div>
+              <div className="relative">
+                <button 
+                  onClick={() => setScaleFilter(scaleFilter === 'small' ? 'all' : 'small')}
+                  onMouseEnter={() => setShowScaleTooltip('small')}
+                  onMouseLeave={() => setShowScaleTooltip(null)}
+                  className={`text-center p-2 rounded transition-all w-full ${scaleFilter === 'small' ? 'bg-green-500/20 ring-1 ring-green-400' : 'hover:bg-green-500/10'}`}
+                >
+                  <span>🏠</span>
+                  <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'small' ? 'text-green-400' : theme.textMuted}`}>
+                    {isMobile ? `(${LEADS.filter(l => l.size === 'small').length})` : `Small (${LEADS.filter(l => l.size === 'small').length})`}
+                  </span>
+                </button>
+                {showScaleTooltip === 'small' && (
+                  <div className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${theme.bgCard} border ${theme.border} shadow-lg`}>
+                    <span className={theme.text}>{t.scaleDesc.small}</span>
+                    <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent ${darkMode ? 'border-t-[#2a2520]' : 'border-t-white'}`}></div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Source Filter */}
+          <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
+            <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
+              {lang === 'nl' ? 'Bron' : lang === 'es' ? 'Fuente' : 'Source'}
+            </div>
+            <div className={`grid ${isMobile ? 'grid-cols-4 gap-1' : 'grid-cols-4 gap-2'} text-xs`}>
               <button 
-                onClick={() => setScaleFilter(scaleFilter === 'large' ? 'all' : 'large')}
-                className={`text-center p-2 rounded transition-all ${scaleFilter === 'large' ? 'bg-purple-500/20 ring-1 ring-purple-400' : 'hover:bg-purple-500/10'}`}
+                onClick={() => setSourceFilter('all')}
+                className={`text-center p-2 rounded transition-all ${sourceFilter === 'all' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
               >
-                <span>🏢</span>
-                <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'large' ? 'text-purple-400' : theme.textMuted}`}>
-                  {isMobile ? `(${LEADS.filter(l => l.size === 'large').length})` : `Large (${LEADS.filter(l => l.size === 'large').length})`}
+                <span>📋</span>
+                <span className={`${isMobile ? 'text-xs block' : 'ml-1'} ${sourceFilter === 'all' ? theme.accent : theme.textMuted}`}>
+                  {lang === 'nl' ? 'Alle' : lang === 'es' ? 'Todas' : 'All'} ({LEADS.length})
                 </span>
               </button>
               <button 
-                onClick={() => setScaleFilter(scaleFilter === 'medium' ? 'all' : 'medium')}
-                className={`text-center p-2 rounded transition-all ${scaleFilter === 'medium' ? 'bg-blue-500/20 ring-1 ring-blue-400' : 'hover:bg-blue-500/10'}`}
+                onClick={() => setSourceFilter(sourceFilter === 'jan' ? 'all' : 'jan')}
+                className={`text-center p-2 rounded transition-all ${sourceFilter === 'jan' ? 'bg-orange-500/20 ring-1 ring-orange-400' : 'hover:bg-orange-500/10'}`}
               >
-                <span>🏪</span>
-                <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'medium' ? 'text-blue-400' : theme.textMuted}`}>
-                  {isMobile ? `(${LEADS.filter(l => l.size === 'medium').length})` : `Medium (${LEADS.filter(l => l.size === 'medium').length})`}
+                <span className="text-orange-400">[J]</span>
+                <span className={`${isMobile ? 'text-xs block' : 'ml-1'} ${sourceFilter === 'jan' ? 'text-orange-400' : theme.textMuted}`}>
+                  Jan ({LEADS.filter(l => l.source === 'J').length})
                 </span>
               </button>
               <button 
-                onClick={() => setScaleFilter(scaleFilter === 'small' ? 'all' : 'small')}
-                className={`text-center p-2 rounded transition-all ${scaleFilter === 'small' ? 'bg-green-500/20 ring-1 ring-green-400' : 'hover:bg-green-500/10'}`}
+                onClick={() => setSourceFilter(sourceFilter === 'henk' ? 'all' : 'henk')}
+                className={`text-center p-2 rounded transition-all ${sourceFilter === 'henk' ? 'bg-green-500/20 ring-1 ring-green-400' : 'hover:bg-green-500/10'}`}
               >
-                <span>🏠</span>
-                <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'small' ? 'text-green-400' : theme.textMuted}`}>
-                  {isMobile ? `(${LEADS.filter(l => l.size === 'small').length})` : `Small (${LEADS.filter(l => l.size === 'small').length})`}
+                <span className="text-green-400">[H]</span>
+                <span className={`${isMobile ? 'text-xs block' : 'ml-1'} ${sourceFilter === 'henk' ? 'text-green-400' : theme.textMuted}`}>
+                  Henk ({LEADS.filter(l => l.source === 'H').length})
+                </span>
+              </button>
+              <button 
+                onClick={() => setSourceFilter(sourceFilter === 'both' ? 'all' : 'both')}
+                className={`text-center p-2 rounded transition-all ${sourceFilter === 'both' ? 'bg-blue-500/20 ring-1 ring-blue-400' : 'hover:bg-blue-500/10'}`}
+              >
+                <span className="text-blue-400">[J+H]</span>
+                <span className={`${isMobile ? 'text-xs block' : 'ml-1'} ${sourceFilter === 'both' ? 'text-blue-400' : theme.textMuted}`}>
+                  {lang === 'nl' ? 'Beide' : lang === 'es' ? 'Ambas' : 'Both'} ({LEADS.filter(l => l.source === 'J+H').length})
                 </span>
               </button>
             </div>
@@ -1820,7 +1970,7 @@ export default function OrthostandFieldCommander() {
       )}
       
       {/* Active filters summary - always visible on mobile when filters are active */}
-      {(filter !== 'all' || scaleFilter !== 'all' || selectedCity !== 'all') && (
+      {(filter !== 'all' || scaleFilter !== 'all' || sourceFilter !== 'all' || selectedCity !== 'all') && (
         <div className={`flex items-center gap-2 flex-wrap ${theme.bgCard} rounded-lg p-2 border ${theme.border}`}>
           <span className={`text-xs ${theme.textMuted}`}>{lang === 'nl' ? 'Actief:' : lang === 'es' ? 'Activo:' : 'Active:'}</span>
           {selectedCity !== 'all' && (
@@ -1842,8 +1992,17 @@ export default function OrthostandFieldCommander() {
               {scaleFilter === 'large' ? '🏢' : scaleFilter === 'medium' ? '🏪' : '🏠'}
             </span>
           )}
+          {sourceFilter !== 'all' && (
+            <span className={`text-xs px-2 py-0.5 rounded-full ${
+              sourceFilter === 'jan' ? 'bg-orange-500/20 text-orange-400' :
+              sourceFilter === 'henk' ? 'bg-green-500/20 text-green-400' :
+              'bg-blue-500/20 text-blue-400'
+            }`}>
+              {sourceFilter === 'jan' ? '[J] Jan' : sourceFilter === 'henk' ? '[H] Henk' : '[J+H]'}
+            </span>
+          )}
           <button 
-            onClick={() => { setFilter('all'); setScaleFilter('all'); setSelectedCity('all'); }}
+            onClick={() => { setFilter('all'); setScaleFilter('all'); setSourceFilter('all'); setSelectedCity('all'); }}
             className={`text-xs ${theme.textMuted} hover:text-red-400 ml-auto`}
           >
             ✕
