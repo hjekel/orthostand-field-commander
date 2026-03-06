@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 // ============================================================================
-// ORTHOSTAND FIELD COMMANDER v2.6
+// ORTHOSTAND FIELD COMMANDER v2.7
 // Premium Sales Trip Companion — Moleskine Edition
-// New in v2.6: Mobile-optimized layout, collapsible filters, QR code sync
+// New in v2.7: Field Mode toggle for simplified mobile view
 // ============================================================================
 
 // --- TRANSLATIONS ---
@@ -50,7 +50,9 @@ const TRANSLATIONS = {
     backupDesc: "Export your data to save progress, import to restore",
     toVisit: "To Visit",
     visited: "Visited",
-    pipeline: { todo: "To Visit", enroute: "En Route", visited: "Visited", followup: "Follow-up", deal: "Deal!", nofit: "No Fit" }
+    pipeline: { todo: "To Visit", enroute: "En Route", visited: "Visited", followup: "Follow-up", deal: "Deal!", nofit: "No Fit" },
+    fieldMode: "Field Mode",
+    fieldModeDesc: "Large buttons, essential info"
   },
   nl: {
     title: "Field Commander",
@@ -94,7 +96,9 @@ const TRANSLATIONS = {
     backupDesc: "Exporteer je data om voortgang te bewaren, importeer om te herstellen",
     toVisit: "Te Bezoeken",
     visited: "Bezocht",
-    pipeline: { todo: "Te Bezoeken", enroute: "Onderweg", visited: "Bezocht", followup: "Follow-up", deal: "Deal!", nofit: "Geen Fit" }
+    pipeline: { todo: "Te Bezoeken", enroute: "Onderweg", visited: "Bezocht", followup: "Follow-up", deal: "Deal!", nofit: "Geen Fit" },
+    fieldMode: "Veldmodus",
+    fieldModeDesc: "Grote knoppen, essentiële info"
   },
   es: {
     title: "Field Commander",
@@ -138,7 +142,9 @@ const TRANSLATIONS = {
     backupDesc: "Exporta tus datos para guardar progreso, importa para restaurar",
     toVisit: "Por Visitar",
     visited: "Visitado",
-    pipeline: { todo: "Por Visitar", enroute: "En Camino", visited: "Visitado", followup: "Seguimiento", deal: "¡Trato!", nofit: "No Encaja" }
+    pipeline: { todo: "Por Visitar", enroute: "En Camino", visited: "Visitado", followup: "Seguimiento", deal: "¡Trato!", nofit: "No Encaja" },
+    fieldMode: "Modo Campo",
+    fieldModeDesc: "Botones grandes, info esencial"
   }
 };
 
@@ -999,6 +1005,7 @@ export default function OrthostandFieldCommander() {
   const [filtersExpanded, setFiltersExpanded] = useState(false); // Collapsed filters on mobile
   const [showQRModal, setShowQRModal] = useState(false); // QR sync modal
   const [qrMode, setQrMode] = useState('export'); // 'export' or 'import'
+  const [mobileView, setMobileView] = useState(false); // NEW: Simplified field mode for mobile
   
   const t = TRANSLATIONS[lang];
   
@@ -1450,18 +1457,18 @@ export default function OrthostandFieldCommander() {
                     📞 {lead.phone}
                   </a>
                 )}
-                {lead.email && (
+                {lead.email && lead.email !== '—' && (
                   <a href={`mailto:${lead.email}`} className={`flex items-center gap-1 px-3 py-2 rounded-lg ${darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'} text-sm`}>
                     ✉️ Email
                   </a>
                 )}
-                {lead.linkedin && (
+                {lead.linkedin && lead.linkedin !== '—' && (
                   <a href={lead.linkedin} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-1 px-3 py-2 rounded-lg ${darkMode ? 'bg-blue-600/20 text-blue-400' : 'bg-blue-100 text-blue-600'} text-sm`}>
                     💼 LinkedIn
                   </a>
                 )}
-                {lead.website && (
-                  <a href={lead.website} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-1 px-3 py-2 rounded-lg ${darkMode ? 'bg-green-500/20 text-green-400' : 'bg-green-100 text-green-600'} text-sm`}>
+                {lead.website && lead.website !== '—' && (
+                  <a href={lead.website.startsWith('http') ? lead.website : `https://${lead.website}`} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-1 px-3 py-2 rounded-lg ${darkMode ? 'bg-green-500/20 text-green-400' : 'bg-green-100 text-green-600'} text-sm`}>
                     🌐 Web
                   </a>
                 )}
@@ -1519,7 +1526,6 @@ export default function OrthostandFieldCommander() {
             
             {/* Icebreakers */}
             <div className="space-y-3">
-              {/* Spanish Icebreakers */}
               <div>
                 <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.icebreakers} 🇪🇸</div>
                 <ul className="space-y-1">
@@ -1530,7 +1536,6 @@ export default function OrthostandFieldCommander() {
                   ))}
                 </ul>
               </div>
-              {/* Dutch Icebreakers */}
               {lead.icebreakersDutch && (
                 <div>
                   <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.icebreakers} 🇳🇱</div>
@@ -1544,21 +1549,6 @@ export default function OrthostandFieldCommander() {
                 </div>
               )}
             </div>
-            
-            {/* Network */}
-            {lead.network.length > 0 && (
-              <div>
-                <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.network}</div>
-                <div className="space-y-1">
-                  {lead.network.map((n, i) => (
-                    <div key={i} className={`text-sm ${theme.text} flex items-center gap-2`}>
-                      <span className="text-[#c9a962]">↔</span>
-                      <strong>{n.name}</strong>: {n.relation}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
             
             {/* Status */}
             <div>
@@ -1613,7 +1603,6 @@ export default function OrthostandFieldCommander() {
                   <button
                     key={score}
                     onClick={() => {
-                      // If clicking on current score, clear it
                       if (localData.interestScore === score) {
                         setLocalData(prev => ({ ...prev, interestScore: 0 }));
                       } else {
@@ -1672,34 +1661,28 @@ export default function OrthostandFieldCommander() {
   };
   
   const PlannerTab = () => {
-    // Drag state
     const [draggedLead, setDraggedLead] = useState(null);
     const [dragOverColumn, setDragOverColumn] = useState(null);
     
-    // Calculate lists
     const toVisit = filteredLeads.filter(l => !leadData[l.id]?.status || leadData[l.id]?.status === 'planned' || leadData[l.id]?.status === 'enroute');
     const visited = filteredLeads.filter(l => leadData[l.id]?.status && !['planned', 'enroute'].includes(leadData[l.id]?.status));
     
-    // Handle drag start
     const handleDragStart = (e, lead) => {
       setDraggedLead(lead);
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', lead.id);
     };
     
-    // Handle drag over
     const handleDragOver = (e, column) => {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
       setDragOverColumn(column);
     };
     
-    // Handle drag leave
     const handleDragLeave = () => {
       setDragOverColumn(null);
     };
     
-    // Handle drop
     const handleDrop = (e, targetColumn) => {
       e.preventDefault();
       setDragOverColumn(null);
@@ -1710,7 +1693,6 @@ export default function OrthostandFieldCommander() {
       const isCurrentlyVisited = currentStatus && !['planned', 'enroute'].includes(currentStatus);
       
       if (targetColumn === 'visited' && !isCurrentlyVisited) {
-        // Moving to visited → set status to 'visited'
         setLeadData(prev => ({
           ...prev,
           [draggedLead.id]: {
@@ -1720,7 +1702,6 @@ export default function OrthostandFieldCommander() {
           }
         }));
       } else if (targetColumn === 'toVisit' && isCurrentlyVisited) {
-        // Moving back to toVisit → clear status
         setLeadData(prev => ({
           ...prev,
           [draggedLead.id]: {
@@ -1734,13 +1715,11 @@ export default function OrthostandFieldCommander() {
       setDraggedLead(null);
     };
     
-    // Handle drag end
     const handleDragEnd = () => {
       setDraggedLead(null);
       setDragOverColumn(null);
     };
     
-    // Draggable card component
     const DraggableCard = ({ lead }) => {
       const data = leadData[lead.id] || {};
       const cityColor = CITIES[lead.city];
@@ -1793,7 +1772,6 @@ export default function OrthostandFieldCommander() {
               {'★'.repeat(data.interestScore)}{'☆'.repeat(5 - data.interestScore)} Interest
             </div>
           )}
-          {/* Drag hint - only on desktop */}
           {!isMobile && (
             <div className={`mt-2 text-center text-xs ${theme.textMuted} opacity-50`}>
               ⋮⋮ {lang === 'nl' ? 'sleep om te verplaatsen' : lang === 'es' ? 'arrastra para mover' : 'drag to move'}
@@ -1823,10 +1801,10 @@ export default function OrthostandFieldCommander() {
         </button>
       )}
       
-      {/* Filters section - always visible on desktop, collapsible on mobile */}
+      {/* Filters section */}
       {(!isMobile || filtersExpanded) && (
         <>
-          {/* Priority Legend - clickable */}
+          {/* Priority Legend */}
           <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
             <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
               {lang === 'nl' ? 'Prioriteit' : lang === 'es' ? 'Prioridad' : 'Priority'}
@@ -1856,7 +1834,7 @@ export default function OrthostandFieldCommander() {
             </div>
           </div>
           
-          {/* Scale Filter - simplified on mobile */}
+          {/* Scale Filter */}
           <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
             <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
               {lang === 'nl' ? 'Schaal' : lang === 'es' ? 'Escala' : 'Scale'}
@@ -1877,7 +1855,6 @@ export default function OrthostandFieldCommander() {
                 {showScaleTooltip === 'large' && (
                   <div className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${theme.bgCard} border ${theme.border} shadow-lg`}>
                     <span className={theme.text}>{t.scaleDesc.large}</span>
-                    <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent ${darkMode ? 'border-t-[#2a2520]' : 'border-t-white'}`}></div>
                   </div>
                 )}
               </div>
@@ -1896,7 +1873,6 @@ export default function OrthostandFieldCommander() {
                 {showScaleTooltip === 'medium' && (
                   <div className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${theme.bgCard} border ${theme.border} shadow-lg`}>
                     <span className={theme.text}>{t.scaleDesc.medium}</span>
-                    <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent ${darkMode ? 'border-t-[#2a2520]' : 'border-t-white'}`}></div>
                   </div>
                 )}
               </div>
@@ -1915,7 +1891,6 @@ export default function OrthostandFieldCommander() {
                 {showScaleTooltip === 'small' && (
                   <div className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${theme.bgCard} border ${theme.border} shadow-lg`}>
                     <span className={theme.text}>{t.scaleDesc.small}</span>
-                    <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent ${darkMode ? 'border-t-[#2a2520]' : 'border-t-white'}`}></div>
                   </div>
                 )}
               </div>
@@ -1969,7 +1944,7 @@ export default function OrthostandFieldCommander() {
         </>
       )}
       
-      {/* Active filters summary - always visible on mobile when filters are active */}
+      {/* Active filters summary */}
       {(filter !== 'all' || scaleFilter !== 'all' || sourceFilter !== 'all' || selectedCity !== 'all') && (
         <div className={`flex items-center gap-2 flex-wrap ${theme.bgCard} rounded-lg p-2 border ${theme.border}`}>
           <span className={`text-xs ${theme.textMuted}`}>{lang === 'nl' ? 'Actief:' : lang === 'es' ? 'Activo:' : 'Active:'}</span>
@@ -2010,70 +1985,186 @@ export default function OrthostandFieldCommander() {
         </div>
       )}
       
-      {/* Drag instruction - only on desktop */}
-      {!isMobile && (
+      {/* NEW: Mobile Field Mode Toggle */}
+      <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border} flex items-center justify-between`}>
+        <div>
+          <span className={`font-medium ${theme.text}`}>📱 {t.fieldMode || 'Field Mode'}</span>
+          <p className={`text-xs ${theme.textMuted}`}>
+            {t.fieldModeDesc || 'Large buttons, essential info'}
+          </p>
+        </div>
+        <button
+          onClick={() => setMobileView(!mobileView)}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            mobileView 
+              ? 'bg-green-500 text-white' 
+              : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted} border ${theme.border}`
+          }`}
+        >
+          {mobileView ? (lang === 'nl' ? 'AAN' : lang === 'es' ? 'ON' : 'ON') : (lang === 'nl' ? 'UIT' : lang === 'es' ? 'OFF' : 'OFF')}
+        </button>
+      </div>
+      
+      {/* Drag instruction - only on desktop when not in mobile view */}
+      {!isMobile && !mobileView && (
         <p className={`text-xs ${theme.textMuted} text-center`}>
           💡 {lang === 'nl' ? 'Sleep kaartjes van links naar rechts om status te wijzigen' : lang === 'es' ? 'Arrastra tarjetas de izquierda a derecha para cambiar estado' : 'Drag cards from left to right to change status'}
         </p>
       )}
       
-      {/* Two Column Layout: To Visit / Visited */}
-      <div className="grid md:grid-cols-2 gap-4">
-        {/* Left: To Visit */}
-        <div
-          onDragOver={(e) => handleDragOver(e, 'toVisit')}
-          onDragLeave={handleDragLeave}
-          onDrop={(e) => handleDrop(e, 'toVisit')}
-          className={`min-h-[200px] rounded-lg p-3 transition-all ${
-            dragOverColumn === 'toVisit' 
-              ? `ring-2 ring-dashed ring-[#c9a962] ${theme.accentBg}` 
-              : ''
-          }`}
-        >
-          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-3 flex items-center gap-2`}>
-            <span>📋</span> {lang === 'nl' ? 'Te Bezoeken' : lang === 'es' ? 'Por Visitar' : 'To Visit'} ({toVisit.length})
-          </div>
-          <div className="space-y-2">
-            {toVisit.map(lead => (
-              <DraggableCard key={lead.id} lead={lead} />
-            ))}
-            {toVisit.length === 0 && (
-              <p className={`text-sm ${theme.textMuted} italic text-center py-8`}>
-                {lang === 'nl' ? 'Geen openstaande bezoeken' : lang === 'es' ? 'Sin visitas pendientes' : 'No pending visits'}
-              </p>
-            )}
-          </div>
-        </div>
-        
-        {/* Right: Visited */}
-        <div
-          onDragOver={(e) => handleDragOver(e, 'visited')}
-          onDragLeave={handleDragLeave}
-          onDrop={(e) => handleDrop(e, 'visited')}
-          className={`min-h-[200px] rounded-lg p-3 transition-all ${
-            dragOverColumn === 'visited' 
-              ? `ring-2 ring-dashed ring-green-500 bg-green-500/10` 
-              : ''
-          }`}
-        >
-          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-3 flex items-center gap-2`}>
-            <span>✅</span> {lang === 'nl' ? 'Bezocht' : lang === 'es' ? 'Visitado' : 'Visited'} ({visited.length})
-          </div>
-          <div className="space-y-2">
-            {visited.map(lead => (
-              <DraggableCard key={lead.id} lead={lead} />
-            ))}
-            {visited.length === 0 && (
-              <div className={`text-center py-8 border-2 border-dashed ${theme.border} rounded-lg`}>
-                <p className={`text-sm ${theme.textMuted} italic`}>
-                  {lang === 'nl' ? 'Sleep bezoeken hierheen' : lang === 'es' ? 'Arrastra visitas aquí' : 'Drag visits here'}
+      {/* Two Column Layout OR Mobile Field View */}
+      {mobileView ? (
+        /* MOBILE FIELD VIEW - Large cards, essential info only */
+        <div className="space-y-4">
+          <p className={`text-xs ${theme.textMuted} text-center`}>
+            📱 {lang === 'nl' ? `${filteredLeads.length} contacten` : lang === 'es' ? `${filteredLeads.length} contactos` : `${filteredLeads.length} contacts`}
+          </p>
+          {filteredLeads.map(lead => {
+            const data = leadData[lead.id] || {};
+            const cityColor = CITIES[lead.city];
+            return (
+              <div 
+                key={lead.id}
+                className={`${theme.bgCard} rounded-xl p-5 border-l-4 shadow-lg`}
+                style={{ borderLeftColor: cityColor.lightColor }}
+              >
+                {/* Company Name - Large */}
+                <h2 className={`text-xl font-bold ${theme.text} mb-2`}>{lead.company}</h2>
+                
+                {/* Priority & Status */}
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
+                  <span className="text-lg">{'⭐'.repeat(lead.priority)}</span>
+                  {data.status && (
+                    <span className={`text-sm px-3 py-1 rounded-full ${
+                      data.status === 'deal' ? 'bg-green-500 text-white' :
+                      data.status === 'visited' ? 'bg-blue-500 text-white' :
+                      data.status === 'followup' ? 'bg-orange-500 text-white' :
+                      data.status === 'nofit' ? 'bg-red-500 text-white' :
+                      `${theme.accentBg} ${theme.accent}`
+                    }`}>
+                      {t.status[data.status]}
+                    </span>
+                  )}
+                  <span className={`text-xl font-bold ${theme.accent} ml-auto`}>{lead.lhfScore}</span>
+                </div>
+                
+                {/* Address */}
+                <p className={`text-base ${theme.textMuted} mb-4`}>
+                  📍 {lead.address?.split(',').slice(0,2).join(',')}
                 </p>
-                <p className="text-2xl mt-2">📥</p>
+                
+                {/* Big Action Buttons */}
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  {/* Call Button */}
+                  {lead.phone && (
+                    <a 
+                      href={`tel:${lead.phone}`}
+                      className="flex items-center justify-center gap-2 bg-green-500 text-white text-lg py-4 rounded-xl font-bold shadow-md active:scale-95 transition-transform"
+                    >
+                      📞 {lang === 'nl' ? 'Bellen' : lang === 'es' ? 'Llamar' : 'Call'}
+                    </a>
+                  )}
+                  
+                  {/* Navigate Button */}
+                  <a 
+                    href={`https://maps.google.com/?q=${encodeURIComponent(lead.address)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 bg-blue-500 text-white text-lg py-4 rounded-xl font-bold shadow-md active:scale-95 transition-transform"
+                  >
+                    📍 {lang === 'nl' ? 'Route' : lang === 'es' ? 'Ruta' : 'Route'}
+                  </a>
+                </div>
+                
+                {/* Details & Mark Visited Buttons */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setSelectedLead(lead)}
+                    className={`flex items-center justify-center gap-2 ${theme.accentBg} ${theme.accent} text-base py-3 rounded-xl font-medium`}
+                  >
+                    📋 {lang === 'nl' ? 'Details' : lang === 'es' ? 'Detalles' : 'Details'}
+                  </button>
+                  
+                  <button
+                    onClick={() => {
+                      const newStatus = data.status === 'visited' ? null : 'visited';
+                      setLeadData(prev => ({
+                        ...prev,
+                        [lead.id]: { ...prev[lead.id], status: newStatus, updatedAt: new Date().toISOString() }
+                      }));
+                    }}
+                    className={`flex items-center justify-center gap-2 text-base py-3 rounded-xl font-medium transition-all ${
+                      data.status === 'visited' || data.status === 'deal'
+                        ? 'bg-green-500 text-white' 
+                        : `border-2 border-dashed ${theme.border} ${theme.textMuted}`
+                    }`}
+                  >
+                    {data.status === 'visited' || data.status === 'deal' ? '✅' : '⬜'} {lang === 'nl' ? 'Bezocht' : lang === 'es' ? 'Visitado' : 'Visited'}
+                  </button>
+                </div>
               </div>
-            )}
+            );
+          })}
+        </div>
+      ) : (
+        /* DESKTOP VIEW - Original Two Column Layout */
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Left: To Visit */}
+          <div
+            onDragOver={(e) => handleDragOver(e, 'toVisit')}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, 'toVisit')}
+            className={`min-h-[200px] rounded-lg p-3 transition-all ${
+              dragOverColumn === 'toVisit' 
+                ? `ring-2 ring-dashed ring-[#c9a962] ${theme.accentBg}` 
+                : ''
+            }`}
+          >
+            <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-3 flex items-center gap-2`}>
+              <span>📋</span> {lang === 'nl' ? 'Te Bezoeken' : lang === 'es' ? 'Por Visitar' : 'To Visit'} ({toVisit.length})
+            </div>
+            <div className="space-y-2">
+              {toVisit.map(lead => (
+                <DraggableCard key={lead.id} lead={lead} />
+              ))}
+              {toVisit.length === 0 && (
+                <p className={`text-sm ${theme.textMuted} italic text-center py-8`}>
+                  {lang === 'nl' ? 'Geen openstaande bezoeken' : lang === 'es' ? 'Sin visitas pendientes' : 'No pending visits'}
+                </p>
+              )}
+            </div>
+          </div>
+          
+          {/* Right: Visited */}
+          <div
+            onDragOver={(e) => handleDragOver(e, 'visited')}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, 'visited')}
+            className={`min-h-[200px] rounded-lg p-3 transition-all ${
+              dragOverColumn === 'visited' 
+                ? `ring-2 ring-dashed ring-green-500 bg-green-500/10` 
+                : ''
+            }`}
+          >
+            <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-3 flex items-center gap-2`}>
+              <span>✅</span> {lang === 'nl' ? 'Bezocht' : lang === 'es' ? 'Visitado' : 'Visited'} ({visited.length})
+            </div>
+            <div className="space-y-2">
+              {visited.map(lead => (
+                <DraggableCard key={lead.id} lead={lead} />
+              ))}
+              {visited.length === 0 && (
+                <div className={`text-center py-8 border-2 border-dashed ${theme.border} rounded-lg`}>
+                  <p className={`text-sm ${theme.textMuted} italic`}>
+                    {lang === 'nl' ? 'Sleep bezoeken hierheen' : lang === 'es' ? 'Arrastra visitas aquí' : 'Drag visits here'}
+                  </p>
+                  <p className="text-2xl mt-2">📥</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
     );
   };
@@ -2199,7 +2290,6 @@ export default function OrthostandFieldCommander() {
                 ))}
               </ul>
             </div>
-            {/* Links Section */}
             {data.links && data.links.length > 0 && (
               <div className={`pt-2 border-t ${theme.border}`}>
                 <span className={`text-xs uppercase tracking-wider ${theme.accent}`}>
@@ -2286,7 +2376,6 @@ export default function OrthostandFieldCommander() {
               <div className={`text-xs ${theme.textMuted}`}>Deals</div>
             </div>
           </div>
-          {/* Progress bar */}
           <div className={`mt-4 h-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} overflow-hidden`}>
             <div 
               className="h-full bg-gradient-to-r from-[#c9a962] to-green-400 transition-all"
@@ -2301,18 +2390,18 @@ export default function OrthostandFieldCommander() {
           <div className="space-y-3">
             {Object.entries(CITIES).map(([city, data]) => {
               const cityLeads = LEADS.filter(l => l.city === city);
-              const visited = cityLeads.filter(l => ['visited', 'deal'].includes(leadData[l.id]?.status)).length;
+              const visitedCount = cityLeads.filter(l => ['visited', 'deal'].includes(leadData[l.id]?.status)).length;
               return (
                 <div key={city}>
                   <div className="flex justify-between text-sm mb-1">
                     <span className={theme.text}>{city}</span>
-                    <span className={theme.textMuted}>{visited}/{cityLeads.length}</span>
+                    <span className={theme.textMuted}>{visitedCount}/{cityLeads.length}</span>
                   </div>
                   <div className={`h-1.5 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} overflow-hidden`}>
                     <div 
                       className="h-full transition-all"
                       style={{ 
-                        width: `${(visited / cityLeads.length) * 100}%`,
+                        width: `${(visitedCount / cityLeads.length) * 100}%`,
                         backgroundColor: data.lightColor
                       }}
                     />
@@ -2345,7 +2434,7 @@ export default function OrthostandFieldCommander() {
           </div>
         )}
         
-        {/* Data Backup Section */}
+        {/* Data Backup */}
         <div className={`${theme.bgCard} rounded-lg p-4 border ${theme.border}`}>
           <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.dataBackup}</div>
           <p className={`text-sm ${theme.textMuted} mb-4`}>{t.backupDesc}</p>
@@ -2353,7 +2442,7 @@ export default function OrthostandFieldCommander() {
             <button
               onClick={() => {
                 const data = {
-                  version: '2.6',
+                  version: '2.7',
                   exportDate: new Date().toISOString(),
                   leadData,
                   journalEntries
@@ -2401,12 +2490,9 @@ export default function OrthostandFieldCommander() {
               />
             </label>
           </div>
-          <p className={`text-xs ${theme.textMuted} mt-3 text-center`}>
-            💡 {lang === 'nl' ? 'Tip: Exporteer regelmatig om dataverlies te voorkomen' : lang === 'es' ? 'Consejo: Exporta regularmente para evitar pérdida de datos' : 'Tip: Export regularly to prevent data loss'}
-          </p>
         </div>
         
-        {/* Device Sync Section */}
+        {/* Device Sync */}
         <div className={`${theme.bgCard} rounded-lg p-4 border ${theme.border}`}>
           <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
             {lang === 'nl' ? 'Apparaat Sync' : lang === 'es' ? 'Sincronizar Dispositivo' : 'Device Sync'}
@@ -2435,23 +2521,12 @@ export default function OrthostandFieldCommander() {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const days = [];
     
-    // Empty slots before first day
     for (let i = 0; i < firstDay; i++) days.push(null);
-    // Days of month
     for (let i = 1; i <= daysInMonth; i++) days.push(i);
     
-    // Trip dates
     const tripDays = {
-      2: { // March
-        15: 'Madrid', 16: 'Madrid', 17: 'Madrid',
-        19: 'Valencia', 20: 'Valencia', 21: 'Valencia', 22: 'Valencia', 23: 'Valencia',
-        24: 'Córdoba', 25: 'Córdoba', 26: 'Córdoba', 27: 'Córdoba', 28: 'Córdoba',
-        29: 'Sevilla', 30: 'Sevilla', 31: 'Sevilla'
-      },
-      3: { // April
-        1: 'Sevilla', 2: 'Sevilla',
-        3: 'Málaga', 4: 'Málaga', 5: 'Málaga', 6: 'Málaga', 7: 'Málaga', 8: 'Málaga'
-      }
+      2: { 15: 'Madrid', 16: 'Madrid', 17: 'Madrid', 19: 'Valencia', 20: 'Valencia', 21: 'Valencia', 22: 'Valencia', 23: 'Valencia', 24: 'Córdoba', 25: 'Córdoba', 26: 'Córdoba', 27: 'Córdoba', 28: 'Córdoba', 29: 'Sevilla', 30: 'Sevilla', 31: 'Sevilla' },
+      3: { 1: 'Sevilla', 2: 'Sevilla', 3: 'Málaga', 4: 'Málaga', 5: 'Málaga', 6: 'Málaga', 7: 'Málaga', 8: 'Málaga' }
     };
     
     const monthNames = {
@@ -2472,55 +2547,31 @@ export default function OrthostandFieldCommander() {
           📅 {t.calendarTitle}
         </h2>
         
-        {/* Month navigation */}
         <div className={`${theme.bgCard} rounded-lg p-4 border ${theme.border}`}>
           <div className="flex items-center justify-between mb-4">
-            <button 
-              onClick={() => setCalendarDate(new Date(year, month - 1, 1))}
-              className={`p-2 ${theme.accent}`}
-            >
-              ◀
-            </button>
-            <span className={`font-serif text-lg ${theme.accent}`}>
-              {monthNames[lang][month]} {year}
-            </span>
-            <button 
-              onClick={() => setCalendarDate(new Date(year, month + 1, 1))}
-              className={`p-2 ${theme.accent}`}
-            >
-              ▶
-            </button>
+            <button onClick={() => setCalendarDate(new Date(year, month - 1, 1))} className={`p-2 ${theme.accent}`}>◀</button>
+            <span className={`font-serif text-lg ${theme.accent}`}>{monthNames[lang][month]} {year}</span>
+            <button onClick={() => setCalendarDate(new Date(year, month + 1, 1))} className={`p-2 ${theme.accent}`}>▶</button>
           </div>
           
-          {/* Day headers */}
           <div className="grid grid-cols-7 gap-1 mb-2">
             {dayNames[lang].map(day => (
-              <div key={day} className={`text-center text-xs ${theme.textMuted} py-1`}>
-                {day}
-              </div>
+              <div key={day} className={`text-center text-xs ${theme.textMuted} py-1`}>{day}</div>
             ))}
           </div>
           
-          {/* Calendar grid */}
           <div className="grid grid-cols-7 gap-1">
             {days.map((day, i) => {
               if (day === null) return <div key={i} />;
-              
               const cityToday = tripDays[month]?.[day];
               const cityColor = cityToday ? CITIES[cityToday] : null;
-              
               return (
                 <div 
                   key={i}
                   className={`aspect-square flex flex-col items-center justify-center rounded-lg text-sm transition-all ${
-                    cityToday 
-                      ? `cursor-pointer hover:scale-105` 
-                      : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`
+                    cityToday ? `cursor-pointer hover:scale-105` : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`
                   }`}
-                  style={cityToday ? { 
-                    backgroundColor: `${darkMode ? cityColor.color : cityColor.lightColor}30`,
-                    color: darkMode ? cityColor.lightColor : cityColor.color
-                  } : {}}
+                  style={cityToday ? { backgroundColor: `${darkMode ? cityColor.color : cityColor.lightColor}30`, color: darkMode ? cityColor.lightColor : cityColor.color } : {}}
                   onClick={() => cityToday && setSelectedDay({ day, month, year, city: cityToday })}
                 >
                   <span className={cityToday ? 'font-medium' : theme.textMuted}>{day}</span>
@@ -2531,16 +2582,11 @@ export default function OrthostandFieldCommander() {
           </div>
         </div>
         
-        {/* Legend */}
         <div className={`${theme.bgCard} rounded-lg p-4 border ${theme.border}`}>
           <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>{t.tripDates}</div>
           <div className="flex flex-wrap gap-2">
             {Object.entries(CITIES).map(([city, data]) => (
-              <div 
-                key={city} 
-                className="flex items-center gap-2 px-2 py-1 rounded"
-                style={{ backgroundColor: `${data.color}30` }}
-              >
+              <div key={city} className="flex items-center gap-2 px-2 py-1 rounded" style={{ backgroundColor: `${data.color}30` }}>
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: data.lightColor }} />
                 <span className={`text-xs ${theme.text}`}>{city}</span>
                 <span className={`text-xs ${theme.textMuted}`}>{data.dates}</span>
@@ -2552,925 +2598,386 @@ export default function OrthostandFieldCommander() {
     );
   };
   
-  // --- MAIN RENDER ---
-  
-  // MAP TAB - Interactive map with all contacts
-  const MapTab = () => {
-    const [mapFilter, setMapFilter] = useState('all');
-    
-    // Get filtered leads based on priority
-    const mapLeads = mapFilter === 'all' ? LEADS : LEADS.filter(l => l.priority === parseInt(mapFilter));
-    
-    // Priority colors
-    const priorityColors = {
-      3: { color: '#FFD700', label: lang === 'nl' ? 'Must Visit (Goud)' : lang === 'es' ? 'Imprescindible (Oro)' : 'Must Visit (Gold)' },
-      2: { color: '#C0C0C0', label: lang === 'nl' ? 'Hoge Waarde (Zilver)' : lang === 'es' ? 'Alto Valor (Plata)' : 'High Value (Silver)' },
-      1: { color: '#CD7F32', label: lang === 'nl' ? 'Kansrijk (Brons)' : lang === 'es' ? 'Vale la Pena (Bronce)' : 'Worth a Stop (Bronze)' }
-    };
-    
-    // Calculate map center (center of Spain trip area)
-    const mapCenter = { lat: 38.5, lng: -4.0 };
-    
-    return (
-      <div className="max-w-6xl mx-auto p-4 space-y-4">
-        <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
-          🗺️ {t.mapTitle}
-        </h2>
-        
-        {/* Filter */}
-        <div className="flex gap-2 flex-wrap">
-          <button
-            onClick={() => setMapFilter('all')}
-            className={`px-3 py-1.5 rounded-full text-sm ${mapFilter === 'all' ? `${theme.accentBg} ${theme.accent}` : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`}`}
-          >
-            {t.filters.all} ({LEADS.length})
-          </button>
-          {[3, 2, 1].map(priority => (
-            <button
-              key={priority}
-              onClick={() => setMapFilter(mapFilter === String(priority) ? 'all' : String(priority))}
-              className={`px-3 py-1.5 rounded-full text-sm flex items-center gap-2 ${mapFilter === String(priority) ? `ring-2` : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`}`}
-              style={mapFilter === String(priority) ? { backgroundColor: `${priorityColors[priority].color}30`, color: priorityColors[priority].color, ringColor: priorityColors[priority].color } : {}}
-            >
-              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: priorityColors[priority].color }} />
-              {priorityColors[priority].label} ({LEADS.filter(l => l.priority === priority).length})
-            </button>
-          ))}
+  const MapTab = () => (
+    <div className="max-w-6xl mx-auto p-4 space-y-4">
+      <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
+        🗺️ {t.mapTitle}
+      </h2>
+      
+      <div className={`${theme.bgCard} rounded-lg border ${theme.border} overflow-hidden`}>
+        <div className="aspect-video relative">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3178823.9404520085!2d-5.996295099999999!3d39.3262345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd422997800a3c81%3A0xc436dec1618c2269!2sSpain!5e0!3m2!1sen!2snl!4v1709913456789!5m2!1sen!2snl"
+            className="w-full h-full"
+            style={{ border: 0, minHeight: '400px' }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
-        
-        {/* Route Overview - Visual representation */}
-        <div className={`${theme.bgCard} rounded-lg border ${theme.border} overflow-hidden`}>
-          {/* Trip Route Header */}
-          <div className={`p-4 border-b ${theme.border}`}>
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className={`font-medium ${theme.text}`}>
-                  {lang === 'nl' ? '🚗 Reis Route' : lang === 'es' ? '🚗 Ruta del Viaje' : '🚗 Trip Route'}
-                </h3>
-                <p className={`text-xs ${theme.textMuted}`}>
-                  {lang === 'nl' ? '15 maart - 8 april 2026' : lang === 'es' ? '15 marzo - 8 abril 2026' : 'March 15 - April 8, 2026'}
-                </p>
-              </div>
-              <a 
-                href={`https://www.google.com/maps/dir/Madrid/Valencia/Cordoba/Sevilla/Malaga`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`px-3 py-2 rounded-lg ${theme.accentBg} ${theme.accent} text-sm flex items-center gap-2`}
-              >
-                🗺️ {lang === 'nl' ? 'Open Route' : lang === 'es' ? 'Abrir Ruta' : 'Open Route'}
-              </a>
-            </div>
-            
-            {/* Visual Route */}
-            <div className="flex items-center justify-between overflow-x-auto pb-2">
-              {Object.entries(CITIES).map(([city, cityData], index) => {
-                const cityLeads = mapLeads.filter(l => l.city === city);
-                const cityVisited = cityLeads.filter(l => ['visited', 'deal'].includes(leadData[l.id]?.status)).length;
-                
-                return (
-                  <React.Fragment key={city}>
-                    <div 
-                      className="flex flex-col items-center min-w-[80px] cursor-pointer"
-                      onClick={() => { setSelectedCity(city); setActiveTab('planner'); }}
-                    >
-                      <div 
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shadow-lg"
-                        style={{ backgroundColor: cityData.lightColor }}
-                      >
-                        {cityLeads.length}
-                      </div>
-                      <span className={`text-sm font-medium mt-1 ${theme.text}`}>{city}</span>
-                      <span className={`text-xs ${theme.textMuted}`}>{cityData.dates}</span>
-                      {cityVisited > 0 && (
-                        <span className="text-xs text-green-400">✓ {cityVisited} visited</span>
-                      )}
-                    </div>
-                    {index < Object.entries(CITIES).length - 1 && (
-                      <div className={`flex-1 h-0.5 mx-2 ${darkMode ? 'bg-[#3a3228]' : 'bg-[#d4c8b8]'}`}>
-                        <div className="h-full bg-[#c9a962]" style={{ width: '100%' }} />
-                      </div>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          </div>
-          
-          {/* Summary Stats */}
-          <div className="grid grid-cols-3 divide-x divide-[#3a3228]">
-            <div className="p-3 text-center">
-              <div className={`text-2xl font-bold`} style={{ color: '#FFD700' }}>{LEADS.filter(l => l.priority === 3).length}</div>
-              <div className={`text-xs ${theme.textMuted}`}>🥇 Must Visit</div>
-            </div>
-            <div className="p-3 text-center">
-              <div className={`text-2xl font-bold`} style={{ color: '#C0C0C0' }}>{LEADS.filter(l => l.priority === 2).length}</div>
-              <div className={`text-xs ${theme.textMuted}`}>🥈 High Value</div>
-            </div>
-            <div className="p-3 text-center">
-              <div className={`text-2xl font-bold`} style={{ color: '#CD7F32' }}>{LEADS.filter(l => l.priority === 1).length}</div>
-              <div className={`text-xs ${theme.textMuted}`}>🥉 Worth Stop</div>
-            </div>
-          </div>
-        </div>
-        
-        {/* City sections with contacts */}
-        {Object.entries(CITIES).map(([city, cityData]) => {
-          const cityLeads = mapLeads.filter(l => l.city === city).sort((a,b) => b.priority - a.priority);
-          if (cityLeads.length === 0) return null;
-          
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {Object.entries(CITIES).map(([city, data]) => {
+          const cityLeads = LEADS.filter(l => l.city === city);
           return (
-            <div key={city} className={`${theme.bgCard} rounded-lg border ${theme.border} overflow-hidden`}>
-              <div 
-                className="p-3 flex items-center gap-2"
-                style={{ backgroundColor: `${cityData.color}30` }}
-              >
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: cityData.lightColor }} />
+            <a
+              key={city}
+              href={`https://www.google.com/maps/search/ortopedia+${city}+spain`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${theme.bgCard} rounded-lg p-3 border ${theme.border} hover:scale-[1.02] transition-all`}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: data.lightColor }} />
                 <span className={`font-medium ${theme.text}`}>{city}</span>
-                <span className={`text-sm ${theme.textMuted}`}>({cityData.dates}) · {cityLeads.length} contacts</span>
               </div>
-              <div className="p-3 space-y-2">
-                {cityLeads.map(lead => {
-                  const data = leadData[lead.id] || {};
-                  return (
-                    <div 
-                      key={lead.id}
-                      onClick={() => setSelectedLead(lead)}
-                      className={`flex items-center justify-between p-2 rounded cursor-pointer hover:scale-[1.01] transition-all ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span 
-                          className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: priorityColors[lead.priority].color }}
-                        />
-                        <div>
-                          <p className={`text-sm font-medium ${theme.text}`}>{lead.company}</p>
-                          <p className={`text-xs ${theme.textMuted}`}>{lead.address?.split(',')[0]}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {data.status && (
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${
-                            data.status === 'deal' ? 'bg-green-500/20 text-green-400' :
-                            data.status === 'visited' ? 'bg-blue-500/20 text-blue-400' :
-                            `${theme.accentBg} ${theme.textMuted}`
-                          }`}>
-                            {t.status[data.status]}
-                          </span>
-                        )}
-                        {lead.website && (
-                          <a 
-                            href={lead.website} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className={`text-xs ${theme.accent} hover:underline`}
-                          >
-                            🌐
-                          </a>
-                        )}
-                        <a 
-                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.address)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className={`text-xs ${theme.accent} hover:underline`}
-                        >
-                          📍
-                        </a>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+              <p className={`text-xs ${theme.textMuted}`}>{data.dates}</p>
+              <p className={`text-xs ${theme.accent}`}>{cityLeads.length} targets</p>
+            </a>
           );
         })}
       </div>
-    );
-  };
+    </div>
+  );
   
-  // KANBAN TAB - Pipeline view
   const KanbanTab = () => {
-    const stages = [
-      { key: 'todo', icon: '📋', label: t.pipeline.todo, color: theme.textMuted },
-      { key: 'enroute', icon: '🚶', label: t.pipeline.enroute, color: 'text-blue-400' },
-      { key: 'visited', icon: '✅', label: t.pipeline.visited, color: 'text-green-400' },
-      { key: 'followup', icon: '📞', label: t.pipeline.followup, color: 'text-orange-400' },
-      { key: 'deal', icon: '🤝', label: t.pipeline.deal, color: 'text-emerald-400' },
-      { key: 'nofit', icon: '❌', label: t.pipeline.nofit, color: 'text-red-400' }
+    const columns = [
+      { key: 'todo', label: t.pipeline.todo, color: 'gray' },
+      { key: 'enroute', label: t.pipeline.enroute, color: 'yellow' },
+      { key: 'visited', label: t.pipeline.visited, color: 'blue' },
+      { key: 'followup', label: t.pipeline.followup, color: 'orange' },
+      { key: 'deal', label: t.pipeline.deal, color: 'green' },
+      { key: 'nofit', label: t.pipeline.nofit, color: 'red' }
     ];
     
-    // Group leads by status
-    const getLeadsByStage = (stageKey) => {
-      if (stageKey === 'todo') {
+    const getLeadsForColumn = (column) => {
+      if (column === 'todo') {
         return LEADS.filter(l => !leadData[l.id]?.status || leadData[l.id]?.status === 'planned');
       }
-      return LEADS.filter(l => leadData[l.id]?.status === stageKey);
+      return LEADS.filter(l => leadData[l.id]?.status === column);
     };
     
-    // Calculate totals
-    const totals = stages.reduce((acc, stage) => {
-      acc[stage.key] = getLeadsByStage(stage.key).length;
-      return acc;
-    }, {});
+    const moveToColumn = (leadId, newStatus) => {
+      setLeadData(prev => ({
+        ...prev,
+        [leadId]: {
+          ...prev[leadId],
+          status: newStatus === 'todo' ? null : newStatus,
+          updatedAt: new Date().toISOString()
+        }
+      }));
+    };
     
     return (
-      <div className="max-w-6xl mx-auto p-4 space-y-4">
-        <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
+      <div className="max-w-full mx-auto p-4">
+        <h2 className={`font-serif text-xl ${theme.accent} mb-4`} style={{ fontFamily: 'Playfair Display, serif' }}>
           📋 {t.kanbanTitle}
         </h2>
         
-        {/* Pipeline summary */}
-        <div className={`${theme.bgCard} rounded-lg p-4 border ${theme.border}`}>
-          <div className="flex justify-between items-center overflow-x-auto gap-1">
-            {stages.map((stage, i) => (
-              <React.Fragment key={stage.key}>
-                <div className="text-center min-w-[60px]">
-                  <div className={`text-2xl mb-1`}>{stage.icon}</div>
-                  <div className={`text-xl font-bold ${stage.color}`}>{totals[stage.key]}</div>
-                  <div className={`text-xs ${theme.textMuted} truncate`}>{stage.label}</div>
-                </div>
-                {i < stages.length - 1 && (
-                  <div className={`text-lg ${theme.textMuted}`}>→</div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-        
-        {/* Kanban columns - scrollable on mobile */}
         <div className="overflow-x-auto pb-4">
           <div className="flex gap-3 min-w-max">
-            {stages.map(stage => {
-              const stageLeads = getLeadsByStage(stage.key).sort((a, b) => b.lhfScore - a.lhfScore);
-              
+            {columns.map(col => {
+              const leads = getLeadsForColumn(col.key);
               return (
                 <div 
-                  key={stage.key} 
-                  className={`w-[280px] flex-shrink-0 ${theme.bgCard} rounded-lg border ${theme.border} overflow-hidden`}
+                  key={col.key}
+                  className={`w-64 ${theme.bgCard} rounded-lg border ${theme.border} flex flex-col`}
                 >
-                  {/* Column header */}
                   <div className={`p-3 border-b ${theme.border} flex items-center justify-between`}>
-                    <div className="flex items-center gap-2">
-                      <span>{stage.icon}</span>
-                      <span className={`font-medium ${stage.color}`}>{stage.label}</span>
-                    </div>
-                    <span className={`text-sm ${theme.textMuted} px-2 py-0.5 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'}`}>
-                      {stageLeads.length}
+                    <span className={`text-sm font-medium ${theme.text}`}>{col.label}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      col.color === 'green' ? 'bg-green-500/20 text-green-400' :
+                      col.color === 'blue' ? 'bg-blue-500/20 text-blue-400' :
+                      col.color === 'orange' ? 'bg-orange-500/20 text-orange-400' :
+                      col.color === 'yellow' ? 'bg-yellow-500/20 text-yellow-400' :
+                      col.color === 'red' ? 'bg-red-500/20 text-red-400' :
+                      `${theme.accentBg} ${theme.textMuted}`
+                    }`}>
+                      {leads.length}
                     </span>
                   </div>
-                  
-                  {/* Column content */}
-                  <div className="p-2 space-y-2 max-h-[400px] overflow-y-auto">
-                    {stageLeads.length === 0 ? (
-                      <p className={`text-xs ${theme.textMuted} text-center py-4 italic`}>
-                        {lang === 'nl' ? 'Geen contacten' : lang === 'es' ? 'Sin contactos' : 'No contacts'}
-                      </p>
-                    ) : (
-                      stageLeads.map(lead => {
-                        const data = leadData[lead.id] || {};
-                        const cityColor = CITIES[lead.city];
-                        
-                        return (
-                          <div
-                            key={lead.id}
-                            onClick={() => setSelectedLead(lead)}
-                            className={`p-2 rounded-lg cursor-pointer hover:scale-[1.02] transition-all border-l-2 ${darkMode ? 'bg-[#1a1814]' : 'bg-[#f5f0e8]'}`}
-                            style={{ borderLeftColor: cityColor.lightColor }}
-                          >
-                            <div className="flex items-start justify-between gap-1">
-                              <div className="flex-1 min-w-0">
-                                <p className={`text-sm font-medium ${theme.text} truncate`}>{lead.company}</p>
-                                <p className={`text-xs ${theme.textMuted} truncate`}>{lead.contact}</p>
-                              </div>
-                              <span className={`text-lg font-bold ${theme.accent}`}>{lead.lhfScore}</span>
-                            </div>
-                            <div className="flex items-center gap-1 mt-1.5 flex-wrap">
-                              <span className={`text-xs px-1.5 py-0.5 rounded ${darkMode ? 'bg-[#252118]' : 'bg-white'} ${theme.textMuted}`}>
-                                {lead.city}
-                              </span>
-                              <span className="text-xs">{'⭐'.repeat(lead.priority)}</span>
-                              {data.interestScore > 0 && (
-                                <span className={`text-xs ${theme.accent}`}>
-                                  {'★'.repeat(data.interestScore)}
-                                </span>
-                              )}
-                            </div>
-                            {data.followupAction && stage.key === 'followup' && (
-                              <p className={`text-xs ${theme.accent} mt-1 truncate`}>
-                                → {data.followupAction}
-                              </p>
+                  <div className="p-2 space-y-2 flex-1 overflow-y-auto max-h-[60vh]">
+                    {leads.map(lead => {
+                      const cityColor = CITIES[lead.city];
+                      return (
+                        <div
+                          key={lead.id}
+                          className={`p-2 rounded border-l-2 ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} cursor-pointer hover:scale-[1.02] transition-all`}
+                          style={{ borderLeftColor: cityColor.lightColor }}
+                          onClick={() => setSelectedLead(lead)}
+                        >
+                          <div className="flex items-start justify-between gap-1">
+                            <p className={`text-xs font-medium ${theme.text} line-clamp-2`}>{lead.company}</p>
+                            <span className={`text-xs ${theme.accent}`}>{lead.lhfScore}</span>
+                          </div>
+                          <p className={`text-[10px] ${theme.textMuted} mt-1`}>{lead.city}</p>
+                          
+                          {/* Quick move buttons */}
+                          <div className="flex gap-1 mt-2">
+                            {col.key !== 'visited' && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); moveToColumn(lead.id, 'visited'); }}
+                                className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500/30"
+                              >
+                                ✓
+                              </button>
+                            )}
+                            {col.key !== 'deal' && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); moveToColumn(lead.id, 'deal'); }}
+                                className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                              >
+                                🎯
+                              </button>
+                            )}
+                            {col.key !== 'followup' && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); moveToColumn(lead.id, 'followup'); }}
+                                className="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 hover:bg-orange-500/30"
+                              >
+                                📅
+                              </button>
                             )}
                           </div>
-                        );
-                      })
-                    )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );
             })}
           </div>
         </div>
+      </div>
+    );
+  };
+  
+  const HelpModal = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeHelp} />
+      <div className={`${theme.bgModal} relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl p-6`}>
+        <button onClick={closeHelp} className={`absolute top-4 right-4 p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text}`}>✕</button>
         
-        {/* Quick tip */}
-        <p className={`text-xs ${theme.textMuted} text-center`}>
-          💡 {lang === 'nl' ? 'Klik op een contact om de status te wijzigen' : lang === 'es' ? 'Haz clic en un contacto para cambiar su estado' : 'Click on a contact to change its status'}
-        </p>
-      </div>
-    );
-  };
-  
-  // QR Sync Modal - For syncing data between devices
-  const QRSyncModal = () => {
-    const [qrData, setQrData] = useState('');
-    const [importCode, setImportCode] = useState('');
-    const [importStatus, setImportStatus] = useState('');
-    
-    // Generate QR data on mount when exporting
-    useEffect(() => {
-      if (qrMode === 'export') {
-        const data = {
-          leadData,
-          journalEntries,
-          exportedAt: new Date().toISOString(),
-          version: '2.6'
-        };
-        // Compress to base64
-        const jsonStr = JSON.stringify(data);
-        const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
-        setQrData(base64);
-      }
-    }, [qrMode, leadData, journalEntries]);
-    
-    // Generate simple share code (first 8 chars of hash)
-    const shareCode = qrData ? qrData.substring(0, 20) + '...' : '';
-    
-    // Handle import
-    const handleImport = () => {
-      try {
-        const jsonStr = decodeURIComponent(escape(atob(importCode.trim())));
-        const data = JSON.parse(jsonStr);
-        if (data.leadData) {
-          setLeadData(prev => ({ ...prev, ...data.leadData }));
-        }
-        if (data.journalEntries) {
-          setJournalEntries(prev => [...data.journalEntries, ...prev]);
-        }
-        setImportStatus('success');
-        setTimeout(() => setShowQRModal(false), 1500);
-      } catch (e) {
-        setImportStatus('error');
-      }
-    };
-    
-    // Copy to clipboard
-    const copyToClipboard = () => {
-      navigator.clipboard.writeText(qrData);
-      setImportStatus('copied');
-      setTimeout(() => setImportStatus(''), 2000);
-    };
-    
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowQRModal(false)} />
-        <div className={`${theme.bgModal} relative w-full max-w-md max-h-[85vh] overflow-hidden rounded-2xl shadow-2xl`}>
-          {/* Header */}
-          <div className={`sticky top-0 ${theme.bgModal} p-4 border-b ${theme.border} z-10`}>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
-                🔄 {lang === 'nl' ? 'Sync Data' : lang === 'es' ? 'Sincronizar' : 'Sync Data'}
-              </h2>
-              <button onClick={() => setShowQRModal(false)} className={`p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text} text-lg`}>✕</button>
-            </div>
-            {/* Mode toggle */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setQrMode('export')}
-                className={`flex-1 py-2 rounded-lg text-sm transition-all ${
-                  qrMode === 'export' ? `${theme.accentBg} ${theme.accent}` : `${theme.textMuted}`
-                }`}
-              >
-                📤 {lang === 'nl' ? 'Delen' : lang === 'es' ? 'Compartir' : 'Share'}
-              </button>
-              <button
-                onClick={() => setQrMode('import')}
-                className={`flex-1 py-2 rounded-lg text-sm transition-all ${
-                  qrMode === 'import' ? `${theme.accentBg} ${theme.accent}` : `${theme.textMuted}`
-                }`}
-              >
-                📥 {lang === 'nl' ? 'Ontvangen' : lang === 'es' ? 'Recibir' : 'Receive'}
-              </button>
-            </div>
+        <h2 className={`font-serif text-2xl ${theme.accent} mb-4`} style={{ fontFamily: 'Playfair Display, serif' }}>
+          ⚡ Field Commander
+        </h2>
+        
+        <div className="space-y-4">
+          <div>
+            <h3 className={`font-medium ${theme.text} mb-1`}>
+              {lang === 'nl' ? '🎯 Doel' : lang === 'es' ? '🎯 Objetivo' : '🎯 Purpose'}
+            </h3>
+            <p className={`text-sm ${theme.textMuted}`}>
+              {lang === 'nl' ? 'Je persoonlijke verkoopreis-assistent voor de Orthostand Spanje missie. 49 vooraf geselecteerde doelwitten in 5 steden.' :
+               lang === 'es' ? 'Tu asistente personal de viaje de ventas para la misión Orthostand España. 49 objetivos preseleccionados en 5 ciudades.' :
+               'Your personal sales trip companion for the Orthostand Spain mission. 49 pre-selected targets across 5 cities.'}
+            </p>
           </div>
           
-          {/* Content */}
-          <div className="p-4">
-            {qrMode === 'export' ? (
-              <div className="space-y-4">
-                <p className={`text-sm ${theme.textMuted}`}>
-                  {lang === 'nl' ? 'Kopieer deze code en stuur naar je andere apparaat:' : 
-                   lang === 'es' ? 'Copia este código y envía a tu otro dispositivo:' : 
-                   'Copy this code and send to your other device:'}
-                </p>
-                
-                {/* Data stats */}
-                <div className={`p-3 rounded-lg ${theme.bgCard} border ${theme.border}`}>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div>
-                      <span className={theme.textMuted}>{lang === 'nl' ? 'Leads met data:' : lang === 'es' ? 'Leads con datos:' : 'Leads with data:'}</span>
-                      <span className={`ml-2 ${theme.accent} font-bold`}>{Object.keys(leadData).length}</span>
-                    </div>
-                    <div>
-                      <span className={theme.textMuted}>{lang === 'nl' ? 'Journal notities:' : lang === 'es' ? 'Notas de diario:' : 'Journal entries:'}</span>
-                      <span className={`ml-2 ${theme.accent} font-bold`}>{journalEntries.length}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Code display */}
-                <div className={`p-3 rounded-lg bg-black/20 border ${theme.border} break-all font-mono text-xs ${theme.textMuted} max-h-32 overflow-y-auto`}>
-                  {qrData.substring(0, 200)}...
-                </div>
-                
-                {/* Copy button */}
-                <button
-                  onClick={copyToClipboard}
-                  className={`w-full py-3 rounded-lg bg-[#c9a962] text-[#1a1814] font-medium flex items-center justify-center gap-2`}
-                >
-                  {importStatus === 'copied' ? '✓' : '📋'} 
-                  {importStatus === 'copied' 
-                    ? (lang === 'nl' ? 'Gekopieerd!' : lang === 'es' ? '¡Copiado!' : 'Copied!')
-                    : (lang === 'nl' ? 'Kopieer Sync Code' : lang === 'es' ? 'Copiar Código' : 'Copy Sync Code')
-                  }
-                </button>
-                
-                <p className={`text-xs ${theme.textMuted} text-center`}>
-                  {lang === 'nl' ? 'Stuur via WhatsApp, email, of airdrop' : 
-                   lang === 'es' ? 'Envía vía WhatsApp, email, o airdrop' : 
-                   'Send via WhatsApp, email, or airdrop'}
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <p className={`text-sm ${theme.textMuted}`}>
-                  {lang === 'nl' ? 'Plak de sync code van je andere apparaat:' : 
-                   lang === 'es' ? 'Pega el código de sincronización de tu otro dispositivo:' : 
-                   'Paste the sync code from your other device:'}
-                </p>
-                
-                {/* Import textarea */}
-                <textarea
-                  value={importCode}
-                  onChange={(e) => setImportCode(e.target.value)}
-                  placeholder={lang === 'nl' ? 'Plak sync code hier...' : lang === 'es' ? 'Pega el código aquí...' : 'Paste sync code here...'}
-                  className={`w-full h-32 p-3 rounded-lg ${theme.bgCard} border ${theme.border} ${theme.text} font-mono text-xs resize-none`}
-                />
-                
-                {/* Import button */}
-                <button
-                  onClick={handleImport}
-                  disabled={!importCode.trim()}
-                  className={`w-full py-3 rounded-lg font-medium flex items-center justify-center gap-2 ${
-                    importCode.trim() 
-                      ? 'bg-[#c9a962] text-[#1a1814]' 
-                      : `${theme.bgCard} ${theme.textMuted}`
-                  }`}
-                >
-                  📥 {lang === 'nl' ? 'Importeer Data' : lang === 'es' ? 'Importar Datos' : 'Import Data'}
-                </button>
-                
-                {/* Status messages */}
-                {importStatus === 'success' && (
-                  <div className="text-center text-green-400 text-sm">
-                    ✅ {lang === 'nl' ? 'Data succesvol geïmporteerd!' : lang === 'es' ? '¡Datos importados con éxito!' : 'Data imported successfully!'}
-                  </div>
-                )}
-                {importStatus === 'error' && (
-                  <div className="text-center text-red-400 text-sm">
-                    ❌ {lang === 'nl' ? 'Ongeldige sync code' : lang === 'es' ? 'Código de sincronización inválido' : 'Invalid sync code'}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-  
-  // Help Modal - Shows app guide and terminology
-  const HelpModal = () => {
-    const [helpTab, setHelpTab] = useState('welcome');
-    
-    const helpContent = {
-      en: {
-        welcome: {
-          title: "Welcome to Field Commander! 👋",
-          content: `This app helps you manage your Spain sales trip for Orthostand M30.
-
-**What is this app?**
-A mobile-first sales companion with 28 pre-loaded targets across 5 cities: Madrid → Valencia → Córdoba → Sevilla → Málaga.
-
-**Quick Start:**
-1. Browse targets in the **Planner** tab
-2. Filter by city, priority, or scale
-3. Tap a contact to see details & log your visit
-4. Drag cards left↔right to mark as visited
-5. Use **Journal** to log notes on the go
-6. Check **Intel** for city-specific tips
-7. Track progress in **Dashboard**`
-        },
-        tabs: {
-          title: "App Tabs Explained 📑",
-          content: `**📍 Planner** — Main view. All contacts with drag & drop to mark visited.
-
-**📓 Journal** — Quick voice/text notes. Timestamped log of your trip.
-
-**🎯 Intel** — City-specific market info, fiscal tips, talking points & useful links.
-
-**📊 Dashboard** — Progress stats, conversion rates, export/import data backup.
-
-**📅 Calendar** — Visual trip calendar showing which city each day.
-
-**🗺️ Map** — Route overview with city-by-city breakdown.
-
-**📋 Pipeline** — Kanban board showing lead status progression.`
-        },
-        terms: {
-          title: "Terminology Guide 📖",
-          content: `**Priority (Stars):**
-⭐⭐⭐ Must Visit — Top targets, highest potential
-⭐⭐ High Value — Strong opportunities
-⭐ Worth a Stop — If time permits
-
-**Scale (Organisation Size):**
-🏢 Large — National chain, 10+ locations (multi-unit deals, longer sales cycle)
-🏪 Medium — Regional, 3-9 locations (balanced speed & volume)
-🏠 Small — Single location, owner-operated (quick decisions, 1 unit)
-
-**LHF Score (0-100):**
-"Low Hanging Fruit" score. Higher = easier to close.
-Based on: decision-maker access, multi-unit potential, reachability, strategic value.
-
-**Status:**
-• Planned — Not yet visited
-• Visited — Meeting completed
-• Follow-up — Requires action
-• Deal — Closed! 🎉
-• No Fit — Not a match`
-        },
-        tips: {
-          title: "Pro Tips 💡",
-          content: `**Filtering:**
-• Click Priority stars (⭐⭐⭐/⭐⭐/⭐) to filter
-• Click Scale icons (🏢/🏪/🏠) to filter
-• Combine both! E.g., "Must Visit" + "Large"
-• Click ⓘ next to Scale for explanation
-
-**Drag & Drop:**
-• In Planner: drag cards left→right to mark visited
-• Drag back left to undo
-
-**Data Safety:**
-• Auto-saves to device storage
-• Use Dashboard → Export to backup
-• Import to restore on another device
-
-**Offline:**
-• App works offline after first load
-• Data syncs when back online
-
-**Contact Details:**
-• Tap any card to open full details
-• Log notes, set interest score
-• Voice note button for hands-free`
-        }
-      },
-      nl: {
-        welcome: {
-          title: "Welkom bij Field Commander! 👋",
-          content: `Deze app helpt je bij je Spanje verkooptrip voor Orthostand M30.
-
-**Wat is deze app?**
-Een mobiele verkoop-companion met 28 voorgeladen targets in 5 steden: Madrid → Valencia → Córdoba → Sevilla → Málaga.
-
-**Snel starten:**
-1. Bekijk targets in de **Planner** tab
-2. Filter op stad, prioriteit of schaal
-3. Tik op een contact voor details & loggen
-4. Sleep kaartjes links↔rechts voor status
-5. Gebruik **Journal** voor notities onderweg
-6. Check **Intel** voor stadspecifieke tips
-7. Volg voortgang in **Dashboard**`
-        },
-        tabs: {
-          title: "App Tabs Uitgelegd 📑",
-          content: `**📍 Planner** — Hoofdscherm. Alle contacten met drag & drop.
-
-**📓 Journal** — Snelle voice/tekst notities. Tijdstempel log van je reis.
-
-**🎯 Intel** — Stad-specifieke marktinfo, fiscale tips, gesprekspunten & links.
-
-**📊 Dashboard** — Voortgang statistieken, conversie, data backup.
-
-**📅 Calendar** — Visuele reiskalender per dag.
-
-**🗺️ Map** — Route overzicht per stad.
-
-**📋 Pipeline** — Kanban bord met lead status voortgang.`
-        },
-        terms: {
-          title: "Terminologie Gids 📖",
-          content: `**Prioriteit (Sterren):**
-⭐⭐⭐ Must Visit — Top targets, hoogste potentieel
-⭐⭐ High Value — Sterke kansen
-⭐ Worth a Stop — Als er tijd is
-
-**Schaal (Organisatie Grootte):**
-🏢 Large — Nationale keten, 10+ locaties (multi-unit deals, langere cyclus)
-🏪 Medium — Regionaal, 3-9 locaties (balans snelheid & volume)
-🏠 Small — Eén locatie, eigenaar (snelle beslissing, 1 unit)
-
-**LHF Score (0-100):**
-"Low Hanging Fruit" score. Hoger = makkelijker te closen.
-Gebaseerd op: beslisser-toegang, multi-unit potentieel, bereikbaarheid, strategische waarde.
-
-**Status:**
-• Planned — Nog niet bezocht
-• Visited — Meeting geweest
-• Follow-up — Actie nodig
-• Deal — Gesloten! 🎉
-• No Fit — Geen match`
-        },
-        tips: {
-          title: "Pro Tips 💡",
-          content: `**Filteren:**
-• Klik Priority sterren (⭐⭐⭐/⭐⭐/⭐) om te filteren
-• Klik Scale iconen (🏢/🏪/🏠) om te filteren
-• Combineer beide! Bijv. "Must Visit" + "Large"
-• Klik ⓘ naast Scale voor uitleg
-
-**Drag & Drop:**
-• In Planner: sleep kaartjes links→rechts voor bezocht
-• Sleep terug naar links om ongedaan te maken
-
-**Data Veiligheid:**
-• Slaat automatisch op op je device
-• Gebruik Dashboard → Export voor backup
-• Import om te herstellen op ander device
-
-**Offline:**
-• App werkt offline na eerste keer laden
-• Data synct wanneer weer online
-
-**Contact Details:**
-• Tik op een kaartje voor volledige details
-• Log notities, zet interesse score
-• Voice note knop voor handsfree`
-        }
-      },
-      es: {
-        welcome: {
-          title: "¡Bienvenido a Field Commander! 👋",
-          content: `Esta app te ayuda a gestionar tu viaje de ventas en España para Orthostand M30.
-
-**¿Qué es esta app?**
-Un compañero de ventas móvil con 28 objetivos precargados en 5 ciudades: Madrid → Valencia → Córdoba → Sevilla → Málaga.
-
-**Inicio Rápido:**
-1. Navega objetivos en la pestaña **Planner**
-2. Filtra por ciudad, prioridad o escala
-3. Toca un contacto para ver detalles y registrar
-4. Arrastra tarjetas izq↔der para marcar visitado
-5. Usa **Journal** para notas en movimiento
-6. Revisa **Intel** para consejos por ciudad
-7. Sigue progreso en **Dashboard**`
-        },
-        tabs: {
-          title: "Pestañas Explicadas 📑",
-          content: `**📍 Planner** — Vista principal. Todos los contactos con arrastrar y soltar.
-
-**📓 Journal** — Notas rápidas de voz/texto. Registro con marca de tiempo.
-
-**🎯 Intel** — Info de mercado por ciudad, consejos fiscales, puntos de conversación.
-
-**📊 Dashboard** — Estadísticas de progreso, tasas de conversión, backup de datos.
-
-**📅 Calendar** — Calendario visual del viaje por día.
-
-**🗺️ Map** — Vista general de la ruta por ciudad.
-
-**📋 Pipeline** — Tablero Kanban con progreso de leads.`
-        },
-        terms: {
-          title: "Guía de Terminología 📖",
-          content: `**Prioridad (Estrellas):**
-⭐⭐⭐ Must Visit — Objetivos top, mayor potencial
-⭐⭐ High Value — Oportunidades fuertes
-⭐ Worth a Stop — Si hay tiempo
-
-**Escala (Tamaño de Organización):**
-🏢 Large — Cadena nacional, 10+ ubicaciones (multi-unidad, ciclo largo)
-🏪 Medium — Regional, 3-9 ubicaciones (equilibrio velocidad y volumen)
-🏠 Small — Una ubicación, propietario (decisión rápida, 1 unidad)
-
-**LHF Score (0-100):**
-Puntuación "Low Hanging Fruit". Mayor = más fácil de cerrar.
-Basado en: acceso al decisor, potencial multi-unidad, alcanzabilidad, valor estratégico.
-
-**Estado:**
-• Planned — Aún no visitado
-• Visited — Reunión completada
-• Follow-up — Requiere acción
-• Deal — ¡Cerrado! 🎉
-• No Fit — No encaja`
-        },
-        tips: {
-          title: "Consejos Pro 💡",
-          content: `**Filtrado:**
-• Clic en estrellas de Prioridad (⭐⭐⭐/⭐⭐/⭐) para filtrar
-• Clic en iconos de Escala (🏢/🏪/🏠) para filtrar
-• ¡Combina ambos! Ej. "Must Visit" + "Large"
-• Clic ⓘ junto a Escala para explicación
-
-**Arrastrar y Soltar:**
-• En Planner: arrastra tarjetas izq→der para marcar visitado
-• Arrastra de vuelta a la izq para deshacer
-
-**Seguridad de Datos:**
-• Guarda automáticamente en tu dispositivo
-• Usa Dashboard → Export para backup
-• Import para restaurar en otro dispositivo
-
-**Sin Conexión:**
-• App funciona offline después de cargar
-• Datos se sincronizan cuando vuelvas online
-
-**Detalles de Contacto:**
-• Toca cualquier tarjeta para ver detalles
-• Registra notas, establece puntuación de interés
-• Botón de nota de voz para manos libres`
-        }
-      }
-    };
-    
-    const content = helpContent[lang];
-    const tabs = ['welcome', 'tabs', 'terms', 'tips'];
-    const tabLabels = {
-      en: { welcome: '👋 Welcome', tabs: '📑 Tabs', terms: '📖 Terms', tips: '💡 Tips' },
-      nl: { welcome: '👋 Welkom', tabs: '📑 Tabs', terms: '📖 Termen', tips: '💡 Tips' },
-      es: { welcome: '👋 Bienvenida', tabs: '📑 Pestañas', terms: '📖 Términos', tips: '💡 Consejos' }
-    };
-    
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={closeHelp} />
-        <div className={`${theme.bgModal} relative w-full max-w-lg max-h-[85vh] overflow-hidden rounded-2xl shadow-2xl`}>
-          {/* Header */}
-          <div className={`sticky top-0 ${theme.bgModal} p-4 border-b ${theme.border} z-10`}>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
-                {content[helpTab].title}
-              </h2>
-              <button onClick={closeHelp} className={`p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text} text-lg`}>✕</button>
-            </div>
-            {/* Tab navigation */}
-            <div className="flex gap-1 overflow-x-auto">
-              {tabs.map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setHelpTab(tab)}
-                  className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${
-                    helpTab === tab 
-                      ? `${theme.accentBg} ${theme.accent}` 
-                      : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`
-                  }`}
-                >
-                  {tabLabels[lang][tab]}
-                </button>
-              ))}
-            </div>
+          <div>
+            <h3 className={`font-medium ${theme.text} mb-1`}>
+              {lang === 'nl' ? '⭐ Prioriteiten' : lang === 'es' ? '⭐ Prioridades' : '⭐ Priority System'}
+            </h3>
+            <ul className={`text-sm ${theme.textMuted} space-y-1`}>
+              <li>⭐⭐⭐ {lang === 'nl' ? 'Must Visit - Strategische accounts' : lang === 'es' ? 'Imprescindible - Cuentas estratégicas' : 'Must Visit - Strategic accounts'}</li>
+              <li>⭐⭐ {lang === 'nl' ? 'Hoge Waarde - Sterk potentieel' : lang === 'es' ? 'Alto Valor - Fuerte potencial' : 'High Value - Strong potential'}</li>
+              <li>⭐ {lang === 'nl' ? 'Kansrijk - Opportunistisch' : lang === 'es' ? 'Vale la Pena - Oportunista' : 'Worth a Stop - Opportunistic'}</li>
+            </ul>
           </div>
           
-          {/* Content */}
-          <div className="p-4 overflow-y-auto max-h-[60vh]">
-            <div className={`prose prose-sm max-w-none ${theme.text}`}>
-              {content[helpTab].content.split('\n').map((line, i) => {
-                if (line.startsWith('**') && line.endsWith('**')) {
-                  return <h4 key={i} className={`font-semibold mt-4 mb-1 ${theme.accent}`}>{line.replace(/\*\*/g, '')}</h4>;
-                } else if (line.startsWith('**')) {
-                  const parts = line.split('**');
-                  return (
-                    <p key={i} className="mb-1">
-                      <strong className={theme.accent}>{parts[1]}</strong>
-                      <span className={theme.textMuted}>{parts[2]}</span>
-                    </p>
-                  );
-                } else if (line.startsWith('•')) {
-                  return <p key={i} className={`ml-2 text-sm ${theme.textMuted}`}>{line}</p>;
-                } else if (line.trim() === '') {
-                  return <br key={i} />;
-                } else {
-                  return <p key={i} className={`text-sm ${theme.text} mb-2`}>{line}</p>;
-                }
-              })}
-            </div>
+          <div>
+            <h3 className={`font-medium ${theme.text} mb-1`}>
+              {lang === 'nl' ? '📱 Tabs' : lang === 'es' ? '📱 Pestañas' : '📱 Tabs'}
+            </h3>
+            <ul className={`text-sm ${theme.textMuted} space-y-1`}>
+              <li>📍 <strong>Planner</strong> - {lang === 'nl' ? 'Dagelijkse bezoekplanning' : lang === 'es' ? 'Planificación diaria' : 'Daily visit planning'}</li>
+              <li>📓 <strong>Journal</strong> - {lang === 'nl' ? 'Bezoekverslagen' : lang === 'es' ? 'Informes de visita' : 'Visit reports'}</li>
+              <li>🎯 <strong>Intel</strong> - {lang === 'nl' ? 'Marktinformatie per stad' : lang === 'es' ? 'Inteligencia de mercado' : 'Market intel per city'}</li>
+              <li>📊 <strong>Dashboard</strong> - {lang === 'nl' ? 'Voortgang & commissie' : lang === 'es' ? 'Progreso y comisión' : 'Progress & commission'}</li>
+              <li>📅 <strong>Calendar</strong> - {lang === 'nl' ? 'Reisplanning overzicht' : lang === 'es' ? 'Calendario del viaje' : 'Trip schedule overview'}</li>
+              <li>🗺️ <strong>Map</strong> - {lang === 'nl' ? 'Geografisch overzicht' : lang === 'es' ? 'Vista geográfica' : 'Geographic overview'}</li>
+              <li>📋 <strong>Pipeline</strong> - {lang === 'nl' ? 'Kanban verkoopfunnel' : lang === 'es' ? 'Embudo de ventas' : 'Kanban sales funnel'}</li>
+            </ul>
           </div>
           
-          {/* Footer */}
-          <div className={`sticky bottom-0 ${theme.bgModal} p-4 border-t ${theme.border}`}>
-            <button
-              onClick={closeHelp}
-              className={`w-full py-3 rounded-lg bg-[#c9a962] text-[#1a1814] font-medium`}
-            >
-              {lang === 'nl' ? 'Begrepen, aan de slag!' : lang === 'es' ? '¡Entendido, a trabajar!' : 'Got it, let\'s go!'}
-            </button>
-            <p className={`text-xs ${theme.textMuted} text-center mt-2`}>
-              {lang === 'nl' ? 'Klik ❓ in de header om deze help opnieuw te openen' : 
-               lang === 'es' ? 'Haz clic en ❓ en el encabezado para abrir esta ayuda de nuevo' : 
-               'Click ❓ in the header to open this help again'}
+          <div>
+            <h3 className={`font-medium ${theme.text} mb-1`}>
+              {lang === 'nl' ? '💡 Tips' : lang === 'es' ? '💡 Consejos' : '💡 Tips'}
+            </h3>
+            <ul className={`text-sm ${theme.textMuted} space-y-1`}>
+              <li>• {lang === 'nl' ? 'Klik op een contact voor volledige details' : lang === 'es' ? 'Haz clic en un contacto para ver detalles' : 'Click any contact for full details'}</li>
+              <li>• {lang === 'nl' ? 'Gebruik 🎙 voor spraaknotities' : lang === 'es' ? 'Usa 🎙 para notas de voz' : 'Use 🎙 for voice notes'}</li>
+              <li>• {lang === 'nl' ? 'Data wordt lokaal opgeslagen' : lang === 'es' ? 'Los datos se guardan localmente' : 'Data is saved locally'}</li>
+              <li>• {lang === 'nl' ? 'Exporteer in Dashboard voor backup' : lang === 'es' ? 'Exporta en Dashboard para copia' : 'Export in Dashboard for backup'}</li>
+            </ul>
+          </div>
+          
+          <div className={`pt-4 border-t ${theme.border}`}>
+            <p className={`text-xs ${theme.textMuted} text-center`}>
+              v2.7 • {lang === 'nl' ? 'Gebouwd voor' : lang === 'es' ? 'Construido para' : 'Built for'} Orthostand 🇪🇸
             </p>
           </div>
         </div>
       </div>
-    );
-  };
-
-  // Day detail modal for calendar
-  const DayModal = ({ dayInfo, onClose }) => {
-    const cityLeads = LEADS.filter(l => l.city === dayInfo.city);
-    const cityColor = CITIES[dayInfo.city];
-    const dateStr = `${dayInfo.day} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dayInfo.month]} ${dayInfo.year}`;
+    </div>
+  );
+  
+  const QRSyncModal = () => {
+    const [syncData, setSyncData] = useState('');
+    const [importing, setImporting] = useState(false);
+    
+    const generateExportData = () => {
+      const data = {
+        v: '2.7',
+        ts: Date.now(),
+        ld: leadData,
+        je: journalEntries
+      };
+      return btoa(JSON.stringify(data));
+    };
+    
+    const handleImport = () => {
+      try {
+        const decoded = JSON.parse(atob(syncData));
+        if (decoded.ld) setLeadData(decoded.ld);
+        if (decoded.je) setJournalEntries(decoded.je);
+        alert(lang === 'nl' ? 'Sync succesvol!' : lang === 'es' ? '¡Sincronización exitosa!' : 'Sync successful!');
+        setShowQRModal(false);
+      } catch (e) {
+        alert(lang === 'nl' ? 'Ongeldige sync code' : lang === 'es' ? 'Código de sincronización inválido' : 'Invalid sync code');
+      }
+    };
     
     return (
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-        <div className={`${theme.bgModal} relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl`}>
-          <div className={`sticky top-0 ${theme.bgModal} p-4 border-b ${theme.border} z-10`}>
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className={`font-serif text-lg ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
-                  📅 {dateStr}
-                </h2>
-                <p className={`text-sm`} style={{ color: cityColor.lightColor }}>{dayInfo.city}</p>
-              </div>
-              <button onClick={onClose} className={`p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text} text-xl`}>✕</button>
-            </div>
-          </div>
-          <div className="p-4 space-y-3">
-            <p className={`text-sm ${theme.textMuted}`}>{cityLeads.length} contacts in {dayInfo.city}</p>
-            {cityLeads.sort((a,b) => b.priority - a.priority).map(lead => (
-              <div 
-                key={lead.id}
-                onClick={() => { onClose(); setSelectedLead(lead); }}
-                className={`p-3 rounded-lg border ${theme.border} cursor-pointer hover:scale-[1.01] transition-all`}
-                style={{ borderLeftColor: cityColor.lightColor, borderLeftWidth: '3px' }}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm mr-2">{'⭐'.repeat(lead.priority)}</span>
-                    <span className={`font-medium ${theme.text}`}>{lead.company}</span>
-                  </div>
-                  <span className={`text-lg font-bold ${theme.accent}`}>{lead.lhfScore}</span>
-                </div>
-                <p className={`text-xs ${theme.textMuted} mt-1`}>{lead.contact} · {lead.type}</p>
-              </div>
-            ))}
-            <button 
-              onClick={() => { onClose(); setSelectedCity(dayInfo.city); setActiveTab('planner'); }}
-              className={`w-full py-2 rounded-lg ${theme.accentBg} ${theme.accent} text-sm mt-4`}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowQRModal(false)} />
+        <div className={`${theme.bgModal} relative w-full max-w-md rounded-2xl p-6`}>
+          <button onClick={() => setShowQRModal(false)} className={`absolute top-4 right-4 p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text}`}>✕</button>
+          
+          <h2 className={`font-serif text-xl ${theme.accent} mb-4`}>
+            🔄 {lang === 'nl' ? 'Apparaat Sync' : lang === 'es' ? 'Sincronizar' : 'Device Sync'}
+          </h2>
+          
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => setQrMode('export')}
+              className={`flex-1 py-2 rounded-lg ${qrMode === 'export' ? `${theme.accentBg} ${theme.accent}` : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`}`}
             >
-              View all {dayInfo.city} contacts →
+              📤 Export
+            </button>
+            <button
+              onClick={() => setQrMode('import')}
+              className={`flex-1 py-2 rounded-lg ${qrMode === 'import' ? `${theme.accentBg} ${theme.accent}` : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`}`}
+            >
+              📥 Import
             </button>
           </div>
+          
+          {qrMode === 'export' ? (
+            <div className="space-y-4">
+              <p className={`text-sm ${theme.textMuted}`}>
+                {lang === 'nl' ? 'Kopieer deze code naar je andere apparaat:' : 
+                 lang === 'es' ? 'Copia este código a tu otro dispositivo:' : 
+                 'Copy this code to your other device:'}
+              </p>
+              <textarea
+                readOnly
+                value={generateExportData()}
+                className={`w-full p-3 rounded-lg ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text} text-xs font-mono h-32`}
+                onClick={(e) => e.target.select()}
+              />
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(generateExportData());
+                  alert(lang === 'nl' ? 'Gekopieerd!' : lang === 'es' ? '¡Copiado!' : 'Copied!');
+                }}
+                className={`w-full py-3 rounded-lg bg-[#c9a962] text-[#1a1814] font-medium`}
+              >
+                📋 {lang === 'nl' ? 'Kopieer naar klembord' : lang === 'es' ? 'Copiar al portapapeles' : 'Copy to clipboard'}
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <p className={`text-sm ${theme.textMuted}`}>
+                {lang === 'nl' ? 'Plak de sync code van je andere apparaat:' : 
+                 lang === 'es' ? 'Pega el código de sincronización de tu otro dispositivo:' : 
+                 'Paste the sync code from your other device:'}
+              </p>
+              <textarea
+                value={syncData}
+                onChange={(e) => setSyncData(e.target.value)}
+                placeholder={lang === 'nl' ? 'Plak code hier...' : lang === 'es' ? 'Pega el código aquí...' : 'Paste code here...'}
+                className={`w-full p-3 rounded-lg ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text} text-xs font-mono h-32 border ${theme.border}`}
+              />
+              <button
+                onClick={handleImport}
+                disabled={!syncData}
+                className={`w-full py-3 rounded-lg font-medium ${syncData ? 'bg-[#c9a962] text-[#1a1814]' : `${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.textMuted}`}`}
+              >
+                📥 {lang === 'nl' ? 'Importeren' : lang === 'es' ? 'Importar' : 'Import'}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
   };
   
+  const DayModal = () => {
+    if (!selectedDay) return null;
+    
+    const cityLeads = LEADS.filter(l => l.city === selectedDay.city);
+    const cityData = CITIES[selectedDay.city];
+    
+    return (
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSelectedDay(null)} />
+        <div className={`${theme.bgModal} relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl`}>
+          <div className={`sticky top-0 ${theme.bgModal} p-4 border-b ${theme.border}`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className={`font-serif text-lg ${theme.text}`}>
+                  {selectedDay.day} {['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][selectedDay.month + 1]} {selectedDay.year}
+                </h2>
+                <p className={theme.textMuted} style={{ color: cityData.lightColor }}>{selectedDay.city}</p>
+              </div>
+              <button onClick={() => setSelectedDay(null)} className={`p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text}`}>✕</button>
+            </div>
+          </div>
+          
+          <div className="p-4 space-y-2">
+            <p className={`text-sm ${theme.textMuted} mb-3`}>
+              {cityLeads.length} {lang === 'nl' ? 'doelwitten in' : lang === 'es' ? 'objetivos en' : 'targets in'} {selectedDay.city}
+            </p>
+            {cityLeads.map(lead => (
+              <LeadCard key={lead.id} lead={lead} compact />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // --- MAIN RENDER ---
   return (
-    <div className={`min-h-screen ${theme.bg} ${theme.text}`} style={{ fontFamily: 'DM Sans, system-ui, sans-serif' }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
-      `}</style>
-      
+    <div className={`min-h-screen ${theme.bg} ${theme.text}`}>
       <Header />
       <TabBar />
-      {activeTab === 'planner' && (
-        <>
-          <CityFilter />
-          <PlannerTab />
-        </>
-      )}
-      {activeTab === 'journal' && <JournalTab />}
-      {activeTab === 'intel' && <IntelTab />}
-      {activeTab === 'dashboard' && <DashboardTab />}
-      {activeTab === 'calendar' && <CalendarTab />}
-      {activeTab === 'map' && <MapTab />}
-      {activeTab === 'kanban' && <KanbanTab />}
+      <CityFilter />
+      
+      <main className="pb-20">
+        {activeTab === 'planner' && <PlannerTab />}
+        {activeTab === 'journal' && <JournalTab />}
+        {activeTab === 'intel' && <IntelTab />}
+        {activeTab === 'dashboard' && <DashboardTab />}
+        {activeTab === 'calendar' && <CalendarTab />}
+        {activeTab === 'map' && <MapTab />}
+        {activeTab === 'kanban' && <KanbanTab />}
+      </main>
       
       {selectedLead && <LeadModal lead={selectedLead} onClose={() => setSelectedLead(null)} />}
-      {selectedDay && <DayModal dayInfo={selectedDay} onClose={() => setSelectedDay(null)} />}
+      {selectedDay && <DayModal />}
       {showHelp && <HelpModal />}
       {showQRModal && <QRSyncModal />}
     </div>
