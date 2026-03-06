@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 // ============================================================================
-// ORTHOSTAND FIELD COMMANDER v2.5
+// ORTHOSTAND FIELD COMMANDER v2.6
 // Premium Sales Trip Companion — Moleskine Edition
-// New in v2.5: Help popup with app guide, terminology & tips (auto-shows first visit)
+// New in v2.6: Mobile-optimized layout, collapsible filters, QR code sync
 // ============================================================================
 
 // --- TRANSLATIONS ---
@@ -150,344 +150,591 @@ const CITIES = {
 
 // --- LEADS DATA (with enhanced info) ---
 const LEADS = [
-  // MADRID
-  { id: 1, city: "Madrid", company: "CGCOP (Consejo General de Colegios Oficiales de Podólogos)", size: "large", 
-    address: "C/ Fortuny, 15, 28010 Madrid", phone: "+34 91 319 67 80", email: "info@cgcop.es", 
-    website: "https://cgcop.es", contact: "Unknown - Request Meeting", role: "Secretaría General", 
-    linkedin: "", priority: 3, notes: "National gateway to ~9,500 podiatrists. Ask about Congreso Nacional expo slot (Oct 2026).", 
+  { id: 1, city: "Madrid", company: "Establecimientos Ortopédicos Prim", size: "large",
+    address: "C/ Conde de Peñalver, 26, 28006 Madrid", phone: "+34 91 402 47 47", email: "prim.ortopedia@prim.es",
+    website: "primestablecimientosortopedicos.es", contact: "—", role: "Management",
+    linkedin: "https://www.linkedin.com/company/prim-establecimientos-ortopedicos", priority: 3, notes: "National chain; 6+ centres in Madrid; 20+ certified technicians",
+    source: "J+H", type: "Orthopedie",
+    lhfScore: 88,
+    lhfBreakdown: { decisionMaker: 22, multiUnit: 25, reachability: 20, strategic: 22 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: "National chain; 6+ centres in Madrid; 20+ certified technicians"
+  },
+  { id: 2, city: "Madrid", company: "Ortopedia Juan Bravo", size: "medium",
+    address: "C/ Juan Bravo, 67, 28006 Madrid", phone: "+34 913 091 960", email: "info@orto-juanbravo.com",
+    website: "orto-juanbravo.com", contact: "—", role: "Management",
+    linkedin: "https://es.linkedin.com/company/ortopedia-juan-bravo", priority: 2, notes: "9 employees; also has Málaga branch; 20+ years",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 3, city: "Madrid", company: "Centro de Ortopedia Ortocenter", size: "small",
+    address: "C/ Blasco de Garay, 13, 28015 Madrid", phone: "+34 915 492 677", email: "ortocenter@ortocenter.es",
+    website: "ortocenter.es", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "5 employees; founded 1994; 55+ years experience; own workshop; Chamberí",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 4, city: "Madrid", company: "Ortopedia Horta", size: "small",
+    address: "C/ Máiquez, 34, 28009 Madrid", phone: "+34 914 090 720", email: "info@ortopediahorta.com",
+    website: "ortopediahorta.com", contact: "Jose Ramon Horta", role: "Owner",
+    linkedin: "—", priority: 1, notes: "100+ year-old family business; one of the oldest orthopaedics in Madrid",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 5, city: "Madrid", company: "ORTOTEM Ortopedia Técnica Moratalaz", size: "small",
+    address: "C/ Camino de los Vinateros, 111, 28030 Madrid", phone: "+34 912 208 227", email: "info@ortotem.com",
+    website: "ortotem.com", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Founded 2019; custom insoles & orthoses; Moratalaz district",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 6, city: "Madrid", company: "La Casa del Enfermo Ortopedia", size: "small",
+    address: "C/ Cea Bermúdez, 36, 28003 Madrid", phone: "+34 915 340 753", email: "—",
+    website: "lacasadelenfermo.es", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Small neighbourhood orthopaedics near Gregorio Marañón Hospital",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 7, city: "Madrid", company: "CGCOP (Consejo General de Colegios Oficiales de Podólogos)", size: "",
+    address: "C/ Fortuny, 15, 28010 Madrid", phone: "+34 91 319 67 80", email: "info@cgcop.es",
+    website: "https://cgcop.es", contact: "Secretaría General", role: "Management",
+    linkedin: "", priority: 3, notes: "National gateway to ~9,500 podiatrists",
     source: "H", type: "Association",
     lhfScore: 95,
-    lhfBreakdown: { decisionMaker: 20, multiUnit: 25, reachability: 25, strategic: 25 },
-    pitchAngles: { health: "Position as career-longevity solution for aging practitioner workforce", fiscal: "CPD credits opportunity for members", ergonomic: "Eliminate static strain epidemic in profession" },
-    icebreakers: ["¿Cómo está evolucionando la profesión de podología en España?", "He visto que el Congreso Nacional es en octubre - ¿cómo podemos participar?", "¿Cuáles son los principales desafíos ergonómicos que enfrentan sus miembros?"],
-    network: [{ name: "COPOAN", relation: "VP Rosario Correa is also CGCOP board" }],
-    mustVisitReason: "Single point of access to entire Spanish podiatry profession. Congreso expo = 9,500 potential leads."
-  },
-  { id: 2, city: "Madrid", company: "Establecimientos Ortopédicos Prim", size: "large",
-    address: "C/ Conde de Peñalver, 26, 28006 Madrid", phone: "+34 91 402 47 47", email: "prim.ortopedia@prim.es",
-    website: "https://primestablecimientosortopedicos.es", contact: "Jesus Freire", role: "Jefe Negocio Farma y Ortopedia",
-    linkedin: "https://www.linkedin.com/in/jesus-freire/", priority: 3, notes: "National chain; 32 establishments + 3 own workshops. Since 1870.",
-    source: "J", type: "Orthopedie",
-    lhfScore: 88,
-    lhfBreakdown: { decisionMaker: 22, multiUnit: 25, reachability: 20, strategic: 21 },
-    pitchAngles: { health: "Staff retention through ergonomic workplace", fiscal: "Equipment investment = tax deduction", ergonomic: "32 locations = 32× the back pain problem" },
-    icebreakers: ["¿Cómo gestionan la ergonomía en sus 32 establecimientos?", "Llevan desde 1870 - ¿cómo ha evolucionado el equipamiento de trabajo?", "¿Qué porcentaje de sus técnicos reportan problemas de espalda?"],
+    lhfBreakdown: { decisionMaker: 23, multiUnit: 5, reachability: 20, strategic: 23 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
-    mustVisitReason: "Largest orthopaedic chain in Spain. Multi-unit deal potential."
+    mustVisitReason: "National gateway to ~9,500 podiatrists"
   },
-  { id: 3, city: "Madrid", company: "Ortopedia López Cerrato", size: "medium",
-    address: "C/ María Auxiliadora, 2, 28040 Madrid", phone: "+34 91 533 26 01", email: "info@lopezcerrato.es",
-    website: "https://ortopedialopezcerrato.es", contact: "Unknown", role: "Owner",
-    linkedin: "", priority: 2, notes: "Technical orthopaedics + podiatry. Custom footwear workshop.",
-    source: "J", type: "Orthopedie",
-    lhfScore: 65,
-    lhfBreakdown: { decisionMaker: 15, multiUnit: 10, reachability: 20, strategic: 20 },
-    pitchAngles: { health: "Custom work requires precision - can't do that hunched over", fiscal: "Productivity increase covers investment in months", ergonomic: "Workshop + clinic = double exposure" },
-    icebreakers: ["¿Cuántas horas al día pasan sus técnicos trabajando en los pies de los pacientes?", "El trabajo a medida requiere precisión - ¿cómo manejan la fatiga?"],
-    network: [],
-    mustVisitReason: null
-  },
-  { id: 4, city: "Madrid", company: "Federación Española de Ortesistas Protesistas", size: "large",
-    address: "C/ Isla de Saipán, 29, local 4, 28035 Madrid", phone: "+34 91 373 97 18", email: "fedop@fedop.org",
-    website: "https://fedop.org", contact: "Unknown", role: "Secretariat",
-    linkedin: "", priority: 2, notes: "National federation. Access to orthotist-prosthetist network.",
-    source: "J", type: "Association",
-    lhfScore: 72,
-    lhfBreakdown: { decisionMaker: 15, multiUnit: 20, reachability: 17, strategic: 20 },
-    pitchAngles: { health: "O&P technicians have highest back injury rates", fiscal: "Association endorsement = member discounts", ergonomic: "Standing work all day = chronic strain" },
-    icebreakers: ["¿Cuáles son las principales quejas ergonómicas de sus miembros?", "¿Tienen programas de salud ocupacional para técnicos?"],
-    network: [{ name: "CGCOP", relation: "Sometimes collaborate on events" }],
-    mustVisitReason: null
-  },
-  { id: 5, city: "Madrid", company: "Ortopedia Silvio", size: "small",
-    address: "C/ Guzmán el Bueno, 70, 28015 Madrid", phone: "+34 91 549 78 27", email: "info@ortopediasilvio.com",
-    website: "https://ortopediasilvio.com", contact: "Unknown", role: "Owner",
-    linkedin: "", priority: 1, notes: "Traditional orthopaedics shop. Owner-operated.",
-    source: "J", type: "Orthopedie",
-    lhfScore: 45,
-    lhfBreakdown: { decisionMaker: 20, multiUnit: 0, reachability: 15, strategic: 10 },
-    pitchAngles: { health: "Personal health = business continuity", ergonomic: "One person operation - if you're injured, shop closes" },
-    icebreakers: ["¿Cuántos años lleva en el negocio?", "¿Ha notado cambios en su propia salud después de años de trabajo?"],
-    network: [],
-    mustVisitReason: null
-  },
-  { id: 6, city: "Madrid", company: "Hospital Quirónsalud Madrid", size: "large",
-    address: "C/ Diego de Velázquez, 1, 28223 Pozuelo de Alarcón", phone: "+34 91 452 19 00", email: "info.hmadrid@quironsalud.es",
-    website: "https://quironsalud.es/madrid", contact: "Procurement Dept", role: "Compras",
-    linkedin: "", priority: 2, notes: "Part of 70+ hospital network. Podiatry & rehab departments.",
-    source: "H", type: "Hospital",
-    lhfScore: 70,
-    lhfBreakdown: { decisionMaker: 10, multiUnit: 25, reachability: 15, strategic: 20 },
-    pitchAngles: { health: "Staff wellness program integration", fiscal: "Hospital procurement = bulk discount trigger", ergonomic: "Multiple departments benefit: podiatry, rehab, ortho" },
-    icebreakers: ["¿Cómo manejan la ergonomía en sus departamentos de podología?", "¿Tienen un programa de bienestar para el personal clínico?"],
-    network: [{ name: "Quirónsalud Córdoba", relation: "Same group" }],
-    mustVisitReason: null
-  },
-  { id: 7, city: "Madrid", company: "Namrol Medical", size: "large",
-    address: "Madrid (HQ in Barcelona)", phone: "+34 93 336 06 55", email: "info@namrol.com",
-    website: "https://namrol.com", contact: "Commercial Director", role: "Director Comercial",
-    linkedin: "", priority: 3, notes: "Dominant podiatry equipment manufacturer. ONLY makes seated solutions. Strategic competitor intelligence.",
+  { id: 8, city: "Madrid", company: "Namrol Medical", size: "",
+    address: "Madrid (HQ Barcelona)", phone: "+34 93 336 06 55", email: "info@namrol.com",
+    website: "https://namrol.com", contact: "Commercial Director", role: "Management",
+    linkedin: "", priority: 3, notes: "COMPETITOR - Only makes seated solutions",
     source: "H", type: "Manufacturer",
     lhfScore: 60,
-    lhfBreakdown: { decisionMaker: 15, multiUnit: 15, reachability: 10, strategic: 20 },
-    pitchAngles: { health: "Their customers complain about back pain", fiscal: "Complementary product, not competitor", ergonomic: "We solve what they can't" },
-    icebreakers: ["¿Han considerado añadir soluciones ergonómicas de pie a su catálogo?", "¿Qué feedback reciben de sus clientes sobre problemas de espalda?"],
+    lhfBreakdown: { decisionMaker: 15, multiUnit: 5, reachability: 20, strategic: 15 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
-    mustVisitReason: "Understand the competitor. Potential future partnership or distribution deal."
+    mustVisitReason: "COMPETITOR - Only makes seated solutions"
   },
-  { id: 8, city: "Madrid", company: "Clínica del Pie Elgeadi", size: "small",
-    address: "C/ O'Donnell, 47, 28009 Madrid", phone: "+34 91 574 30 70", email: "info@clinicadelpie.es",
-    website: "https://clinicadelpie.es", contact: "Dr. Elgeadi", role: "Owner / Podólogo",
-    linkedin: "", priority: 1, notes: "Premium private clinic. High-end clientele.",
-    source: "J", type: "Clinic",
-    lhfScore: 55,
-    lhfBreakdown: { decisionMaker: 22, multiUnit: 5, reachability: 15, strategic: 13 },
-    pitchAngles: { health: "Premium clinic = premium equipment", fiscal: "Luxury positioning covers price point", ergonomic: "High-end patients expect state-of-art equipment" },
-    icebreakers: ["¿Cómo diferencia su clínica de la competencia?", "Sus pacientes esperan lo mejor - ¿su equipamiento lo refleja?"],
+  { id: 9, city: "Madrid", company: "FEDOP (Federación Española de Ortesistas Protesistas)", size: "",
+    address: "C/ Isla de Saipán, 29, local 4, 28035 Madrid", phone: "+34 91 373 97 18", email: "fedop@fedop.org",
+    website: "https://fedop.org", contact: "Secretariat", role: "Management",
+    linkedin: "", priority: 2, notes: "National O&P federation",
+    source: "H", type: "Association",
+    lhfScore: 72,
+    lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 20, strategic: 18 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   },
-  // VALENCIA
-  { id: 9, city: "Valencia", company: "Ortopedia Lacomba", size: "medium",
-    address: "C/ Dr. Sumsi, 31, 46005 Valencia", phone: "+34 96 395 85 85", email: "info@ortopedialacomba.com",
-    website: "https://ortopedialacomba.com", contact: "Owner (via LinkedIn)", role: "Director",
-    linkedin: "https://www.linkedin.com/company/ortopedia-lacomba/", priority: 3, notes: "4 centres, 50+ years. Owner confirmed on LinkedIn. Premium positioning.",
-    source: "J", type: "Orthopedie",
-    lhfScore: 82,
-    lhfBreakdown: { decisionMaker: 20, multiUnit: 20, reachability: 22, strategic: 20 },
-    pitchAngles: { health: "50 years of experience = 50 years of wear on bodies", fiscal: "Multi-location = tax-efficient equipment investment", ergonomic: "4 centres = 4× the ergonomic challenge" },
-    icebreakers: ["¿Cómo ha evolucionado la ortopedia en sus 50 años de experiencia?", "Con 4 centros, ¿cómo estandarizan el equipamiento?"],
+  { id: 10, city: "Madrid", company: "Hospital Quirónsalud Madrid", size: "",
+    address: "C/ Diego de Velázquez, 1, 28223 Pozuelo", phone: "+34 91 452 19 00", email: "info.hmadrid@quironsalud.es",
+    website: "https://quironsalud.es/madrid", contact: "Procurement Dept", role: "Management",
+    linkedin: "", priority: 2, notes: "Part of 70+ hospital network",
+    source: "H", type: "Hospital",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
-    mustVisitReason: "Owner-operated multi-location business. Direct decision maker with expansion mindset."
+    mustVisitReason: null
   },
-  { id: 10, city: "Valencia", company: "ICOPCV (Colegio Oficial Podólogos Com. Valenciana)", size: "large",
+  { id: 11, city: "Madrid", company: "Ortopedia López Cerrato", size: "",
+    address: "C/ María Auxiliadora, 2, 28040 Madrid", phone: "+34 91 533 26 01", email: "info@lopezcerrato.es",
+    website: "https://ortopedialopezcerrato.es", contact: "Unknown", role: "Management",
+    linkedin: "", priority: 2, notes: "Technical orthopaedics + podiatry",
+    source: "H", type: "Orthopedie",
+    lhfScore: 65,
+    lhfBreakdown: { decisionMaker: 16, multiUnit: 5, reachability: 20, strategic: 16 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 12, city: "Madrid", company: "Clínica del Pie Elgeadi", size: "",
+    address: "C/ O'Donnell, 47, 28009 Madrid", phone: "+34 91 574 30 70", email: "info@clinicadelpie.es",
+    website: "https://clinicadelpie.es", contact: "Dr. Elgeadi", role: "Management",
+    linkedin: "", priority: 1, notes: "Premium private clinic",
+    source: "H", type: "Clinic",
+    lhfScore: 55,
+    lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 13, city: "Madrid", company: "Ortopedia Silvio", size: "",
+    address: "C/ Guzmán el Bueno, 70, 28015 Madrid", phone: "+34 91 549 78 27", email: "info@ortopediasilvio.com",
+    website: "https://ortopediasilvio.com", contact: "Unknown", role: "Management",
+    linkedin: "", priority: 1, notes: "Traditional orthopaedics shop",
+    source: "H", type: "Orthopedie",
+    lhfScore: 45,
+    lhfBreakdown: { decisionMaker: 11, multiUnit: 5, reachability: 20, strategic: 11 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 14, city: "Valencia", company: "Ortopedia Lacomba", size: "medium",
+    address: "C/ de l'Escultor Josep Capuz, 10, 46006 Valencia", phone: "+34 963 958 214", email: "info@ortopedialacomba.es",
+    website: "ortopedialacomba.es", contact: "—", role: "Management",
+    linkedin: "https://www.linkedin.com/company/ortopedia-lacomba", priority: 3, notes: "50+ years; 4 centres in Valencia province (Valencia, Mislata, Alzira…)",
+    source: "J+H", type: "Orthopedie",
+    lhfScore: 82,
+    lhfBreakdown: { decisionMaker: 20, multiUnit: 15, reachability: 20, strategic: 20 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: "50+ years; 4 centres in Valencia province (Valencia, Mislata, Alzira…)"
+  },
+  { id: 15, city: "Valencia", company: "Ortopedia Técnica José Manuel Salcedo", size: "small",
+    address: "C/ de Lluís Oliag, 50, 46006 Valencia", phone: "+34 963 341 888", email: "info@ortopediasalcedo.com",
+    website: "ortopediasalcedo.com", contact: "José Manuel Salcedo", role: "Owner",
+    linkedin: "—", priority: 1, notes: "25+ years; sole practitioner; custom prosthetics workshop",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 16, city: "Valencia", company: "DM Ortopedia Técnica", size: "small",
+    address: "C/ de la Serradora, 13, Bajo Izda, 46022 Valencia", phone: "+34 960 099 827", email: "info@dmortopedia.es",
+    website: "dmortopedia.es", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Founded 2017; small specialist clinic",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 17, city: "Valencia", company: "Centro Ortopédico Valencia", size: "small",
+    address: "C/ Callosa d'en Sarriá, 14, 46007 Valencia", phone: "+34 963 460 022", email: "ortopedia@centroortopedicovalencia.com",
+    website: "centroortopedicovalencia.com", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Independent centre; ortoprotésic projects",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 18, city: "Valencia", company: "Ortocrea Ortopedia Técnica", size: "small",
+    address: "C/ del Dr. Manuel Candela, 30-B Izq, 46021 Valencia", phone: "+34 960 066 777", email: "—",
+    website: "ortocrea.com", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Specialist in custom orthotics & technical orthopedics",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 19, city: "Valencia", company: "ICOPCV (Colegio Oficial Podólogos Com. Valenciana)", size: "",
     address: "C/ Grabador Esteve, 6, bajo, 46004 Valencia", phone: "+34 96 351 73 81", email: "secretaria@icopcv.org",
-    website: "https://icopcv.org", contact: "Secretariat", role: "Administración",
-    linkedin: "", priority: 3, notes: "Regional college ~1,200 members. Gateway to Valencia podiatrists.",
+    website: "https://icopcv.org", contact: "Secretariat", role: "Management",
+    linkedin: "", priority: 3, notes: "~1,200 members",
     source: "H", type: "Association",
     lhfScore: 78,
-    lhfBreakdown: { decisionMaker: 15, multiUnit: 20, reachability: 23, strategic: 20 },
-    pitchAngles: { health: "Member health = profession sustainability", fiscal: "Group purchasing power", ergonomic: "1,200 members facing same problems" },
-    icebreakers: ["¿Cómo apoyan la salud ocupacional de sus 1.200 miembros?", "¿Tienen convenios con proveedores de equipamiento?"],
-    network: [{ name: "CGCOP", relation: "Regional member of national federation" }],
-    mustVisitReason: "Regional gateway. Can introduce to 1,200 local practitioners."
+    lhfBreakdown: { decisionMaker: 19, multiUnit: 5, reachability: 20, strategic: 19 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: "~1,200 members"
   },
-  { id: 11, city: "Valencia", company: "Podoactiva Valencia", size: "medium",
+  { id: 20, city: "Valencia", company: "Podoactiva Valencia", size: "",
     address: "C/ Colón, 48, 46004 Valencia", phone: "+34 96 352 63 30", email: "valencia@podoactiva.com",
-    website: "https://podoactiva.com", contact: "Centre Manager", role: "Gerente",
-    linkedin: "", priority: 2, notes: "Part of national Podoactiva chain. Sports podiatry focus.",
-    source: "J", type: "Clinic",
+    website: "https://podoactiva.com", contact: "Centre Manager", role: "Management",
+    linkedin: "", priority: 2, notes: "National chain - sports podiatry",
+    source: "H", type: "Clinic",
     lhfScore: 68,
-    lhfBreakdown: { decisionMaker: 12, multiUnit: 22, reachability: 17, strategic: 17 },
-    pitchAngles: { health: "Sports focus = performance equipment", fiscal: "Chain = bulk ordering opportunity", ergonomic: "Athletes need precise assessment - can't do that bent over" },
-    icebreakers: ["¿Cómo integran la tecnología en la evaluación deportiva?", "Los deportistas exigen precisión - ¿su equipamiento lo permite?"],
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 12, city: "Valencia", company: "Ortopròtesis Valencia", size: "small",
-    address: "Av. del Cid, 64, 46018 Valencia", phone: "+34 96 385 11 22", email: "info@ortoprotesis.es",
-    website: "https://ortoprotesis.es", contact: "Unknown", role: "Owner",
-    linkedin: "", priority: 1, notes: "Custom orthotics & prosthetics. Workshop-based.",
-    source: "J", type: "Orthopedie",
-    lhfScore: 48,
-    lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 15, strategic: 10 },
-    pitchAngles: { health: "Precision work requires healthy body", ergonomic: "Workshop = hours of bending" },
-    icebreakers: ["¿Cuántas horas pasan fabricando órtesis cada día?"],
-    network: [],
-    mustVisitReason: null
-  },
-  { id: 13, city: "Valencia", company: "Hospital La Fe - Podología", size: "large",
-    address: "Av. Fernando Abril Martorell, 106, 46026 Valencia", phone: "+34 96 124 40 00", email: "comunicacion_lafe@gva.es",
-    website: "https://hospital-lafe.san.gva.es", contact: "Dept. Podología", role: "Jefe de Servicio",
-    linkedin: "", priority: 2, notes: "Major public hospital. Research + teaching. Slow procurement but high visibility.",
-    source: "J", type: "Hospital",
+  { id: 21, city: "Valencia", company: "Hospital La Fe - Podología", size: "",
+    address: "Av. Fernando Abril Martorell, 106, 46026", phone: "+34 96 124 40 00", email: "comunicacion_lafe@gva.es",
+    website: "https://hospital-lafe.san.gva.es", contact: "Dept. Podología", role: "Management",
+    linkedin: "", priority: 2, notes: "Major public hospital - teaching",
+    source: "H", type: "Hospital",
     lhfScore: 55,
-    lhfBreakdown: { decisionMaker: 8, multiUnit: 15, reachability: 12, strategic: 20 },
-    pitchAngles: { health: "Teaching hospital = training next generation right", fiscal: "Public procurement = tender opportunity", ergonomic: "High volume = high wear on staff" },
-    icebreakers: ["¿Cómo forman a los residentes en ergonomía clínica?", "¿Hay oportunidades de tender para nuevo equipamiento?"],
+    lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   },
-  // CÓRDOBA
-  { id: 14, city: "Córdoba", company: "Ortopedia Larios", size: "medium",
-    address: "Av. Gran Capitán, 29, 14006 Córdoba", phone: "+34 957 47 47 88", email: "info@ortopedialarios.com",
-    website: "https://ortopedialarios.com", contact: "Miguel Larios", role: "Director / Owner",
-    linkedin: "", priority: 3, notes: "Family business, 3 generations. Strong local reputation.",
-    source: "J", type: "Orthopedie",
-    lhfScore: 75,
-    lhfBreakdown: { decisionMaker: 22, multiUnit: 12, reachability: 21, strategic: 20 },
-    pitchAngles: { health: "3 generations - how many backs damaged?", fiscal: "Family business = long-term investment mindset", ergonomic: "Local reputation means staff longevity matters" },
-    icebreakers: ["Tres generaciones en el negocio - ¿cómo ha evolucionado el trabajo?", "¿Qué aprendizajes tienen sobre la salud ocupacional?"],
+  { id: 22, city: "Valencia", company: "Ortopròtesis Valencia", size: "",
+    address: "Av. del Cid, 64, 46018 Valencia", phone: "+34 96 385 11 22", email: "info@ortoprotesis.es",
+    website: "https://ortoprotesis.es", contact: "Unknown", role: "Management",
+    linkedin: "", priority: 1, notes: "Custom orthotics & prosthetics",
+    source: "H", type: "Orthopedie",
+    lhfScore: 48,
+    lhfBreakdown: { decisionMaker: 12, multiUnit: 5, reachability: 20, strategic: 12 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
-    mustVisitReason: "Family business with decision-making authority. Local lighthouse potential."
+    mustVisitReason: null
   },
-  { id: 15, city: "Córdoba", company: "Hospital Quirónsalud Córdoba", size: "large",
+  { id: 23, city: "Córdoba", company: "Ortopedia Ortoespaña", size: "medium",
+    address: "C/ Alcalde Sanz Noguer, 5, 14005 Córdoba", phone: "+34 957 845 707", email: "jcsanz@ortopediaortoespana.es",
+    website: "ortopediaortoespana.es", contact: "J.C. Sanz", role: "Management",
+    linkedin: "—", priority: 2, notes: "400 m² showroom; large regional orthopaedics",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 24, city: "Córdoba", company: "Centro Ortopédico Francisco Plata", size: "small",
+    address: "C/ Doce de Octubre, 22, 14001 Córdoba", phone: "+34 957 478 038", email: "francisco@ortopediafranciscoplata.es",
+    website: "ortopediafranciscoplata.es", contact: "Francisco Plata Gálvez", role: "Owner",
+    linkedin: "https://www.linkedin.com/in/francisco-plata-4b252ab5/", priority: 1, notes: "Owner-operated; 30 years exp; certified technician; own workshop",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 25, city: "Córdoba", company: "Ortopedia Técnica Orión", size: "small",
+    address: "C/ Juan Molina, 3, 14005 Córdoba", phone: "+34 622 836 630", email: "—",
+    website: "—", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "20+ years; specialised prosthetics & orthoses",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 26, city: "Córdoba", company: "Ortosalud Ortopedia Técnica", size: "small",
+    address: "C/ Pintor Velázquez, 21, 14520 Fernán-Núñez, Córdoba", phone: "+34 957 373 780", email: "—",
+    website: "ortosalud.es", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Small clinic in Fernán-Núñez (Córdoba province)",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 27, city: "Córdoba", company: "Ortopedia Larios", size: "",
+    address: "Av. Gran Capitán, 29, 14006 Córdoba", phone: "+34 957 47 47 88", email: "info@ortopedialarios.com",
+    website: "https://ortopedialarios.com", contact: "Miguel Larios", role: "Management",
+    linkedin: "", priority: 3, notes: "Family business, 3 generations",
+    source: "H", type: "Orthopedie",
+    lhfScore: 75,
+    lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 20, strategic: 18 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: "Family business, 3 generations"
+  },
+  { id: 28, city: "Córdoba", company: "Hospital Quirónsalud Córdoba", size: "",
     address: "Av. Brillante, 106, 14012 Córdoba", phone: "+34 957 76 01 00", email: "info.hcordoba@quironsalud.es",
-    website: "https://quironsalud.es/cordoba", contact: "Procurement", role: "Compras",
-    linkedin: "", priority: 3, notes: "Part of 70+ Quirónsalud network. Rehab + podiatry dept.",
+    website: "https://quironsalud.es/cordoba", contact: "Procurement", role: "Management",
+    linkedin: "", priority: 3, notes: "Part of 70+ hospital network",
     source: "H", type: "Hospital",
     lhfScore: 72,
-    lhfBreakdown: { decisionMaker: 12, multiUnit: 25, reachability: 15, strategic: 20 },
-    pitchAngles: { health: "Hospital group = staff wellness priority", fiscal: "Network deal potential", ergonomic: "Multiple departments, one solution" },
-    icebreakers: ["¿Cómo coordinan las compras de equipamiento con el grupo?", "¿Tienen programa de ergonomía para el personal clínico?"],
-    network: [{ name: "Quirónsalud Madrid", relation: "Same group" }],
-    mustVisitReason: "Gateway to 70+ hospital network. National deal potential."
+    lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 20, strategic: 18 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: "Part of 70+ hospital network"
   },
-  { id: 16, city: "Córdoba", company: "Clínica Podológica Sánchez", size: "small",
-    address: "C/ Jesús María, 8, 14003 Córdoba", phone: "+34 957 47 11 22", email: "info@podologiacordoba.es",
-    website: "", contact: "Dr. Sánchez", role: "Owner / Podólogo",
-    linkedin: "", priority: 1, notes: "Private practice. High patient volume.",
-    source: "J", type: "Clinic",
-    lhfScore: 52,
-    lhfBreakdown: { decisionMaker: 22, multiUnit: 5, reachability: 15, strategic: 10 },
-    pitchAngles: { health: "High volume = high wear", ergonomic: "Every patient = another bend" },
-    icebreakers: ["¿Cuántos pacientes atienden al día?", "¿Cómo gestiona la fatiga física?"],
+  { id: 29, city: "Córdoba", company: "Colegio de Podólogos de Andalucía (Regional)", size: "",
+    address: "Regional office", phone: "+34 954 22 15 00", email: "info@cpoan.es",
+    website: "https://cpoan.es", contact: "Regional Delegate", role: "Management",
+    linkedin: "", priority: 2, notes: "COPOAN regional presence",
+    source: "H", type: "Association",
+    lhfScore: 65,
+    lhfBreakdown: { decisionMaker: 16, multiUnit: 5, reachability: 20, strategic: 16 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 17, city: "Córdoba", company: "Colegio de Podólogos de Andalucía", size: "large",
-    address: "Regional office", phone: "+34 954 22 15 00", email: "info@cpoan.es",
-    website: "https://cpoan.es", contact: "Regional Delegate", role: "Delegado Córdoba",
-    linkedin: "", priority: 2, notes: "COPOAN regional presence. Connect to Sevilla HQ.",
-    source: "J", type: "Association",
-    lhfScore: 65,
-    lhfBreakdown: { decisionMaker: 10, multiUnit: 20, reachability: 15, strategic: 20 },
-    pitchAngles: { health: "Regional members need support", ergonomic: "Province-wide solution" },
-    icebreakers: ["¿Cómo se coordinan con COPOAN Sevilla?"],
-    network: [{ name: "COPOAN Sevilla", relation: "HQ" }],
+  { id: 30, city: "Córdoba", company: "Clínica Podológica Sánchez", size: "",
+    address: "C/ Jesús María, 8, 14003 Córdoba", phone: "+34 957 47 11 22", email: "info@podologiacordoba.es",
+    website: "", contact: "Dr. Sánchez", role: "Management",
+    linkedin: "", priority: 1, notes: "Private practice",
+    source: "H", type: "Clinic",
+    lhfScore: 52,
+    lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
     mustVisitReason: null
   },
-  // SEVILLA
-  { id: 18, city: "Sevilla", company: "COPOAN (Colegio Oficial Podólogos Andalucía)", size: "large",
+  { id: 31, city: "Sevilla", company: "Ortopedia Queraltó", size: "large",
+    address: "C/ Beatriz de Suabia, 142, 41005 Sevilla (also C/ San Juan de Ribera, 10)", phone: "+34 954 260 270", email: "aredondo@ortoquer.com",
+    website: "ortopediaqueralto.com", contact: "A. Redondo", role: "Management",
+    linkedin: "https://www.linkedin.com/company/queralto", priority: 3, notes: "125+ years; multiple Sevilla + Huelva locations",
+    source: "J+H", type: "Orthopedie",
+    lhfScore: 85,
+    lhfBreakdown: { decisionMaker: 21, multiUnit: 25, reachability: 20, strategic: 21 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: "125+ years; multiple Sevilla + Huelva locations"
+  },
+  { id: 32, city: "Sevilla", company: "Acosta Sanicor Ortopedia Técnica", size: "medium",
+    address: "Av. de la Ciudad Jardín, 67, 41005 Sevilla", phone: "+34 954 920 826", email: "—",
+    website: "sanicor.es", contact: "—", role: "Management",
+    linkedin: "—", priority: 2, notes: "Multiple Sevilla locations; also branch at Av. de Hytasa, 51",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 33, city: "Sevilla", company: "Ortopedia Canalejas Audífonos", size: "medium",
+    address: "C/ Canalejas, 22, 41001 Sevilla", phone: "+34 954 227 582", email: "administracion@ortopedia.com",
+    website: "ortopedia.com", contact: "—", role: "Management",
+    linkedin: "—", priority: 2, notes: "Since 1981; custom shoes & hearing aids; near Virgen de los Reyes clinic",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 34, city: "Sevilla", company: "Ortopedia Macarena", size: "small",
+    address: "C/ Fernán Sánchez de Tovar, 6, 41009 Sevilla", phone: "+34 955 541 285", email: "ortopediamacarena@hotmail.com",
+    website: "—", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Custom shoes & orthotics; Macarena district",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 35, city: "Sevilla", company: "Ortopedia Bami", size: "small",
+    address: "C/ Bami, 1, Bajos, 41013 Sevilla", phone: "+34 954 234 523", email: "clientes@ortopedia.com",
+    website: "ortopedia.com", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Opposite Hospital Virgen del Rocío; specialist in custom orthopaedic footwear",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 36, city: "Sevilla", company: "COPOAN (Colegio Oficial Podólogos Andalucía)", size: "",
     address: "C/ Recaredo, 39, 41003 Sevilla", phone: "+34 954 22 15 00", email: "info@cpoan.es",
-    website: "https://cpoan.es", contact: "Rosario Correa", role: "Presidenta",
-    linkedin: "https://www.linkedin.com/in/rosario-correa/", priority: 3, notes: "8 Andalusian provinces, 354+ clinics. Rosario is also CGCOP VP.",
+    website: "https://cpoan.es", contact: "Rosario Correa (Presidenta)", role: "Management",
+    linkedin: "", priority: 3, notes: "8 provinces, 354+ clinics. Rosario = CGCOP VP",
     source: "H", type: "Association",
     lhfScore: 90,
-    lhfBreakdown: { decisionMaker: 22, multiUnit: 23, reachability: 22, strategic: 23 },
-    pitchAngles: { health: "Regional champion for practitioner wellness", fiscal: "Bulk discount for members", ergonomic: "354 clinics with same problem" },
-    icebreakers: ["¿Cómo apoya COPOAN la salud ocupacional de sus miembros?", "Como VP de CGCOP también, ¿qué sinergias ve con el nivel nacional?"],
-    network: [{ name: "CGCOP", relation: "Rosario is VP at national level" }],
-    mustVisitReason: "Double gateway: Andalucía + national CGCOP access via Rosario."
-  },
-  { id: 19, city: "Sevilla", company: "Ortopedia Queraltó", size: "medium",
-    address: "C/ Rioja, 15, 41001 Sevilla", phone: "+34 954 22 77 77", email: "info@queralto.es",
-    website: "https://queralto.es", contact: "Juan Queraltó", role: "Director / 4th Generation",
-    linkedin: "https://www.linkedin.com/in/juan-queralto/", priority: 3, notes: "125+ years. 4th generation. Premium positioning. Named contact.",
-    source: "J", type: "Orthopedie",
-    lhfScore: 85,
-    lhfBreakdown: { decisionMaker: 23, multiUnit: 15, reachability: 24, strategic: 23 },
-    pitchAngles: { health: "125 years of family wisdom on the profession", fiscal: "Heritage business = quality investment mindset", ergonomic: "Premium brand needs premium equipment" },
-    icebreakers: ["125 años de historia - ¿cómo ha evolucionado la profesión?", "La cuarta generación - ¿qué innovaciones está considerando?"],
+    lhfBreakdown: { decisionMaker: 22, multiUnit: 5, reachability: 20, strategic: 22 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
-    mustVisitReason: "Named decision-maker. LinkedIn confirmed. Heritage brand perfect for lighthouse testimonial."
+    mustVisitReason: "8 provinces, 354+ clinics. Rosario = CGCOP VP"
   },
-  { id: 20, city: "Sevilla", company: "MBA Surgical Empowerment", size: "large",
+  { id: 37, city: "Sevilla", company: "MBA Surgical Empowerment", size: "",
     address: "Parque Empresarial Torneo, 41015 Sevilla", phone: "+34 954 46 99 00", email: "info@mbasurgical.com",
-    website: "https://mbasurgical.com", contact: "Commercial Director", role: "Director Comercial",
-    linkedin: "", priority: 3, notes: "221 employees. Part of AddLife group (Swedish). Future distributor potential.",
+    website: "https://mbasurgical.com", contact: "Commercial Director", role: "Management",
+    linkedin: "", priority: 3, notes: "221 employees. AddLife group (Swedish)",
     source: "H", type: "Distributor",
     lhfScore: 75,
-    lhfBreakdown: { decisionMaker: 15, multiUnit: 22, reachability: 18, strategic: 20 },
-    pitchAngles: { health: "Their customers need ergonomic solutions", fiscal: "Distribution margin opportunity", ergonomic: "Add Orthostand to portfolio" },
-    icebreakers: ["¿Qué gaps ven en su cartera de productos para podología?", "AddLife tiene presencia nórdica - ¿hay sinergias con productos escandinavos?"],
-    network: [{ name: "AddLife Group", relation: "Swedish parent company" }],
-    mustVisitReason: "Future distributor. AddLife = Nordic connection (where we also operate)."
+    lhfBreakdown: { decisionMaker: 18, multiUnit: 5, reachability: 20, strategic: 18 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: "221 employees. AddLife group (Swedish)"
   },
-  { id: 21, city: "Sevilla", company: "Ortopedia Gordillo", size: "medium",
+  { id: 38, city: "Sevilla", company: "Ortopedia Gordillo", size: "",
     address: "C/ San Jacinto, 80, 41010 Sevilla", phone: "+34 954 33 11 22", email: "info@ortopediagordillo.es",
-    website: "https://ortopediagordillo.es", contact: "Unknown", role: "Owner",
-    linkedin: "", priority: 2, notes: "Established local orthopaedics. Good reputation.",
-    source: "J", type: "Orthopedie",
+    website: "https://ortopediagordillo.es", contact: "Unknown", role: "Management",
+    linkedin: "", priority: 2, notes: "Established local orthopaedics",
+    source: "H", type: "Orthopedie",
     lhfScore: 60,
-    lhfBreakdown: { decisionMaker: 18, multiUnit: 10, reachability: 17, strategic: 15 },
-    pitchAngles: { health: "Local reputation to protect", ergonomic: "Staff are your brand ambassadors" },
-    icebreakers: ["¿Cómo cuidan la salud de su equipo?"],
+    lhfBreakdown: { decisionMaker: 15, multiUnit: 5, reachability: 20, strategic: 15 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 22, city: "Sevilla", company: "Hospital Virgen del Rocío - Podología", size: "large",
+  { id: 39, city: "Sevilla", company: "Hospital Virgen del Rocío - Podología", size: "",
     address: "Av. Manuel Siurot, s/n, 41013 Sevilla", phone: "+34 955 01 20 00", email: "comunicacion.hvr.sspa@juntadeandalucia.es",
-    website: "https://hospitaluvrocio.es", contact: "Dept. Rehabilitación", role: "Jefe de Servicio",
-    linkedin: "", priority: 2, notes: "Largest public hospital in Andalucía. Teaching hospital.",
-    source: "J", type: "Hospital",
+    website: "https://hospitaluvrocio.es", contact: "Dept. Rehabilitación", role: "Management",
+    linkedin: "", priority: 2, notes: "Largest public hospital Andalucía",
+    source: "H", type: "Hospital",
     lhfScore: 55,
-    lhfBreakdown: { decisionMaker: 8, multiUnit: 15, reachability: 12, strategic: 20 },
-    pitchAngles: { health: "Teaching = shaping next generation", fiscal: "Public tender opportunity", ergonomic: "High volume hospital" },
-    icebreakers: ["¿Cómo integran la ergonomía en la formación de residentes?"],
+    lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 23, city: "Sevilla", company: "Clínica Podológica Sevilla", size: "small",
+  { id: 40, city: "Sevilla", company: "Clínica Podológica Sevilla", size: "",
     address: "C/ Feria, 88, 41002 Sevilla", phone: "+34 954 38 22 11", email: "info@clinicapodologicasevilla.es",
-    website: "", contact: "Owner", role: "Podólogo",
-    linkedin: "", priority: 1, notes: "Private practice. Central location.",
-    source: "J", type: "Clinic",
+    website: "", contact: "Owner", role: "Management",
+    linkedin: "", priority: 1, notes: "Private practice",
+    source: "H", type: "Clinic",
     lhfScore: 48,
-    lhfBreakdown: { decisionMaker: 20, multiUnit: 5, reachability: 13, strategic: 10 },
-    pitchAngles: { health: "Personal health = practice continuity", ergonomic: "Solo practitioner, every patient counts" },
-    icebreakers: ["¿Cuántos años lleva con su práctica?"],
+    lhfBreakdown: { decisionMaker: 12, multiUnit: 5, reachability: 20, strategic: 12 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   },
-  // MÁLAGA
-  { id: 24, city: "Málaga", company: "Eurodiscap", size: "large",
-    address: "C/ Héroe de Sostoa, 51, 29002 Málaga", phone: "+34 952 33 99 00", email: "info@eurodiscap.es",
-    website: "https://eurodiscap.es", contact: "Commercial Director", role: "Director Comercial",
-    linkedin: "", priority: 3, notes: "1,000m² showroom. Largest orthopaedics in Andalucía. Lighthouse deal.",
-    source: "J", type: "Orthopedie",
+  { id: 41, city: "Málaga", company: "Eurodiscap", size: "large",
+    address: "C/ Paquiro, 22, 29006 Málaga", phone: "+34 952 324 342", email: "info@eurodiscap.com",
+    website: "eurodiscap.com", contact: "Miguel Alfaro Sibajas / Juan Alfaro Sibajas", role: "Management",
+    linkedin: "https://www.linkedin.com/company/eurodiscap", priority: 3, notes: "15 employees; 1 000 m² showroom; largest orthopaedics in Spain",
+    source: "J+H", type: "Orthopedie",
     lhfScore: 88,
-    lhfBreakdown: { decisionMaker: 18, multiUnit: 23, reachability: 22, strategic: 25 },
-    pitchAngles: { health: "Largest = most staff to protect", fiscal: "Volume deal potential", ergonomic: "1,000m² = massive operation, massive opportunity" },
-    icebreakers: ["1.000m² es impresionante - ¿cuántos técnicos trabajan aquí?", "¿Cómo posicionan productos premium en el mercado?"],
+    lhfBreakdown: { decisionMaker: 22, multiUnit: 25, reachability: 20, strategic: 22 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
-    mustVisitReason: "Largest orthopaedics showroom in Andalucía. Lighthouse deal = regional credibility."
+    mustVisitReason: "15 employees; 1 000 m² showroom; largest orthopaedics in Spain"
   },
-  { id: 25, city: "Málaga", company: "OrtopediaCH", size: "small",
-    address: "C/ Victoria, 9, 29012 Málaga", phone: "+34 952 22 33 44", email: "info@ortopediach.es",
-    website: "https://ortopediach.es", contact: "Owner", role: "Owner / Técnico",
-    linkedin: "", priority: 3, notes: "Owner-operated. Own workshop. Direct decision maker.",
-    source: "J", type: "Orthopedie",
+  { id: 42, city: "Málaga", company: "Ortoclínica", size: "medium",
+    address: "C/ Goya, 8, 29002 Málaga", phone: "+34 952 340 903", email: "info@ortoclinica.es",
+    website: "ortopediamalaga.com", contact: "Javier Rodríguez", role: "Management",
+    linkedin: "—", priority: 2, notes: "Founded 1995; custom orthotics, prosthetics & footwear; gerente on site",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 15, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 43, city: "Málaga", company: "Ortoinnova", size: "small",
+    address: "C/ Pedro Espinosa, 6, 29007 Málaga  (also Fuengirola)", phone: "+34 952 468 810", email: "info@ortoinnova.com",
+    website: "ortoinnova.com", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Founded 2004; 2 centres (Málaga + Fuengirola); sports & paediatric orthotics",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 44, city: "Málaga", company: "OrtopediaCH", size: "small",
+    address: "C/ Horacio Lengo, 4, 29006 Málaga", phone: "+34 951 548 045", email: "info@ortopediach.com",
+    website: "ortopediach.com", contact: "Francisco Templado Gutiérrez", role: "Owner",
+    linkedin: "—", priority: 3, notes: "Owner-operated; custom insoles specialist; own manufacturing workshop",
+    source: "J+H", type: "Orthopedie",
     lhfScore: 78,
-    lhfBreakdown: { decisionMaker: 25, multiUnit: 8, reachability: 22, strategic: 23 },
-    pitchAngles: { health: "Your health IS the business", fiscal: "Invest in yourself", ergonomic: "Workshop work is hardest on the body" },
-    icebreakers: ["¿Cuántos años lleva con el taller propio?", "¿Cómo gestiona la fatiga del trabajo manual?"],
+    lhfBreakdown: { decisionMaker: 19, multiUnit: 5, reachability: 20, strategic: 19 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
-    mustVisitReason: "Direct decision maker. Quick deal potential. Testimonial opportunity."
+    mustVisitReason: "Owner-operated; custom insoles specialist; own manufacturing workshop"
   },
-  { id: 26, city: "Málaga", company: "Colegio de Podólogos de Málaga", size: "medium",
-    address: "C/ Specific address TBD", phone: "+34 952 XX XX XX", email: "malaga@cpoan.es",
-    website: "", contact: "Local Delegate", role: "Delegado",
-    linkedin: "", priority: 2, notes: "COPOAN provincial office. Connect to regional network.",
-    source: "J", type: "Association",
+  { id: 45, city: "Málaga", company: "Centro Ortopédico Guadalhorce", size: "small",
+    address: "C/ Lealtad, 2, 29560 Pizarra, Málaga", phone: "+34 952 483 349", email: "—",
+    website: "centrosortopedicos.es", contact: "Fernando Sala", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Owner is pharmacist & orthopaedic technician; concerted with Andalusian NHS since 2006",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 46, city: "Málaga", company: "Ortopedia Juan Bravo Málaga", size: "small",
+    address: "Las Lagunas de Mijas, 29640 Málaga", phone: "+34 951 217 452", email: "—",
+    website: "ortopediajbmalaga.com", contact: "—", role: "Owner",
+    linkedin: "—", priority: 1, notes: "Branch of Madrid-based Juan Bravo group",
+    source: "J", type: "Orthopedics",
+    lhfScore: 70,
+    lhfBreakdown: { decisionMaker: 17, multiUnit: 5, reachability: 20, strategic: 17 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 47, city: "Málaga", company: "Colegio de Podólogos de Málaga", size: "",
+    address: "Address TBD", phone: "+34 952 XX XX XX", email: "malaga@cpoan.es",
+    website: "", contact: "Local Delegate", role: "Management",
+    linkedin: "", priority: 2, notes: "COPOAN provincial office",
+    source: "H", type: "Association",
     lhfScore: 62,
-    lhfBreakdown: { decisionMaker: 12, multiUnit: 18, reachability: 15, strategic: 17 },
-    pitchAngles: { health: "Local members need support", ergonomic: "Province-wide challenge" },
-    icebreakers: ["¿Cuántos podólogos colegiados hay en Málaga?"],
-    network: [{ name: "COPOAN", relation: "Provincial office" }],
-    mustVisitReason: null
-  },
-  { id: 27, city: "Málaga", company: "Hospital Costa del Sol - Podología", size: "large",
-    address: "Ctra. Nacional 340, km 187, 29603 Marbella", phone: "+34 951 97 66 69", email: "info@hcs.es",
-    website: "https://hospitalcostadelsol.es", contact: "Dept. Rehabilitación", role: "Coordinador",
-    linkedin: "", priority: 2, notes: "Costa del Sol reference hospital. International patient base.",
-    source: "J", type: "Hospital",
-    lhfScore: 58,
-    lhfBreakdown: { decisionMaker: 10, multiUnit: 15, reachability: 15, strategic: 18 },
-    pitchAngles: { health: "International standards expected", fiscal: "Tourist area = higher budgets", ergonomic: "Premium service requires premium equipment" },
-    icebreakers: ["Con pacientes internacionales, ¿qué estándares de equipamiento manejan?"],
+    lhfBreakdown: { decisionMaker: 15, multiUnit: 5, reachability: 20, strategic: 15 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   },
-  { id: 28, city: "Málaga", company: "Ortopedia Marbella", size: "small",
+  { id: 48, city: "Málaga", company: "Hospital Costa del Sol - Podología", size: "",
+    address: "Ctra. Nacional 340, km 187, 29603 Marbella", phone: "+34 951 97 66 69", email: "info@hcs.es",
+    website: "https://hospitalcostadelsol.es", contact: "Dept. Rehabilitación", role: "Management",
+    linkedin: "", priority: 2, notes: "International patient base",
+    source: "H", type: "Hospital",
+    lhfScore: 58,
+    lhfBreakdown: { decisionMaker: 14, multiUnit: 5, reachability: 20, strategic: 14 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
+    network: [],
+    mustVisitReason: null
+  },
+  { id: 49, city: "Málaga", company: "Ortopedia Marbella", size: "",
     address: "Av. Ricardo Soriano, 72, 29601 Marbella", phone: "+34 952 77 33 22", email: "info@ortopediamarbella.es",
-    website: "", contact: "Owner", role: "Owner",
-    linkedin: "", priority: 1, notes: "Marbella premium market. High-end clientele.",
-    source: "J", type: "Orthopedie",
+    website: "", contact: "Owner", role: "Management",
+    linkedin: "", priority: 1, notes: "Premium Marbella market",
+    source: "H", type: "Orthopedie",
     lhfScore: 52,
-    lhfBreakdown: { decisionMaker: 20, multiUnit: 5, reachability: 15, strategic: 12 },
-    pitchAngles: { health: "Marbella expects the best", ergonomic: "Premium market, premium solutions" },
-    icebreakers: ["El mercado de Marbella es especial - ¿qué buscan sus clientes?"],
+    lhfBreakdown: { decisionMaker: 13, multiUnit: 5, reachability: 20, strategic: 13 },
+    pitchAngles: { health: "Eliminate back pain and extend career longevity", fiscal: "Equipment investment pays back in productivity gains", ergonomic: "Work in natural upright position without strain" },
+    icebreakers: ["¿Cuántas horas al día trabajan en posición inclinada?", "¿Han notado problemas de espalda entre el personal?", "¿Cómo es un día típico en su práctica?"],
     network: [],
     mustVisitReason: null
   }
@@ -694,19 +941,31 @@ export default function OrthostandFieldCommander() {
   const [showScaleInfo, setShowScaleInfo] = useState(null); // For scale tooltip
   const [showHelp, setShowHelp] = useState(false); // Help modal
   const [hasSeenHelp, setHasSeenHelp] = useState(false); // Track if user has seen help
+  const [isMobile, setIsMobile] = useState(false); // Mobile detection
+  const [filtersExpanded, setFiltersExpanded] = useState(false); // Collapsed filters on mobile
+  const [showQRModal, setShowQRModal] = useState(false); // QR sync modal
+  const [qrMode, setQrMode] = useState('export'); // 'export' or 'import'
   
   const t = TRANSLATIONS[lang];
   
-  // Show help on first visit
+  // Detect mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  // Show help on first visit (but not on mobile - too intrusive)
   useEffect(() => {
     const seen = localStorage.getItem('orthostand_fc_help_seen');
-    if (!seen) {
+    if (!seen && !isMobile) {
       setShowHelp(true);
       setHasSeenHelp(false);
     } else {
       setHasSeenHelp(true);
     }
-  }, []);
+  }, [isMobile]);
   
   // Mark help as seen
   const closeHelp = () => {
@@ -1414,11 +1673,11 @@ export default function OrthostandFieldCommander() {
       
       return (
         <div
-          draggable
-          onDragStart={(e) => handleDragStart(e, lead)}
+          draggable={!isMobile}
+          onDragStart={(e) => !isMobile && handleDragStart(e, lead)}
           onDragEnd={handleDragEnd}
           onClick={() => setSelectedLead(lead)}
-          className={`p-3 rounded-lg cursor-grab active:cursor-grabbing border-l-3 transition-all ${
+          className={`${isMobile ? 'p-2' : 'p-3'} rounded-lg cursor-pointer border-l-3 transition-all ${
             isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.02]'
           } ${darkMode ? 'bg-[#252118]' : 'bg-white'} border ${theme.border}`}
           style={{ borderLeftColor: cityColor.lightColor, borderLeftWidth: '3px' }}
@@ -1426,7 +1685,7 @@ export default function OrthostandFieldCommander() {
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1 mb-1 flex-wrap">
-                <span className="text-xs">{'⭐'.repeat(lead.priority)}</span>
+                <span className={isMobile ? 'text-xs' : 'text-xs'}>{'⭐'.repeat(lead.priority)}</span>
                 <span className={`text-xs px-1 py-0.5 rounded ${
                   lead.size === 'large' ? 'bg-purple-500/20 text-purple-400' :
                   lead.size === 'medium' ? 'bg-blue-500/20 text-blue-400' :
@@ -1446,199 +1705,158 @@ export default function OrthostandFieldCommander() {
                   </span>
                 )}
               </div>
-              <p className={`font-medium ${theme.text} truncate`}>{lead.company}</p>
-              <p className={`text-xs ${theme.textMuted} truncate`}>{lead.contact}</p>
+              <p className={`font-medium ${theme.text} truncate ${isMobile ? 'text-sm' : ''}`}>{lead.company}</p>
+              {!isMobile && <p className={`text-xs ${theme.textMuted} truncate`}>{lead.contact}</p>}
             </div>
             <div className="flex flex-col items-end gap-1">
-              <span className={`text-lg font-bold ${theme.accent}`}>{lead.lhfScore}</span>
-              <span className={`text-xs ${theme.textMuted}`}>{lead.city}</span>
+              <span className={`${isMobile ? 'text-base' : 'text-lg'} font-bold ${theme.accent}`}>{lead.lhfScore}</span>
+              {!isMobile && <span className={`text-xs ${theme.textMuted}`}>{lead.city}</span>}
             </div>
           </div>
-          {data.interestScore > 0 && (
+          {!isMobile && data.interestScore > 0 && (
             <div className={`mt-1 text-xs ${theme.accent}`}>
               {'★'.repeat(data.interestScore)}{'☆'.repeat(5 - data.interestScore)} Interest
             </div>
           )}
-          {/* Drag hint */}
-          <div className={`mt-2 text-center text-xs ${theme.textMuted} opacity-50`}>
-            ⋮⋮ {lang === 'nl' ? 'sleep om te verplaatsen' : lang === 'es' ? 'arrastra para mover' : 'drag to move'}
-          </div>
+          {/* Drag hint - only on desktop */}
+          {!isMobile && (
+            <div className={`mt-2 text-center text-xs ${theme.textMuted} opacity-50`}>
+              ⋮⋮ {lang === 'nl' ? 'sleep om te verplaatsen' : lang === 'es' ? 'arrastra para mover' : 'drag to move'}
+            </div>
+          )}
         </div>
       );
     };
     
     return (
     <div className="max-w-6xl mx-auto p-4 space-y-3">
-      {/* Priority Legend - clickable */}
-      <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
-        <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>Priority Guide</div>
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <button 
-            onClick={() => setFilter(filter === 'mustVisit' ? 'all' : 'mustVisit')}
-            className={`text-left p-2 rounded transition-all ${filter === 'mustVisit' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
-          >
-            <span className="text-sm">⭐⭐⭐</span> <span className={theme.text}>{t.priority[3]}</span>
-          </button>
-          <button 
-            onClick={() => setFilter(filter === 'highValue' ? 'all' : 'highValue')}
-            className={`text-left p-2 rounded transition-all ${filter === 'highValue' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
-          >
-            <span className="text-sm">⭐⭐</span> <span className={theme.text}>{t.priority[2]}</span>
-          </button>
-          <button 
-            onClick={() => setFilter(filter === 'worthStop' ? 'all' : 'worthStop')}
-            className={`text-left p-2 rounded transition-all ${filter === 'worthStop' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
-          >
-            <span className="text-sm">⭐</span> <span className={theme.text}>{t.priority[1]}</span>
-          </button>
-        </div>
-      </div>
-      
-      {/* Scale Guide - clickable with tooltips */}
-      <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
-        <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
-          {lang === 'nl' ? 'Schaal Filter' : lang === 'es' ? 'Filtro de Escala' : 'Scale Filter'}
-          <span className={`ml-2 ${theme.textMuted} normal-case`}>
-            ({lang === 'nl' ? 'klik voor info' : lang === 'es' ? 'clic para info' : 'click for info'})
+      {/* Mobile: Collapsible filters toggle */}
+      {isMobile && (
+        <button
+          onClick={() => setFiltersExpanded(!filtersExpanded)}
+          className={`w-full flex items-center justify-between p-3 rounded-lg ${theme.bgCard} border ${theme.border}`}
+        >
+          <span className={`text-sm ${theme.text}`}>
+            🎯 {lang === 'nl' ? 'Filters' : lang === 'es' ? 'Filtros' : 'Filters'}
+            {(filter !== 'all' || scaleFilter !== 'all' || selectedCity !== 'all') && (
+              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${theme.accentBg} ${theme.accent}`}>
+                {[filter !== 'all', scaleFilter !== 'all', selectedCity !== 'all'].filter(Boolean).length}
+              </span>
+            )}
           </span>
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <div className="relative">
-            <button 
-              onClick={() => setScaleFilter(scaleFilter === 'large' ? 'all' : 'large')}
-              onContextMenu={(e) => { e.preventDefault(); setShowScaleInfo(showScaleInfo === 'large' ? null : 'large'); }}
-              className={`w-full text-left p-2 rounded transition-all ${scaleFilter === 'large' ? 'bg-purple-500/20 ring-1 ring-purple-400 text-purple-400' : 'hover:bg-purple-500/10'}`}
-            >
-              <span className="text-sm">🏢</span> <span className={scaleFilter === 'large' ? 'text-purple-400' : theme.text}>Large</span>
-              <span className={`ml-1 ${theme.textMuted}`}>({LEADS.filter(l => l.size === 'large').length})</span>
-            </button>
-            <button
-              onClick={() => setShowScaleInfo(showScaleInfo === 'large' ? null : 'large')}
-              className={`absolute top-1 right-1 w-5 h-5 rounded-full text-xs ${theme.textMuted} hover:${theme.accent}`}
-            >
-              ⓘ
-            </button>
-            {showScaleInfo === 'large' && (
-              <div className={`absolute z-50 top-full left-0 mt-1 p-3 rounded-lg shadow-xl ${theme.bgModal} border ${theme.border} w-64`}>
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-medium text-purple-400">🏢 Large</span>
-                  <button onClick={() => setShowScaleInfo(null)} className={theme.textMuted}>✕</button>
-                </div>
-                <p className={`text-xs ${theme.text}`}>
-                  {lang === 'nl' ? 'Nationale keten / 10+ locaties / Grote organisatie' : 
-                   lang === 'es' ? 'Cadena nacional / 10+ ubicaciones / Gran organización' : 
-                   'National chain / 10+ locations / Large organisation'}
-                </p>
-                <p className={`text-xs ${theme.textMuted} mt-2`}>
-                  {lang === 'nl' ? '→ Multi-unit deal potentieel, langere besliscyclus' : 
-                   lang === 'es' ? '→ Potencial multi-unidad, ciclo de decisión más largo' : 
-                   '→ Multi-unit deal potential, longer decision cycle'}
-                </p>
-              </div>
-            )}
-          </div>
-          
-          <div className="relative">
-            <button 
-              onClick={() => setScaleFilter(scaleFilter === 'medium' ? 'all' : 'medium')}
-              className={`w-full text-left p-2 rounded transition-all ${scaleFilter === 'medium' ? 'bg-blue-500/20 ring-1 ring-blue-400 text-blue-400' : 'hover:bg-blue-500/10'}`}
-            >
-              <span className="text-sm">🏪</span> <span className={scaleFilter === 'medium' ? 'text-blue-400' : theme.text}>Medium</span>
-              <span className={`ml-1 ${theme.textMuted}`}>({LEADS.filter(l => l.size === 'medium').length})</span>
-            </button>
-            <button
-              onClick={() => setShowScaleInfo(showScaleInfo === 'medium' ? null : 'medium')}
-              className={`absolute top-1 right-1 w-5 h-5 rounded-full text-xs ${theme.textMuted} hover:${theme.accent}`}
-            >
-              ⓘ
-            </button>
-            {showScaleInfo === 'medium' && (
-              <div className={`absolute z-50 top-full left-0 mt-1 p-3 rounded-lg shadow-xl ${theme.bgModal} border ${theme.border} w-64`}>
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-medium text-blue-400">🏪 Medium</span>
-                  <button onClick={() => setShowScaleInfo(null)} className={theme.textMuted}>✕</button>
-                </div>
-                <p className={`text-xs ${theme.text}`}>
-                  {lang === 'nl' ? 'Regionaal / 3-9 locaties' : 
-                   lang === 'es' ? 'Regional / 3-9 ubicaciones' : 
-                   'Regional / 3-9 locations'}
-                </p>
-                <p className={`text-xs ${theme.textMuted} mt-2`}>
-                  {lang === 'nl' ? '→ Goede balans snelheid & volume' : 
-                   lang === 'es' ? '→ Buen equilibrio velocidad y volumen' : 
-                   '→ Good balance of speed & volume'}
-                </p>
-              </div>
-            )}
-          </div>
-          
-          <div className="relative">
-            <button 
-              onClick={() => setScaleFilter(scaleFilter === 'small' ? 'all' : 'small')}
-              className={`w-full text-left p-2 rounded transition-all ${scaleFilter === 'small' ? 'bg-green-500/20 ring-1 ring-green-400 text-green-400' : 'hover:bg-green-500/10'}`}
-            >
-              <span className="text-sm">🏠</span> <span className={scaleFilter === 'small' ? 'text-green-400' : theme.text}>Small</span>
-              <span className={`ml-1 ${theme.textMuted}`}>({LEADS.filter(l => l.size === 'small').length})</span>
-            </button>
-            <button
-              onClick={() => setShowScaleInfo(showScaleInfo === 'small' ? null : 'small')}
-              className={`absolute top-1 right-1 w-5 h-5 rounded-full text-xs ${theme.textMuted} hover:${theme.accent}`}
-            >
-              ⓘ
-            </button>
-            {showScaleInfo === 'small' && (
-              <div className={`absolute z-50 top-full left-0 mt-1 p-3 rounded-lg shadow-xl ${theme.bgModal} border ${theme.border} w-64`}>
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-medium text-green-400">🏠 Small</span>
-                  <button onClick={() => setShowScaleInfo(null)} className={theme.textMuted}>✕</button>
-                </div>
-                <p className={`text-xs ${theme.text}`}>
-                  {lang === 'nl' ? 'Eén locatie / Eigenaar-geëxploiteerd' : 
-                   lang === 'es' ? 'Una ubicación / Operado por propietario' : 
-                   'Single location / Owner-operated'}
-                </p>
-                <p className={`text-xs ${theme.textMuted} mt-2`}>
-                  {lang === 'nl' ? '→ Snelle beslissing, meestal 1 unit' : 
-                   lang === 'es' ? '→ Decisión rápida, generalmente 1 unidad' : 
-                   '→ Quick decision, usually 1 unit'}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-        
-        {/* Active filters summary */}
-        {(filter !== 'all' || scaleFilter !== 'all') && (
-          <div className={`mt-2 pt-2 border-t ${theme.border} flex items-center gap-2 flex-wrap`}>
-            <span className={`text-xs ${theme.textMuted}`}>{lang === 'nl' ? 'Actieve filters:' : lang === 'es' ? 'Filtros activos:' : 'Active filters:'}</span>
-            {filter !== 'all' && (
-              <span className={`text-xs px-2 py-0.5 rounded-full ${theme.accentBg} ${theme.accent}`}>
-                {filter === 'mustVisit' ? '⭐⭐⭐' : filter === 'highValue' ? '⭐⭐' : '⭐'}
-              </span>
-            )}
-            {scaleFilter !== 'all' && (
-              <span className={`text-xs px-2 py-0.5 rounded-full ${
-                scaleFilter === 'large' ? 'bg-purple-500/20 text-purple-400' :
-                scaleFilter === 'medium' ? 'bg-blue-500/20 text-blue-400' :
-                'bg-green-500/20 text-green-400'
-              }`}>
-                {scaleFilter === 'large' ? '🏢' : scaleFilter === 'medium' ? '🏪' : '🏠'} {scaleFilter}
-              </span>
-            )}
-            <button 
-              onClick={() => { setFilter('all'); setScaleFilter('all'); }}
-              className={`text-xs ${theme.textMuted} hover:text-red-400 ml-auto`}
-            >
-              ✕ {lang === 'nl' ? 'Reset' : lang === 'es' ? 'Limpiar' : 'Clear'}
-            </button>
-          </div>
-        )}
-      </div>
+          <span className={`${theme.textMuted} transition-transform ${filtersExpanded ? 'rotate-180' : ''}`}>▼</span>
+        </button>
+      )}
       
-      {/* Drag instruction */}
-      <p className={`text-xs ${theme.textMuted} text-center`}>
-        💡 {lang === 'nl' ? 'Sleep kaartjes van links naar rechts om status te wijzigen' : lang === 'es' ? 'Arrastra tarjetas de izquierda a derecha para cambiar estado' : 'Drag cards from left to right to change status'}
-      </p>
+      {/* Filters section - always visible on desktop, collapsible on mobile */}
+      {(!isMobile || filtersExpanded) && (
+        <>
+          {/* Priority Legend - clickable */}
+          <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
+            <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
+              {lang === 'nl' ? 'Prioriteit' : lang === 'es' ? 'Prioridad' : 'Priority'}
+            </div>
+            <div className={`grid ${isMobile ? 'grid-cols-3 gap-1' : 'grid-cols-3 gap-2'} text-xs`}>
+              <button 
+                onClick={() => setFilter(filter === 'mustVisit' ? 'all' : 'mustVisit')}
+                className={`text-center p-2 rounded transition-all ${filter === 'mustVisit' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
+              >
+                <span className="text-sm">⭐⭐⭐</span>
+                {!isMobile && <span className={`ml-1 ${theme.text}`}>{t.priority[3]}</span>}
+              </button>
+              <button 
+                onClick={() => setFilter(filter === 'highValue' ? 'all' : 'highValue')}
+                className={`text-center p-2 rounded transition-all ${filter === 'highValue' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
+              >
+                <span className="text-sm">⭐⭐</span>
+                {!isMobile && <span className={`ml-1 ${theme.text}`}>{t.priority[2]}</span>}
+              </button>
+              <button 
+                onClick={() => setFilter(filter === 'worthStop' ? 'all' : 'worthStop')}
+                className={`text-center p-2 rounded transition-all ${filter === 'worthStop' ? `${theme.accentBg} ring-1 ring-[#c9a962]` : 'hover:bg-[#c9a962]/10'}`}
+              >
+                <span className="text-sm">⭐</span>
+                {!isMobile && <span className={`ml-1 ${theme.text}`}>{t.priority[1]}</span>}
+              </button>
+            </div>
+          </div>
+          
+          {/* Scale Filter - simplified on mobile */}
+          <div className={`${theme.bgCard} rounded-lg p-3 border ${theme.border}`}>
+            <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
+              {lang === 'nl' ? 'Schaal' : lang === 'es' ? 'Escala' : 'Scale'}
+            </div>
+            <div className={`grid ${isMobile ? 'grid-cols-3 gap-1' : 'grid-cols-3 gap-2'} text-xs`}>
+              <button 
+                onClick={() => setScaleFilter(scaleFilter === 'large' ? 'all' : 'large')}
+                className={`text-center p-2 rounded transition-all ${scaleFilter === 'large' ? 'bg-purple-500/20 ring-1 ring-purple-400' : 'hover:bg-purple-500/10'}`}
+              >
+                <span>🏢</span>
+                <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'large' ? 'text-purple-400' : theme.textMuted}`}>
+                  {isMobile ? `(${LEADS.filter(l => l.size === 'large').length})` : `Large (${LEADS.filter(l => l.size === 'large').length})`}
+                </span>
+              </button>
+              <button 
+                onClick={() => setScaleFilter(scaleFilter === 'medium' ? 'all' : 'medium')}
+                className={`text-center p-2 rounded transition-all ${scaleFilter === 'medium' ? 'bg-blue-500/20 ring-1 ring-blue-400' : 'hover:bg-blue-500/10'}`}
+              >
+                <span>🏪</span>
+                <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'medium' ? 'text-blue-400' : theme.textMuted}`}>
+                  {isMobile ? `(${LEADS.filter(l => l.size === 'medium').length})` : `Medium (${LEADS.filter(l => l.size === 'medium').length})`}
+                </span>
+              </button>
+              <button 
+                onClick={() => setScaleFilter(scaleFilter === 'small' ? 'all' : 'small')}
+                className={`text-center p-2 rounded transition-all ${scaleFilter === 'small' ? 'bg-green-500/20 ring-1 ring-green-400' : 'hover:bg-green-500/10'}`}
+              >
+                <span>🏠</span>
+                <span className={`${isMobile ? 'text-xs' : 'ml-1'} ${scaleFilter === 'small' ? 'text-green-400' : theme.textMuted}`}>
+                  {isMobile ? `(${LEADS.filter(l => l.size === 'small').length})` : `Small (${LEADS.filter(l => l.size === 'small').length})`}
+                </span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+      
+      {/* Active filters summary - always visible on mobile when filters are active */}
+      {(filter !== 'all' || scaleFilter !== 'all' || selectedCity !== 'all') && (
+        <div className={`flex items-center gap-2 flex-wrap ${theme.bgCard} rounded-lg p-2 border ${theme.border}`}>
+          <span className={`text-xs ${theme.textMuted}`}>{lang === 'nl' ? 'Actief:' : lang === 'es' ? 'Activo:' : 'Active:'}</span>
+          {selectedCity !== 'all' && (
+            <span className={`text-xs px-2 py-0.5 rounded-full ${theme.accentBg} ${theme.accent}`}>
+              📍 {selectedCity}
+            </span>
+          )}
+          {filter !== 'all' && (
+            <span className={`text-xs px-2 py-0.5 rounded-full ${theme.accentBg} ${theme.accent}`}>
+              {filter === 'mustVisit' ? '⭐⭐⭐' : filter === 'highValue' ? '⭐⭐' : '⭐'}
+            </span>
+          )}
+          {scaleFilter !== 'all' && (
+            <span className={`text-xs px-2 py-0.5 rounded-full ${
+              scaleFilter === 'large' ? 'bg-purple-500/20 text-purple-400' :
+              scaleFilter === 'medium' ? 'bg-blue-500/20 text-blue-400' :
+              'bg-green-500/20 text-green-400'
+            }`}>
+              {scaleFilter === 'large' ? '🏢' : scaleFilter === 'medium' ? '🏪' : '🏠'}
+            </span>
+          )}
+          <button 
+            onClick={() => { setFilter('all'); setScaleFilter('all'); setSelectedCity('all'); }}
+            className={`text-xs ${theme.textMuted} hover:text-red-400 ml-auto`}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+      
+      {/* Drag instruction - only on desktop */}
+      {!isMobile && (
+        <p className={`text-xs ${theme.textMuted} text-center`}>
+          💡 {lang === 'nl' ? 'Sleep kaartjes van links naar rechts om status te wijzigen' : lang === 'es' ? 'Arrastra tarjetas de izquierda a derecha para cambiar estado' : 'Drag cards from left to right to change status'}
+        </p>
+      )}
       
       {/* Two Column Layout: To Visit / Visited */}
       <div className="grid md:grid-cols-2 gap-4">
@@ -1976,7 +2194,7 @@ export default function OrthostandFieldCommander() {
             <button
               onClick={() => {
                 const data = {
-                  version: '2.2',
+                  version: '2.6',
                   exportDate: new Date().toISOString(),
                   leadData,
                   journalEntries
@@ -2027,6 +2245,24 @@ export default function OrthostandFieldCommander() {
           <p className={`text-xs ${theme.textMuted} mt-3 text-center`}>
             💡 {lang === 'nl' ? 'Tip: Exporteer regelmatig om dataverlies te voorkomen' : lang === 'es' ? 'Consejo: Exporta regularmente para evitar pérdida de datos' : 'Tip: Export regularly to prevent data loss'}
           </p>
+        </div>
+        
+        {/* Device Sync Section */}
+        <div className={`${theme.bgCard} rounded-lg p-4 border ${theme.border}`}>
+          <div className={`text-xs uppercase tracking-wider ${theme.textMuted} mb-2`}>
+            {lang === 'nl' ? 'Apparaat Sync' : lang === 'es' ? 'Sincronizar Dispositivo' : 'Device Sync'}
+          </div>
+          <p className={`text-sm ${theme.textMuted} mb-4`}>
+            {lang === 'nl' ? 'Synchroniseer data tussen je laptop en telefoon' : 
+             lang === 'es' ? 'Sincroniza datos entre tu portátil y teléfono' : 
+             'Sync data between your laptop and phone'}
+          </p>
+          <button
+            onClick={() => setShowQRModal(true)}
+            className={`w-full py-3 px-4 rounded-lg bg-[#c9a962] text-[#1a1814] font-medium flex items-center justify-center gap-2`}
+          >
+            🔄 {lang === 'nl' ? 'Sync met ander apparaat' : lang === 'es' ? 'Sincronizar con otro dispositivo' : 'Sync with another device'}
+          </button>
         </div>
       </div>
     );
@@ -2485,6 +2721,184 @@ export default function OrthostandFieldCommander() {
     );
   };
   
+  // QR Sync Modal - For syncing data between devices
+  const QRSyncModal = () => {
+    const [qrData, setQrData] = useState('');
+    const [importCode, setImportCode] = useState('');
+    const [importStatus, setImportStatus] = useState('');
+    
+    // Generate QR data on mount when exporting
+    useEffect(() => {
+      if (qrMode === 'export') {
+        const data = {
+          leadData,
+          journalEntries,
+          exportedAt: new Date().toISOString(),
+          version: '2.6'
+        };
+        // Compress to base64
+        const jsonStr = JSON.stringify(data);
+        const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
+        setQrData(base64);
+      }
+    }, [qrMode, leadData, journalEntries]);
+    
+    // Generate simple share code (first 8 chars of hash)
+    const shareCode = qrData ? qrData.substring(0, 20) + '...' : '';
+    
+    // Handle import
+    const handleImport = () => {
+      try {
+        const jsonStr = decodeURIComponent(escape(atob(importCode.trim())));
+        const data = JSON.parse(jsonStr);
+        if (data.leadData) {
+          setLeadData(prev => ({ ...prev, ...data.leadData }));
+        }
+        if (data.journalEntries) {
+          setJournalEntries(prev => [...data.journalEntries, ...prev]);
+        }
+        setImportStatus('success');
+        setTimeout(() => setShowQRModal(false), 1500);
+      } catch (e) {
+        setImportStatus('error');
+      }
+    };
+    
+    // Copy to clipboard
+    const copyToClipboard = () => {
+      navigator.clipboard.writeText(qrData);
+      setImportStatus('copied');
+      setTimeout(() => setImportStatus(''), 2000);
+    };
+    
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowQRModal(false)} />
+        <div className={`${theme.bgModal} relative w-full max-w-md max-h-[85vh] overflow-hidden rounded-2xl shadow-2xl`}>
+          {/* Header */}
+          <div className={`sticky top-0 ${theme.bgModal} p-4 border-b ${theme.border} z-10`}>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className={`font-serif text-xl ${theme.accent}`} style={{ fontFamily: 'Playfair Display, serif' }}>
+                🔄 {lang === 'nl' ? 'Sync Data' : lang === 'es' ? 'Sincronizar' : 'Sync Data'}
+              </h2>
+              <button onClick={() => setShowQRModal(false)} className={`p-2 rounded-full ${darkMode ? 'bg-[#1a1814]' : 'bg-[#e8e0d0]'} ${theme.text} text-lg`}>✕</button>
+            </div>
+            {/* Mode toggle */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setQrMode('export')}
+                className={`flex-1 py-2 rounded-lg text-sm transition-all ${
+                  qrMode === 'export' ? `${theme.accentBg} ${theme.accent}` : `${theme.textMuted}`
+                }`}
+              >
+                📤 {lang === 'nl' ? 'Delen' : lang === 'es' ? 'Compartir' : 'Share'}
+              </button>
+              <button
+                onClick={() => setQrMode('import')}
+                className={`flex-1 py-2 rounded-lg text-sm transition-all ${
+                  qrMode === 'import' ? `${theme.accentBg} ${theme.accent}` : `${theme.textMuted}`
+                }`}
+              >
+                📥 {lang === 'nl' ? 'Ontvangen' : lang === 'es' ? 'Recibir' : 'Receive'}
+              </button>
+            </div>
+          </div>
+          
+          {/* Content */}
+          <div className="p-4">
+            {qrMode === 'export' ? (
+              <div className="space-y-4">
+                <p className={`text-sm ${theme.textMuted}`}>
+                  {lang === 'nl' ? 'Kopieer deze code en stuur naar je andere apparaat:' : 
+                   lang === 'es' ? 'Copia este código y envía a tu otro dispositivo:' : 
+                   'Copy this code and send to your other device:'}
+                </p>
+                
+                {/* Data stats */}
+                <div className={`p-3 rounded-lg ${theme.bgCard} border ${theme.border}`}>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <span className={theme.textMuted}>{lang === 'nl' ? 'Leads met data:' : lang === 'es' ? 'Leads con datos:' : 'Leads with data:'}</span>
+                      <span className={`ml-2 ${theme.accent} font-bold`}>{Object.keys(leadData).length}</span>
+                    </div>
+                    <div>
+                      <span className={theme.textMuted}>{lang === 'nl' ? 'Journal notities:' : lang === 'es' ? 'Notas de diario:' : 'Journal entries:'}</span>
+                      <span className={`ml-2 ${theme.accent} font-bold`}>{journalEntries.length}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Code display */}
+                <div className={`p-3 rounded-lg bg-black/20 border ${theme.border} break-all font-mono text-xs ${theme.textMuted} max-h-32 overflow-y-auto`}>
+                  {qrData.substring(0, 200)}...
+                </div>
+                
+                {/* Copy button */}
+                <button
+                  onClick={copyToClipboard}
+                  className={`w-full py-3 rounded-lg bg-[#c9a962] text-[#1a1814] font-medium flex items-center justify-center gap-2`}
+                >
+                  {importStatus === 'copied' ? '✓' : '📋'} 
+                  {importStatus === 'copied' 
+                    ? (lang === 'nl' ? 'Gekopieerd!' : lang === 'es' ? '¡Copiado!' : 'Copied!')
+                    : (lang === 'nl' ? 'Kopieer Sync Code' : lang === 'es' ? 'Copiar Código' : 'Copy Sync Code')
+                  }
+                </button>
+                
+                <p className={`text-xs ${theme.textMuted} text-center`}>
+                  {lang === 'nl' ? 'Stuur via WhatsApp, email, of airdrop' : 
+                   lang === 'es' ? 'Envía vía WhatsApp, email, o airdrop' : 
+                   'Send via WhatsApp, email, or airdrop'}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <p className={`text-sm ${theme.textMuted}`}>
+                  {lang === 'nl' ? 'Plak de sync code van je andere apparaat:' : 
+                   lang === 'es' ? 'Pega el código de sincronización de tu otro dispositivo:' : 
+                   'Paste the sync code from your other device:'}
+                </p>
+                
+                {/* Import textarea */}
+                <textarea
+                  value={importCode}
+                  onChange={(e) => setImportCode(e.target.value)}
+                  placeholder={lang === 'nl' ? 'Plak sync code hier...' : lang === 'es' ? 'Pega el código aquí...' : 'Paste sync code here...'}
+                  className={`w-full h-32 p-3 rounded-lg ${theme.bgCard} border ${theme.border} ${theme.text} font-mono text-xs resize-none`}
+                />
+                
+                {/* Import button */}
+                <button
+                  onClick={handleImport}
+                  disabled={!importCode.trim()}
+                  className={`w-full py-3 rounded-lg font-medium flex items-center justify-center gap-2 ${
+                    importCode.trim() 
+                      ? 'bg-[#c9a962] text-[#1a1814]' 
+                      : `${theme.bgCard} ${theme.textMuted}`
+                  }`}
+                >
+                  📥 {lang === 'nl' ? 'Importeer Data' : lang === 'es' ? 'Importar Datos' : 'Import Data'}
+                </button>
+                
+                {/* Status messages */}
+                {importStatus === 'success' && (
+                  <div className="text-center text-green-400 text-sm">
+                    ✅ {lang === 'nl' ? 'Data succesvol geïmporteerd!' : lang === 'es' ? '¡Datos importados con éxito!' : 'Data imported successfully!'}
+                  </div>
+                )}
+                {importStatus === 'error' && (
+                  <div className="text-center text-red-400 text-sm">
+                    ❌ {lang === 'nl' ? 'Ongeldige sync code' : lang === 'es' ? 'Código de sincronización inválido' : 'Invalid sync code'}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
   // Help Modal - Shows app guide and terminology
   const HelpModal = () => {
     const [helpTab, setHelpTab] = useState('welcome');
@@ -2899,6 +3313,7 @@ Basado en: acceso al decisor, potencial multi-unidad, alcanzabilidad, valor estr
       {selectedLead && <LeadModal lead={selectedLead} onClose={() => setSelectedLead(null)} />}
       {selectedDay && <DayModal dayInfo={selectedDay} onClose={() => setSelectedDay(null)} />}
       {showHelp && <HelpModal />}
+      {showQRModal && <QRSyncModal />}
     </div>
   );
 }
